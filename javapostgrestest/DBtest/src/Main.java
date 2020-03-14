@@ -29,21 +29,5 @@ public class Main {
 	
 	}
 
-	/*
-	public static Connection connect0(String name,String user, String pass) throws SQLException {
-		String url = PATH + name;		
-		Connection c=DriverManager.getConnection(url, user, pass);
-		return c;
-	}
-	public static String names(String name,String...args) throws SQLException {
-	    String sql="";
-	    Boolean first=true;
-	    StringBuilder str = new StringBuilder("SELECT ");
-        for(String ss: args) {
-        	if (first) {str.append("\"" + ss + "\"");}
-        	else {str.append(", \"" + ss + "\"");}
-        }
-        str.append(" FROM " + "\"" + name + "\"");
-		return sql;
-	}*/
+	
 }

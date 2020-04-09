@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header">
+				 <div class="site-title fleft">Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<ul class="main-menu">
+					<li class="main-menu__item"><a class="main-menu__item_link" href="index.html">Main</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="products.html">Catalog</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="basket.html">
+					  <img src="img/bag.png"> cart (0)</a></li>				
+					<li class="main-menu__item"><a class="main-menu__item_link" href="login.html">login</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="contact.html">Contacts</a></li>	
+					<li class="main-menu__item"><a class="main-menu__item_link" href="about.html">About</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="terms.html">Terms</a></li>	
+					<!--  <li class="end"></li>  -->
+				</ul>				
+				<div class="end"></div>
+			</div>
+	<!-- **********SIDE CONTENT************************* -->			
+			<div class="side">
+				<div class="side-content">
+<!--************************** -->
+<ul class="categories">
+ <li class="categories__item submenu">Men's shoes
+    <ul>
+       <li class="categories__item">Boots</li>
+       <li class="categories__item">Winter Boots</li>
+       <li class="categories__item">Chelsea Boots</li>
+       <li class="categories__item">Loafers</li>
+       <li class="categories__item">Shoes</li>
+       <li class="categories__item">Flip Flops</li>
+       <li class="categories__item">Sandals</li>
+       <li class="categories__item">Slippers</li>
+       <li class="categories__item">Sports Shoes</li>
+	 </ul>
+ </li>	 
+ <li class="categories__item submenu">Women'shoes
+    <ul>
+	 <li class="categories__item">Boots</li>
+     <li class="categories__item">Sandals</li>
+     <li class="categories__item">Slippers</li>
+     <li class="categories__item">Ankle Boots</li>
+     <li class="categories__item">Chelsea Boots</li>
+     <li class="categories__item">Sports Shoes</li>
+     <li class="categories__item">Loafers</li>
+     <li class="categories__item">Flip Flops</li>
+     <li class="categories__item">Boat Shoes</li>
+     <li class="categories__item">Winter Boots</li>
+     <li class="categories__item">High Boots</li>
+	</ul>
+ </li> 	
+ <li class="categories__item submenu">Unisex shoes
+    <ul>
+	 <li class="categories__item">Rubber Shoes</li>
+     <li class="categories__item">Rubber Boots</li>
+	 <li class="categories__item">Slippers</li>
+	</ul> 
+ </li>  
+ <li class="categories__item submenu">Season
+   <ul>
+	 <li class="categories__item">Winter</li>
+	 <li class="categories__item">Allseason</li>
+	 <li class="categories__item">Insulated</li>
+	 <li class="categories__item">Summer</li>
+   </ul> 	  
+ </li>	 
+ <li class="categories__item submenu">Brand
+  <ul> 
+   <li class="categories__item">Euroshoes</li>
+   <li class="categories__item">Puma</li>
+   <li class="categories__item">Belwest</li>
+  </ul>
+ </li> 
+ <li class="categories__item">Sale</li>
+ <li class="categories__item">Sport</li>
+ <li class="categories__item">Print</li>
+ <li class="categories__item">Wedding</li>
+</ul> 
+
+<!-- *********************************** -->
+<div class="categories">
+<form class="sform">
+    <label class="sform__label" for="material">Material:</label>
+		<select class="sform__text-input" id="material" name="Material" multiple>
+		    <option value="Natural leather">Natural leather</option>
+		    <option value="Faux leather">Faux leather</option>
+			<option value="Textile">Textile</option>
+			<option value="Rubber">Rubber</option>
+			<option value="Suede">Suede</option>
+		</select>
+    <label class="sform__label" for="color">Color:</label>
+		<select class="sform__text-input" id="color" name="Color" multiple>
+		    <option value="white">white</option>
+		    <option value="black">black</option>
+			<option value="brown">brown</option>
+			<option value="red">red</option>
+			<option value="pink">pink</option>
+			<option value="blue">blue</option>
+			<option value="orange">orange</option>
+			<option value="yellow">yellow</option>
+			<option value="green">green</option>
+			<option value="grey">grey</option>
+			<option value="bordo">bordo</option>
+			<option value="silver">silver</option>			
+			<option value="gold">gold</option>			
+			<option value="purple">purple</option>			
+			<option value="multicolor">multicolor</option>						
+		</select>
+    <label class="sform__label" for="prices">Prices:</label>
+		<select class="sform__text-input" id="prices" name="Prices" multiple>
+		    <option value=1>under 50</option>
+		    <option value=2>50-100</option>
+			<option value=3>above 100</option>
+		</select>
+    <label class="sform__label" for="discounts">Discounts:</label>
+		<select class="sform__text-input" id="discounts" name="Discounts" multiple>
+		    <option value=1>0</option>
+		    <option value=2>under 20</option>
+			<option value=3>20-40</option>
+			<option value=4>above 40</option>
+		</select>
+    <div class="sform__input"><input id="stock" type="checkbox" name="In stock" value="true" checked><label for="stock">In Stock</label></div> 
+	<button class="form__button" type="submit">Select</button>						
+	<button id="button-cancel" class="form__button" type="reset">Cancel</button>
+ </form>
+</div>
+<!-- *********************************** -->
+				</div>
+			</div>
+			<div class="main">
+				<div class="main-content">
+					<h1 class="page-title">Товары для дома</h1>
+					<div class="product">
+						<h3 class="product__title">Тарелка</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$13,45</div>
+						<div class="product__description">Тарелка аллюминиевая с дырочкой. Немного помята.</div>
+						<a class="product__button-add" href="#">Добавить в корзину</a>
+					</div>
+					<div class="product">
+						<h3 class="product__title">Цветочный горшок</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$24,50</div>
+						<div class="product__description">Глиняный на 5&nbsp;л с подставкой.</div>
+						<a class="product__button-add" href="#">Добавить в корзину</a>
+					</div>
+					<div class="product">
+						<h3 class="product__title">Щётка для обуви</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$33,30</div>
+						<div class="product__description">Деревянная с икусственным коротким ворсом без ручки.</div>
+						<a class="product__button-add" href="#">Добавить в корзину</a>
+					</div>
+					<div class="product">
+						<h3 class="product__title">Стиральный порошок</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$59,99</div>
+						<div class="product__description">Большая упаковка 20&nbsp;кг для цветного белья. Подходит для использования в стиральных машинах. Даёт обильную пену даже при небольшом количестве порошка. Не рекомендуется для стирки шёлковых и хлопчатобумажных тканей.</div>
+						<a class="product__button-add" href="#">Добавить в корзину</a>
+					</div>
+				</div>
+			</div>
+			<div class="pusher end"></div>
+		</div>
+		<div class="footer">&copy; Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+	</body>
+</html>

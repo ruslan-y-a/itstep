@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Users</div>				   				
+			</div>
+			<div class="main-content">
+				   <h2 class="page-title">Users</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">
+						<tr>
+						    <th class="table__header">ID</th>
+							<th class="table__header">Name</th>
+							<th class="table__header">Password</th>
+							<th class="table__header">e-mail</th>
+							<th class="table__header">Role</th>
+							<th class="table__header">Action</th>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid1">2.3</td>
+							<td class="table__cell" id="tname1">a</td>
+							<td class="table__cell" id="tpassword1">a</td>
+							<td class="table__cell" id="te-mail1">a</td>
+						    <td class="table__cell" id="trole1">Admin</td>
+						    <td class="table__cell"><img id="edit1" src="img/edit.png"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid2">2.3</td>
+							<td class="table__cell" id="tname2">a</td>
+							<td class="table__cell" id="tpassword2">a</td>
+							<td class="table__cell" id="te-mail2">a</td>
+						    <td class="table__cell" id="trole2">Client</td>
+		                    <td class="table__cell" ><img id="edit2" src="img/edit.png"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid3">2.3</td>
+							<td class="table__cell" id="tname3">a</td>
+							<td class="table__cell" id="tpassword3">a</td>
+							<td class="table__cell" id="te-mail3">a</td>
+						    <td class="table__cell" id="trole3">Product</td>
+			                <td class="table__cell"  ><img id="edit3" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid4">2.3</td>
+							<td class="table__cell" id="tname4">a</td>
+							<td class="table__cell" id="tpassword4">a</td>
+							<td class="table__cell" id="te-mail4">a</td>
+						    <td class="table__cell" id="trole4">Manager</td>
+		                    <td class="table__cell" ><img id="edit4" src="img/edit.png"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid5">2.3</td>
+							<td class="table__cell" id="tname5">a</td>
+							<td class="table__cell" id="tpassword5">a</td>
+							<td class="table__cell" id="te-mail5">a</td>
+						    <td class="table__cell" id="trole5">Cashier</td>
+			                <td class="table__cell"  ><img id="edit5" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
+						</tr>
+					</table>
+				</div>	
+				
+				<h2 class="backoffice-edit-form">Edit Form</h2>
+				<div>
+			        <form class="backoffice-edit-form" action="save.html" style="width: 480px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="name">name:</label>
+						<input class="backoffice-form__text-input" id="name" type="text" name="name" value="Иван">
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="password">password:</label>
+						<input class="backoffice-form__text-input" id="password" type="text" name="password" value="Петров">		
+					   </fieldset> 			
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="e-mail">e-mail:</label>
+						<input class="backoffice-form__text-input" id="e-mail" type="text" name="e-mail" value="Петров">		
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">
+					    <label class="sform__label" for="roleid">role:</label>
+		                <select class="sform__text-input" id="roleid" name="roleid" required>
+		                  <option value=0>Admin</option>
+		                  <option value=1 selected>Client</option>
+			              <option value=2>Product</option>
+			              <option value=3>Manager</option>
+			              <option value=4>Cashier</option>
+		                </select>	
+					  </fieldset> 							
+						<button class="form__button" type="submit">Сохранить</button>
+						<button class="form__button_danger" type="button">Удалить</button>
+						<button class="form__button" type="reset">Отмена</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">
+           document.querySelector('#table').addEventListener('click', function(e){ 
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {
+        		  id = id.substring(4);
+        		  id = parseInt(id, 10);
+        	//		console.log(id);
+        			Edit(id);
+        	  }         	  
+        	});         
+ 
+          function Edit(nid){        	  
+        	  var id = document.getElementById('tid'+nid).innerHTML;        	        	  
+        	  var name = document.getElementById('tname'+nid).innerHTML;
+        	  var password = document.getElementById('tpassword'+nid).innerHTML;
+        	  var email = document.getElementById('te-mail'+nid).innerHTML;
+        	  var role = document.getElementById('trole'+nid).innerHTML;
+        	          	  
+        	  document.getElementById('name').value = name;
+        	  document.getElementById('password').value = password;
+        	  document.getElementById('e-mail').value = email;
+        	  role=getrole(role);
+        	  document.getElementById('roleid').value = role;
+           }	
+          
+          function getsrole(role){
+        	  switch (role) {
+        	  case 0: return 'Admin'; break;
+        	  case 1: return 'Client'; break;
+        	  case 2: return 'Product'; break;
+        	  case 3: return 'Manager'; break;
+        	  case 4: return 'Cashier'; break;        	  
+        	}
+        	  return 'Client';
+          } 
+          
+          function getrole(role){
+        	  switch (role) {
+        	  case 'Admin': return 0; break;
+        	  case 'Client': return 1; break;
+        	  case 'Product': return 2; break;
+        	  case 'Manager': return 3; break;
+        	  case 'Cashier': return 4; break;        	  
+        	}
+        	  return 1;
+          } 
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

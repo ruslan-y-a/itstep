@@ -22,6 +22,20 @@ html, body {
 	padding-bottom:20px;
 	border-bottom:1px solid green;
 }
+.backoffice-dtab{
+	display:block;
+	float:left;
+	max-width:350px;
+	margin-right:50px;
+	margin-bottom:50px;
+}
+.backoffice-dtab-right{
+	display:block;
+	/*float:right;*/
+	max-width:350px;	
+	max-height:250px;
+	margin:0 auto;
+}
 .backoffice-edit-form{
 /*  visibility: hidden;*/
  display: block;
@@ -393,7 +407,9 @@ overflow: visible;
 .fleft{
 	float: left;
 }
-
+.mright{
+	margin-right: 50px;
+}
 ol{
   counter-reset: myCounter;
 }

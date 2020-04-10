@@ -10,10 +10,10 @@
 		<div class="wrapper">
 			<div>
 				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
-				<div class="backoffice-header2">Admin</div>				   				
+				<div class="backoffice-header2">Users</div>				   				
 			</div>
 			<div class="main-content">
-				   <h2 class="page-title">users</h2>
+				   <h2 class="page-title">Users</h2>
 				   <div class="backoffice-edit-page"> 
 					<table class="table" id="table">
 						<tr>
@@ -25,44 +25,44 @@
 							<th class="table__header">Action</th>
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="tid">1</td>
-							<td class="table__cell" id="tname">a</td>
-							<td class="table__cell" id="tpassword">a</td>
-							<td class="table__cell" id="te-mail">a</td>
-						    <td class="table__cell" id="trole">Admin</td>
-						    <td class="table__cell"><img id="edit" src="img/edit.png"></td>
+						    <td class="table__cell_numeric" id="tid1">2.3</td>
+							<td class="table__cell" id="tname1">a</td>
+							<td class="table__cell" id="tpassword1">a</td>
+							<td class="table__cell" id="te-mail1">a</td>
+						    <td class="table__cell" id="trole1">Admin</td>
+						    <td class="table__cell"><img id="edit1" src="img/edit.png"></td>
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="tid">2</td>
-							<td class="table__cell" id="tname">a</td>
-							<td class="table__cell" id="tpassword">a</td>
-							<td class="table__cell" id="te-mail">a</td>
-						    <td class="table__cell" id="trole">Client</td>
-		                    <td class="table__cell" ><img id="edit" src="img/edit.png"></td>
+						    <td class="table__cell_numeric" id="tid2">2.3</td>
+							<td class="table__cell" id="tname2">a</td>
+							<td class="table__cell" id="tpassword2">a</td>
+							<td class="table__cell" id="te-mail2">a</td>
+						    <td class="table__cell" id="trole2">Client</td>
+		                    <td class="table__cell" ><img id="edit2" src="img/edit.png"></td>
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="tid">3</td>
-							<td class="table__cell" id="tname">a</td>
-							<td class="table__cell" id="tpassword">a</td>
-							<td class="table__cell" id="te-mail">a</td>
-						    <td class="table__cell" id="trole">Product</td>
-			                <td class="table__cell"  ><img id="edit" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
+						    <td class="table__cell_numeric" id="tid3">2.3</td>
+							<td class="table__cell" id="tname3">a</td>
+							<td class="table__cell" id="tpassword3">a</td>
+							<td class="table__cell" id="te-mail3">a</td>
+						    <td class="table__cell" id="trole3">Product</td>
+			                <td class="table__cell"  ><img id="edit3" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="tid">4</td>
-							<td class="table__cell" id="tname">a</td>
-							<td class="table__cell" id="tpassword">a</td>
-							<td class="table__cell" id="te-mail">a</td>
-						    <td class="table__cell" id="trole">Manager</td>
-		                    <td class="table__cell" ><img id="edit" src="img/edit.png"></td>
+						    <td class="table__cell_numeric" id="tid4">2.3</td>
+							<td class="table__cell" id="tname4">a</td>
+							<td class="table__cell" id="tpassword4">a</td>
+							<td class="table__cell" id="te-mail4">a</td>
+						    <td class="table__cell" id="trole4">Manager</td>
+		                    <td class="table__cell" ><img id="edit4" src="img/edit.png"></td>
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="tid">5</td>
-							<td class="table__cell" id="tname">a</td>
-							<td class="table__cell" id="tpassword">a</td>
-							<td class="table__cell" id="te-mail">a</td>
-						    <td class="table__cell" id="trole">Cashier</td>
-			                <td class="table__cell"  ><img id="edit" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
+						    <td class="table__cell_numeric" id="tid5">2.3</td>
+							<td class="table__cell" id="tname5">a</td>
+							<td class="table__cell" id="tpassword5">a</td>
+							<td class="table__cell" id="te-mail5">a</td>
+						    <td class="table__cell" id="trole5">Cashier</td>
+			                <td class="table__cell"  ><img id="edit5" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
 						</tr>
 					</table>
 				</div>	
@@ -107,22 +107,23 @@
 		</div>
 	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
         <script type="text/javascript">
-        document.querySelector('#table').addEventListener('click', function(e){         
-      	  var id = e.target.id; 
-      	  var tmp=id.substring(0,4);
-      	  if (tmp=='edit') {        	
-      			Edit(e.target);
-      	     }         	          	          	          			
-      	  });                   
-                   
-        function Edit(e){        	  
-      	  var pnode = e.parentNode.parentNode;        
-      	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
-      	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
-      	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;
-      	  var password = pnode.childNodes[5].innerHTML; //getchildid(pnode,'tpassword').innerHTML;
-      	  var email = pnode.childNodes[7].innerHTML; //getchildid(pnode,'te-mail').innerHTML;
-      	  var role = pnode.childNodes[9].innerHTML; //getchildid(pnode,'trole').innerHTML;
+           document.querySelector('#table').addEventListener('click', function(e){ 
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {
+        		  id = id.substring(4);
+        		  id = parseInt(id, 10);
+        	//		console.log(id);
+        			Edit(id);
+        	  }         	  
+        	});         
+ 
+          function Edit(nid){        	  
+        	  var id = document.getElementById('tid'+nid).innerHTML;        	        	  
+        	  var name = document.getElementById('tname'+nid).innerHTML;
+        	  var password = document.getElementById('tpassword'+nid).innerHTML;
+        	  var email = document.getElementById('te-mail'+nid).innerHTML;
+        	  var role = document.getElementById('trole'+nid).innerHTML;
         	    
         	  document.getElementById('id').value = id;
         	  document.getElementById('name').value = name;

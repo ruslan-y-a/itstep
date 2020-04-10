@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin, Manager, Product</div>				   				
+			</div>
+			<div class="main-content">
+				   <h2 class="page-title">variant</h2>
+				   <div class="backoffice-edit-page"> 
+				    <div class="backoffice-dtab">
+				     <h3 class="page-title">Main Variant</h3>
+					 <table class="table" id="table1">
+			<!-- 		id", "name"     , "currency",  "rate" -->
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">name</th>	
+							<th class="table__header">Action</th>	
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="pid">1</td>
+							<td class="table__cell" id="pname">Size</td>					
+						    <td class="table__cell"><img src="img/edit.png" id="pedit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="pid">15</td>
+							<td class="table__cell" id="pname">Color</td>
+		                    <td class="table__cell" ><img src="img/edit.png" id="pedit" ></td>
+						</tr>				
+					</table>
+					</div>
+					<div class="backoffice-dtab-right">
+					 <h3 class="page-title">Child Variant </h3>
+				  	 <table class="table" id="table2">
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">name</th>		
+							<th class="table__header">parentid</th>		
+							<th class="table__header">Action</th>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="cid">2</td>
+							<td class="table__cell" id="cname">36</td>
+							<td class="table__cell" id="cparentid">1</td>						
+						    <td class="table__cell"><img src="img/edit.png" id="cedit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="cid">3</td>
+							<td class="table__cell" id="cname">37</td>
+							<td class="table__cell" id="cparentid">1</td>	
+		                    <td class="table__cell" ><img src="img/edit.png" id="cedit" ></td>
+						</tr>	
+						<tr>
+						    <td class="table__cell_numeric" id="cid">16</td>
+							<td class="table__cell" id="cname">white</td>
+							<td class="table__cell" id="cparentid">15</td>						
+						    <td class="table__cell"><img src="img/edit.png" id="cedit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="cid">17</td>
+							<td class="table__cell" id="cname">black</td>
+							<td class="table__cell" id="cparentid">15</td>
+		                    <td class="table__cell" ><img src="img/edit.png" id="cedit" ></td>
+						</tr>				
+					</table>
+					</div>
+					<div class="end"></div>
+				</div>	
+				 <div class="backoffice-dtab">
+				  <h2 class="backoffice-edit-form fleft">Edit Main Variant Form</h2>
+				  <div>
+			         <form class="backoffice-edit-form" action="save.html" style="width: 350px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="id">id:</label>
+						<input class="backoffice-form__text-input" id="id" type="text" name="id" value="0" readonly>
+					  </fieldset> 
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="name">name:</label>
+						<input class="backoffice-form__text-input" id="name" type="text" name="name" value="Size" required>
+					  </fieldset> 					
+						<button class="form__button" type="submit">Сохранить</button>
+						<button class="form__button_danger" type="button">Удалить</button>
+						<button class="form__button" type="reset">Отмена</button>
+					 </form>
+			     </div>	
+			    </div>  
+			    <div class="backoffice-dtab-right">
+			   	  <h2 class="backoffice-edit-form fleft">Edit Child Variant Form</h2>
+				  <div>
+			        <form class="backoffice-edit-form" action="save.html" style="width: 350px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="chid">id:</label>
+						<input class="backoffice-form__text-input" id="chid" type="text" name="id" value="0" readonly>
+					  </fieldset> 
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="chname">name:</label>
+						<input class="backoffice-form__text-input" id="chname" type="text" name="name" value="36" required>
+					  </fieldset> 			
+					  <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="parentid">parentid:</label>						
+						<input class="backoffice-form__text-input" id="parentid" type="text" name="parentid" value="0" required>
+					  </fieldset> 				
+						<button class="form__button" type="submit" id="submit">Сохранить</button>
+						<button class="form__button_danger" type="button">Удалить</button>
+						<button class="form__button" type="reset">Отмена</button>
+					</form>
+			      </div>
+			    </div> 
+			    <div class="end"></div>
+			</div>			    
+			<div class="end"></div>
+		 </div>			
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">          
+          document.querySelector('#table1').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,5);  
+        	    if (tmp=='pedit') {        	
+      			  Editp(e.target);
+      	        }
+        	  });    
+          document.querySelector('#table2').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,5);
+        	    if (tmp=='cedit') {        	
+        		  Editc(e.target);
+        	     }    
+        	  });      
+                   
+          function Editp(e){        	  
+        	  var pnode = e.parentNode.parentNode;                	         	        	 
+        	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
+        	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;        	  
+        	  //var childid = pnode.childNodes[5].innerHTML; //getchildid(pnode,'tpassword').innerHTML;
+        	  document.getElementById('parentid').value=id;        
+        	          	  
+        	  document.getElementById('id').value = id;
+        	  document.getElementById('name').value = name;    	          	                  
+          }
+          function Editc(e){        	  
+        	  var pnode = e.parentNode.parentNode;        
+        	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+        	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
+        	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;
+        	  var cparentid = pnode.childNodes[5].innerHTML; //getchildid(pnode,'tpassword').innerHTML;        	      
+        	          	  
+        	  document.getElementById('chid').value = id;
+        	  document.getElementById('chname').value = name;
+        	  document.getElementById('parentid').value = cparentid;
+         	          	  
+          }
+          
+                  
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

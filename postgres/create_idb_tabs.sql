@@ -37,8 +37,25 @@ CREATE TABLE "items" (
 	"classifications" INTEGER[] NOT NULL,
     "tagcloud" INTEGER[] NULL,
 	"keywords" VARCHAR(50)[] NULL,
+	"img" VARCHAR(100)[] NULL,
+	"mainimg" INTEGER NULL,
 	"url" VARCHAR(200) NULL UNIQUE
 );
+--CREATE SEQUENCE "country_id_sequence" START 100;
+-- 0 USD -- 1 EUR
+DROP TABLE IF EXISTS "currency";
+CREATE TABLE "currency" (
+	"id" SERIAL PRIMARY KEY,	
+	"name"  VARCHAR(3) NOT NULL, 	     
+	"rate" REAL NOT NULL
+);
+DROP TABLE IF EXISTS "country";
+CREATE TABLE "country" (
+	"id" SERIAL PRIMARY KEY,	
+	"name"  VARCHAR(20) NOT NULL, 	 
+    "currency" INTEGER NOT NULL REFERENCES "currency" ON DELETE RESTRICT ON UPDATE RESTRICT	
+);
+--ALTER SEQUENCE "country_id_sequence" OWNED BY "country"."id";
 ------------------------------------
 DROP TABLE IF EXISTS "baseitem";
 CREATE TABLE "baseitem" (
@@ -46,30 +63,12 @@ CREATE TABLE "baseitem" (
 	"itemid" INTEGER NOT NULL REFERENCES "items" ON DELETE CASCADE ON UPDATE	CASCADE,
 	"variantid" INTEGER[] NOT NULL,
 	"name" VARCHAR(20) NULL UNIQUE,
+	"quantity" INTEGER NOT NULL,
+	"baseprice" BIGINT NULL,
+    "currency" INTEGER NOT NULL DEFAULT 1 REFERENCES "country" ON DELETE CASCADE ON UPDATE	CASCAD,
 	UNIQUE ("itemid", "variantid")                                                                               
 );
--------------------------------------------------------------------------
---CREATE SEQUENCE "country_id_sequence" START 100;
--- 0 USD -- 1 EUR
-DROP TABLE IF EXISTS "country";
-CREATE TABLE "country" (
-	"id" SERIAL PRIMARY KEY,	
-	"name"  VARCHAR(20) NOT NULL, 	 
-    "currency" VARCHAR(3) NOT NULL,
-	"rate" REAL NOT NULL
-);
---ALTER SEQUENCE "country_id_sequence" OWNED BY "country"."id";
-------------------------------------
-DROP TABLE IF EXISTS "stocks";
-CREATE TABLE "stocks" (
-	"id" SERIAL PRIMARY KEY,
-	"baseitemid" INTEGER NOT NULL REFERENCES "baseitem" ON DELETE CASCADE ON UPDATE	CASCADE,
-	"quantity" INTEGER NOT NULL,
-	"unitname" VARCHAR(20) NULL UNIQUE,
-	"baseprice" MONEY NULL,
-     "currency" INTEGER NOT NULL DEFAULT 1 REFERENCES "country" ON DELETE CASCADE ON UPDATE	CASCADE                                                                        
-);
--------------------------------------------------------------------------
+-------------------------------------
 DROP TABLE IF EXISTS "users";
 CREATE TABLE "users" (
 	"id" SERIAL PRIMARY KEY,
@@ -115,8 +114,8 @@ CREATE TABLE "orders" (
 	"quantity" INTEGER NOT NULL,
 	"sum" MONEY NOT NULL,
 	"currencyid" INTEGER NOT NULL REFERENCES "country" ON DELETE RESTRICT ON UPDATE RESTRICT,
-	"ordertype" INTEGER NOT NULL DEFAULT 2,
-    "rejectionreason" VARCHAR(50) NULL, 
+	"ordertype" INTEGER NOT NULL DEFAULT 1,
+    "active" BOOLEAN NOT NULL DEFAULT TRUE, 
 	"statussold" BOOLEAN NOT NULL DEFAULT FALSE
 	CHECK ("dateexpired" > "date")
 );

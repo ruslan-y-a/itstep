@@ -13,10 +13,10 @@
 				<div class="backoffice-header2">Admin, Manager, Product</div>				   				
 			</div>
 			<div class="main-content">
-				   <h2 class="page-title">variant</h2>
+				   <h2 class="page-title">category</h2>
 				   <div class="backoffice-edit-page"> 
 				    <div class="backoffice-dtab">
-				     <h3 class="page-title">Main Variant</h3>
+				     <h3 class="page-title">Main category</h3>
 					 <table class="table" id="table1">
 			<!-- 		id", "name"     , "currency",  "rate" -->
 						<tr>
@@ -25,19 +25,19 @@
 							<th class="table__header">Action</th>	
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="pid">1</td>
-							<td class="table__cell" id="pname">Size</td>					
+						    <td class="table__cell_numeric" id="pid">2</td>
+							<td class="table__cell" id="pname">Men\'s shoes</td>					
 						    <td class="table__cell"><img src="img/edit.png" id="pedit"></td>
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="pid">15</td>
-							<td class="table__cell" id="pname">Color</td>
+						    <td class="table__cell_numeric" id="pid">28</td>
+							<td class="table__cell" id="pname">Season</td>
 		                    <td class="table__cell" ><img src="img/edit.png" id="pedit" ></td>
 						</tr>				
 					</table>
 					</div>
 					<div class="backoffice-dtab-right">
-					 <h3 class="page-title">Child Variant </h3>
+					 <h3 class="page-title">Child category</h3>
 				  	 <table class="table" id="table2">
 						<tr>
 						    <th class="table__header">id</th>
@@ -47,26 +47,26 @@
 						</tr>
 						<tr>
 						    <td class="table__cell_numeric" id="cid">2</td>
-							<td class="table__cell" id="cname">36</td>
-							<td class="table__cell" id="cparentid">1</td>						
+							<td class="table__cell" id="cname">Boots</td>
+							<td class="table__cell" id="cparentid">2</td>						
 						    <td class="table__cell"><img src="img/edit.png" id="cedit"></td>
 						</tr>
 						<tr>
 						    <td class="table__cell_numeric" id="cid">3</td>
-							<td class="table__cell" id="cname">37</td>
-							<td class="table__cell" id="cparentid">1</td>	
+							<td class="table__cell" id="cname">Loafers</td>
+							<td class="table__cell" id="cparentid">2</td>	
 		                    <td class="table__cell" ><img src="img/edit.png" id="cedit" ></td>
 						</tr>	
 						<tr>
-						    <td class="table__cell_numeric" id="cid">16</td>
-							<td class="table__cell" id="cname">white</td>
-							<td class="table__cell" id="cparentid">15</td>						
+						    <td class="table__cell_numeric" id="cid">29</td>
+							<td class="table__cell" id="cname">Winter</td>
+							<td class="table__cell" id="cparentid">28</td>						
 						    <td class="table__cell"><img src="img/edit.png" id="cedit"></td>
 						</tr>
 						<tr>
-						    <td class="table__cell_numeric" id="cid">17</td>
-							<td class="table__cell" id="cname">black</td>
-							<td class="table__cell" id="cparentid">15</td>
+						    <td class="table__cell_numeric" id="cid">30</td>
+							<td class="table__cell" id="cname">Allseason</td>
+							<td class="table__cell" id="cparentid">28</td>
 		                    <td class="table__cell" ><img src="img/edit.png" id="cedit" ></td>
 						</tr>				
 					</table>
@@ -74,7 +74,7 @@
 					<div class="end"></div>
 				</div>	
 				 <div class="backoffice-dtab">
-				  <h2 class="backoffice-edit-form fleft">Edit Main Variant Form</h2>
+				  <h2 class="backoffice-edit-form fleft">Edit Main category Form</h2>
 				  <div>
 			         <form id="form1" class="backoffice-edit-form" action="save.html" style="width: 350px">
 			          <fieldset id="backoffice-edit-form-item">
@@ -92,7 +92,7 @@
 			     </div>	
 			    </div>  
 			    <div class="backoffice-dtab-right">
-			   	  <h2 class="backoffice-edit-form fleft">Edit Child Variant Form</h2>
+			   	  <h2 class="backoffice-edit-form fleft">Edit Child category Form</h2>
 				  <div >
 			        <form id="form2" class="backoffice-edit-form" action="save.html" style="width: 350px">
 			          <fieldset id="backoffice-edit-form-item">
@@ -105,10 +105,10 @@
 					  </fieldset> 			
 					  <fieldset id="backoffice-edit-form-item">
 						<label class="backoffice-form__label" for="parentid">parentid:</label>						
-						<input class="backoffice-form__text-input" id="parentid" type="text" name="parentid" value="0" required readonly>
-					     <select class="sform__text-input" id="parentcategory">
-		                   <option value=1>Size</option>			              
-			               <option value=15>Color</option>			               
+						<input class="backoffice-form__text-input" id="parentid" type="text" name="parentid" value="0" required>
+					   <select class="sform__text-input" id="parentcategory">
+		                   <option value=2>Men\'s shoes</option>			              
+			               <option value=28>Season</option>			               
 		                 </select>	
 					  </fieldset> 				
 						<button class="form__button" type="submit" id="submit">Save</button>
@@ -121,8 +121,8 @@
 			</div>			    
 			<div class="end"></div>
 		 </div>			
-	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
 	    <script type="text/javascript" src="script/category.js"></script>       
-<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->		
 	</body>
 </html>

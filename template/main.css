@@ -310,6 +310,7 @@ overflow: visible;
 
 .table {
 	border-collapse: collapse;
+	margin-bottom:20px;
 }
 
 .table__header, .table__cell, .table__cell_numeric {
@@ -327,6 +328,10 @@ overflow: visible;
 .table__cell img{
 	width: 20px;
 	border: 1px solid black;
+}
+
+.table td{
+	min-width:100%;
 }
 
 .table__cell_numeric {

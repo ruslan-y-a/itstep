@@ -36,7 +36,15 @@
 			</div>
 			<div class="side">
 				<div class="side-content">
-					Боковое меню
+					<h2 class="page-title">Врезка</h2>
+					<div id="block-message" class="popup" style="display: none"></div>
+					<form id="form-summ" class="form">
+						<label class="form__label" for="number-a">Число A:</label>
+						<input class="form__text-input" name="numberA" type="text">
+						<label class="form__label" for="number-b">Число B:</label>
+						<input class="form__text-input" name="numberB" type="text">
+						<button class="form__button" type="submit">OK</button>
+					</form>
 				</div>
 			</div>
 			<div class="main">
@@ -88,33 +96,17 @@
 						<textarea class="form__text-input" id="about" name="about" rows="4"></textarea>
 						<div class="form__input">
 							<input id="subscribe" type="checkbox" name="subscribe" value="true" checked>
-							<div class="form__input"><input id="stock" type="checkbox" name="In stock" value="true" checked>
-							<label for="stock">In Stock</label></div>
+							<label for="subscribe">Подписка на рассылку</label>
 						</div>
 						<button class="form__button" type="submit">Сохранить</button>
 						<button class="form__button_danger" type="button">Удалить</button>
-						<button id="button-cancel" class="form__button" type="button">Отмена</button>
+						<button class="form__button" type="button">Отмена</button>
 					</form>
 				</div>
 			</div>
 			<div class="pusher end"></div>
 		</div>
 		<div class="footer">&copy; Интернет-магазин &laquo;Всякая всячина&raquo;</div>
-		<script type="text/javascript">
-			var buttonCancelHandler = function() {
-				var s = 'рама мыла маму';
-				for(var i = 4; i <= 7; i++) {
-					console.log(s + i);
-				}
-			};
-
-			var buttonCancel = document.getElementById('button-cancel');
-			if(buttonCancel) {
-				buttonCancel.onclick = buttonCancelHandler;
-				console.log('OK');
-			} else {
-				console.log('ERROR');
-			}
-		</script>
+		<script type="text/javascript" src="program.js"></script>
 	</body>
 </html>

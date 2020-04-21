@@ -4,6 +4,18 @@
 		<meta charset="UTF-8">
 		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
 		<link rel="stylesheet" href="main.css" type="text/css">
+		
+		<link rel="canonical" href="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta name="description" content="">
+		<meta name="robots" content="index,follow">
+		<meta name="keywords">
+		<link rel="icon" href= "favicon.ico" type="image/x-icon">
+ 		<meta property="og:title" content="" />
+		<meta property="og:description"	content="">
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="" />
+		<meta property="og:site_name" content="" /> 
 	</head>
 	<body>
 		<div class="wrapper">
@@ -86,6 +98,11 @@
 <!-- *********************************** -->
 <div class="categories">
 <form class="sform">
+       <label for="sort">Sort:</label>
+	   <select class="sform__text-input" id="sort" name="sort">
+	   <option value=1>Ascending price</option>
+	   <option value=2>Descending price</option>			              
+	   </select>			
     <label class="sform__label" for="material">Material:</label>
 		<select class="sform__text-input" id="material" name="Material" multiple>
 		    <option value="Natural leather">Natural leather</option>
@@ -150,40 +167,84 @@
 				</div>
 			</div>
 			<div class="main">
-				<div class="main-content">
-					<h1 class="page-title">Товары для дома</h1>
+				<div class="main-content">				     
+				     <div class="fleft"> 
+				      <h1 class="page-title">Товары для дома</h1>
+					 </div> 
+					 <div class="banner2"><img src="img/summershoes.png"></div>
+			 	    <div class="pusher end"></div>									
 					<div class="product">
 						<h3 class="product__title">Тарелка</h3>
 						<img class="product__photo" src="no-image.jpg">
 						<div class="product__price">$13,45</div>
 						<div class="product__description">Тарелка аллюминиевая с дырочкой. Немного помята.</div>
-						<a class="product__button-add" href="#">Добавить в корзину</a>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
 					</div>
 					<div class="product">
 						<h3 class="product__title">Цветочный горшок</h3>
 						<img class="product__photo" src="no-image.jpg">
 						<div class="product__price">$24,50</div>
 						<div class="product__description">Глиняный на 5&nbsp;л с подставкой.</div>
-						<a class="product__button-add" href="#">Добавить в корзину</a>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
 					</div>
 					<div class="product">
 						<h3 class="product__title">Щётка для обуви</h3>
 						<img class="product__photo" src="no-image.jpg">
 						<div class="product__price">$33,30</div>
 						<div class="product__description">Деревянная с икусственным коротким ворсом без ручки.</div>
-						<a class="product__button-add" href="#">Добавить в корзину</a>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
 					</div>
 					<div class="product">
 						<h3 class="product__title">Стиральный порошок</h3>
 						<img class="product__photo" src="no-image.jpg">
 						<div class="product__price">$59,99</div>
 						<div class="product__description">Большая упаковка 20&nbsp;кг для цветного белья. Подходит для использования в стиральных машинах. Даёт обильную пену даже при небольшом количестве порошка. Не рекомендуется для стирки шёлковых и хлопчатобумажных тканей.</div>
-						<a class="product__button-add" href="#">Добавить в корзину</a>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
+					</div>
+					<div class="product">
+						<h3 class="product__title">Стиральный порошок</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$59,99</div>
+						<div class="product__description">Большая упаковка 20&nbsp;кг для цветного белья. Подходит для использования в стиральных машинах. Даёт обильную пену даже при небольшом количестве порошка. Не рекомендуется для стирки шёлковых и хлопчатобумажных тканей.</div>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
+					</div>
+					<div class="product">
+						<h3 class="product__title">Стиральный порошок</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$59,99</div>
+						<div class="product__description">Большая упаковка 20&nbsp;кг для цветного белья. Подходит для использования в стиральных машинах. Даёт обильную пену даже при небольшом количестве порошка. Не рекомендуется для стирки шёлковых и хлопчатобумажных тканей.</div>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
+					</div>
+					<div class="product">
+						<h3 class="product__title">Стиральный порошок</h3>
+						<img class="product__photo" src="no-image.jpg">
+						<div class="product__price">$59,99</div>
+						<div class="product__description">Большая упаковка 20&nbsp;кг для цветного белья. Подходит для использования в стиральных машинах. Даёт обильную пену даже при небольшом количестве порошка. Не рекомендуется для стирки шёлковых и хлопчатобумажных тканей.</div>
+						<a class="product__button-add" href="item.html">Look</a>
+						<a class="product__button-add" href="#">To Cart</a>
 					</div>
 				</div>
 			</div>
-			<div class="pusher end"></div>
+			<div class="pusher end"></div>		
+			<div>  
+			 <ul class="main-menu">
+			 <li class="main-menu__item"><a class="main-menu__item_link" href="#">Tag1</a></li>
+			 <li class="main-menu__item"><a class="main-menu__item_link" href="#">Tag2</a></li>
+			 <li class="main-menu__item"><a class="main-menu__item_link" href="#">Tag3</a></li>
+			 <li class="main-menu__item"><a class="main-menu__item_link" href="#">Tag4</a></li>
+			 </ul>
+			</div>
+			<div class="pusher end"></div>						
 		</div>
-		<div class="footer">&copy; Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+		<div class="footer">
+		 &copy; Интернет-магазин &laquo;Всякая всячина&raquo;
+		 <div class="fright"><a href="sitemap.xml">Sitemap</a></div>
+		</div>
 	</body>
 </html>

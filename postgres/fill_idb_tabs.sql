@@ -40,7 +40,7 @@ INSERT INTO "category"
 ("id", "name"                           , "parentid") VALUES
 ---------------------------------------------------
 (   1, 'Special shoes'                  , 1          ),
-(   2, 'Men\'s shoes'                   , NULL       ),
+(   2, 'Men shoes'                   , NULL       ),
 (   3,         'Boots'                  , 2          ),
 (   4,         'Winter Boots'           , 2          ),
 (   5,         'Chelsea Boots'          , 2          ),
@@ -50,7 +50,7 @@ INSERT INTO "category"
 (   9,         'Sandals'                , 2          ),
 (  10,         'Slippers'               , 2          ),
 (  11,         'Sports Shoes'           , 2          ),
-(  12,  'Women\'s shoes'                , NULL       ),
+(  12,  'Women shoes'                , NULL       ),
 (  13,         'Boots'                  , 12         ),
 (  14,         'Sandals'                , 12         ),
 (  15,         'Slippers'               , 12         ),
@@ -87,8 +87,8 @@ INSERT INTO "classification"
 ("id", "name"                           , "parentid", "categoryid") VALUES
 ---------------------------------------------------
 (   1, 'Special shoes'                       , 1    , 1           ),
-(   2, 'Men\'s shoes'                        , 2    , 2           ),
-(   3, 'Women\'s shoes'                      , 3    , 12          ),
+(   2, 'Mens shoes'                        , 2    , 2           ),
+(   3, 'Womens shoes'                      , 3    , 12          ),
 (   4, 'Unisex shoes'                        , 4    , 24          ),
 (   5, 'Type'                                , NULL , NULL        ),
 (   6,         'Mens Boots'                  , 5    , 3           ),
@@ -221,6 +221,25 @@ INSERT INTO "items"
 -----------------------------------------------
 SELECT setval('items_id_seq', 6);
 --================================================================
+INSERT INTO "currency"
+---------------------------------------------------
+("id", "name"     , "rate" ) VALUES
+---------------------------------------------------
+(   1,   'USD'    ,    1    ),
+(   2,   'EUR'    ,    1.1  ),
+(   3,   'GBP'    ,    1.9  );
+-----------------------------------------------
+SELECT setval('currency_id_seq',3 );
+--================================================================
+INSERT INTO "country"
+---------------------------------------------------
+("id", "name"     , "currency" ) VALUES
+---------------------------------------------------
+(   1, 'USA'      , 1      ),
+(   2, 'Europe'   , 2      );
+-----------------------------------------------
+SELECT setval('country_id_seq',2 );
+--================================================================
 INSERT INTO "baseitem"
 ---------------------------------------------------
 ("id", "itemid" , "variantid" , "quantity"   ) VALUES
@@ -244,25 +263,6 @@ INSERT INTO "baseitem"
 -----------------------------------------------
 SELECT setval('baseitem_id_seq',16 );
 --================================================================
-INSERT INTO "currency"
----------------------------------------------------
-("id", "name"     , "rate" ) VALUES
----------------------------------------------------
-(   1,   'USD'    ,    1    ),
-(   2,   'EUR'    ,    1.1  ),
-(   2,   'GBP'    ,    1.9  );
------------------------------------------------
-SELECT setval('country_id_seq',2 );
---================================================================
-INSERT INTO "country"
----------------------------------------------------
-("id", "name"     , "currency" ) VALUES
----------------------------------------------------
-(   1, 'USA'      , 1      ),
-(   2, 'Europe'   , 2      );
------------------------------------------------
-SELECT setval('country_id_seq',2 );
---================================================================
 INSERT INTO "client"
 ---------------------------------------------------
 ("id","countryid",  "address"  ,"creationdate","userid","bonuspoints","phoneno",
@@ -277,7 +277,7 @@ SELECT setval('client_id_seq',2 );
 --================================================================
 INSERT INTO "orders"
 ---------------------------------------------------
-("id","number","date"                   ,"dateexpired","baseitemid","customerid","quantity","sum",
+("id","number","datetime"        ,"dateexpired","baseitemid","customerid","quantity","sum",
  "currencyid","ordertype" ,"active"  ,"statussold") VALUES
 ---------------------------------------------------
 (1 ,1  ,  '2019-12-07 14:30:00'  ,'2019-12-12' ,   1         , 1         , 1        , 60  ,
@@ -315,7 +315,7 @@ SELECT setval('webpages_id_seq',3 );
 --================================================================
 INSERT INTO "sale"
 ---------------------------------------------------
-("id","date"                 ,"orderid","return","currencyid") VALUES
+("id","datetime"                 ,"orderid","return","currencyid") VALUES
 ---------------------------------------------------
 (1   , '2018-12-07 14:30:00' , 1       , FALSE  ,1           ),
 (2   , '2018-12-07 14:30:00' , 2       , FALSE  ,1           ),

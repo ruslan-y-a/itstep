@@ -18,6 +18,7 @@ public class Commander {
 	public Commander() throws ClassNotFoundException {
 		Class.forName("org.postgresql.Driver");
 		this.PATH="jdbc:postgresql://localhost/";
+		 this.pass="root"; this.user="root";
 	}
 	public void Connect (String name,String user, String pass) throws SQLException {
 		try {

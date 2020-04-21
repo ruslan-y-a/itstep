@@ -28,7 +28,7 @@ CREATE TABLE "items" (
 	"articul" VARCHAR(20) NOT NULL, 
 	"model" VARCHAR(20) NOT NULL,
 	"categoryid" INTEGER[] NOT NULL,
-	"baseprice" MONEY NOT NULL,
+	"baseprice" BIGINT NOT NULL,
 	"discount" INTEGER NULL,
 	"title" VARCHAR(150) NULL,
 	"text" TEXT NULL,
@@ -60,12 +60,12 @@ CREATE TABLE "country" (
 DROP TABLE IF EXISTS "baseitem";
 CREATE TABLE "baseitem" (
 	"id" SERIAL PRIMARY KEY,
-	"itemid" INTEGER NOT NULL REFERENCES "items" ON DELETE CASCADE ON UPDATE	CASCADE,
+	"itemid" INTEGER NOT NULL REFERENCES "items" ON DELETE CASCADE ON UPDATE CASCADE,
 	"variantid" INTEGER[] NOT NULL,
 	"name" VARCHAR(20) NULL UNIQUE,
 	"quantity" INTEGER NOT NULL,
 	"baseprice" BIGINT NULL,
-    "currency" INTEGER NOT NULL DEFAULT 1 REFERENCES "country" ON DELETE CASCADE ON UPDATE	CASCAD,
+    "currency" INTEGER NOT NULL DEFAULT 1 REFERENCES "currency" ON DELETE CASCADE ON UPDATE	CASCADE,
 	UNIQUE ("itemid", "variantid")                                                                               
 );
 -------------------------------------
@@ -107,17 +107,17 @@ DROP TABLE IF EXISTS "orders";
 CREATE TABLE "orders" (
 	"id" SERIAL PRIMARY KEY,
 	"number" INTEGER NOT NULL,
-	"date" TIMESTAMP NOT NULL,
+	"datetime" TIMESTAMP NOT NULL,
 	"dateexpired" DATE NOT NULL,
 	"baseitemid" INTEGER NOT NULL REFERENCES "baseitem" ON DELETE RESTRICT ON UPDATE RESTRICT,
 	"customerid" INTEGER NOT NULL REFERENCES "client" ON DELETE RESTRICT ON UPDATE CASCADE,
 	"quantity" INTEGER NOT NULL,
-	"sum" MONEY NOT NULL,
+	"sum" BIGINT NOT NULL,
 	"currencyid" INTEGER NOT NULL REFERENCES "country" ON DELETE RESTRICT ON UPDATE RESTRICT,
 	"ordertype" INTEGER NOT NULL DEFAULT 1,
     "active" BOOLEAN NOT NULL DEFAULT TRUE, 
-	"statussold" BOOLEAN NOT NULL DEFAULT FALSE
-	CHECK ("dateexpired" > "date")
+	"statussold" BOOLEAN NOT NULL DEFAULT FALSE,
+	CHECK ("dateexpired" > "datetime")
 );
 -------------------------------------------------------------------------
 DROP TABLE IF EXISTS "tagcloud";
@@ -150,7 +150,7 @@ CREATE TABLE "webpages" (
 DROP TABLE IF EXISTS "sale";
 CREATE TABLE "sale" (
 	"id" SERIAL PRIMARY KEY,
-	"date" TIMESTAMP NOT NULL,
+	"datetime" TIMESTAMP NOT NULL,
 	"orderid" INTEGER NOT NULL REFERENCES "orders" ON DELETE RESTRICT ON UPDATE CASCADE,	
     "return" BOOLEAN NOT NULL DEFAULT FALSE,
     "currencyid" INTEGER NOT NULL REFERENCES "country" ON DELETE RESTRICT ON UPDATE RESTRICT

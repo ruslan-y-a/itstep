@@ -2,7 +2,10 @@ package tabs;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import postgres.DaoException;
 import sqlSetGet.SqlGetter;
@@ -29,15 +32,16 @@ abstract public class Entity implements absEntity{
 		  Object o = entityValues.get(columnName);
 		  sqlSetter.sqlSet(s, i, o);            
 	  }
+	  public void setToTab (PreparedStatement s, Integer i,String columnName,String value) throws DaoException {	
+		  SqlSetter sqlSetter = tabSetter.get(columnName);         		  
+		  sqlSetter.sqlSet(s, i, value);            
+	  }
 	  @Override
-	  public void getFromTab (ResultSet r, String columnName) throws DaoException {		  
-		  SqlGetter sqlGetter = tabGetter.get(columnName);			   
-		  entityValues.put(columnName, sqlGetter.sqlGet(r, columnName));
-	  }	 
 	  public void getNameFromTab (ResultSet r, String columnName) throws DaoException {		  
 		  SqlGetter sqlGetter = tabGetter.get(columnName);			   
 		  entityValues.put(columnName, sqlGetter.sqlGet(r, columnName));
-		  this.cast(columnName); 
+		 try { this.cast(columnName);}
+		 catch(NullPointerException e) {}
 	  }  
 	  
 	  @Override
@@ -53,8 +57,11 @@ abstract public class Entity implements absEntity{
 	public HashMap<String, Object> getEntityValues() {
 		return entityValues;
 	}
+	public List<Object> getEntityValuesList() {
+		return (List<Object>)entityValues.values();
+	}
 
-	public void put(String s,Object o) {
+	public void put(String s,Object o) throws DaoException {
 		entityValues.put(s, o);	
 	}
 	
@@ -77,15 +84,6 @@ abstract public class Entity implements absEntity{
 		 return "\"" + DBName +"\"";
 	  }
 	  
-	  public String fieldsToSql(String[] args) {		  
-		  if (args.length==0) return "";
-		  StringBuilder ss = new StringBuilder(); 
-		  ss.append("\"" + args[0] +"\"");
-		  for (int i=1;i<args.length;i++) {
-			  ss.append(", " + "\"" + args[i] +"\""); 		  
-		  }	  
-		  return ss.toString();
-	  }
 	  public String fieldsToSql(String[] args, boolean check) {		  
 		  if (args.length==0) return "";
 		  StringBuilder ss = new StringBuilder(); 
@@ -105,35 +103,26 @@ abstract public class Entity implements absEntity{
 		  return ss.toString();
 	  }
 	  public String fieldsToSql() {		  
-		  String[] args=this.getFieldsList();
-		  if (args.length==0) return "";
+		  String[] args=this.getFieldsList();		  
 		  StringBuilder ss = new StringBuilder(); 
 		  ss.append("\"" + args[0] +"\"");
 		  for (int i=1;i<args.length;i++) {
 			  ss.append(", " + "\"" + args[i] +"\""); 		  
 		  }	  
 		  return ss.toString();
-	  }
+	  }	
 	  public String fieldsToSql(boolean check) {		  
-		  String[] args=this.getFieldsList();
-		  if (args.length==0) return "";
+		  String[] args=this.getFieldsList();		  
 		  StringBuilder ss = new StringBuilder(); 
-		  if (check) {
-			  if (entityValues.get(args[0])!=null) {   
-				  ss.append("\"" + args[0] +"\"");}
-	       } else {  
-		   ss.append("\"" + args[0] +"\"");}
-		  
-		  for (int i=1;i<args.length;i++) {
-			  if (check) {
-				  if (entityValues.get(args[i])!=null) {
-			         ss.append(", " + "\"" + args[i] +"\"");}
-			} else {	  
-				ss.append(", " + "\"" + args[i] +"\"");}   		  
+		  boolean bf=true;
+		  for (int i=0;i<args.length;i++) {
+			if (entityValues.get(args[i])!=null) {
+			  if (bf) {ss.append("\"" + args[i] +"\"");bf=false;}
+			  else {ss.append(", " + "\"" + args[i] +"\"");}
+			}  
 		  }	  
 		  return ss.toString();
-	  }
-	  
+	  }	
 	  public String numArgsToSql(boolean check) {		 
 		  StringBuilder ss = new StringBuilder(); 		
 		 
@@ -159,24 +148,14 @@ abstract public class Entity implements absEntity{
 	  }
 	  public String numArgsToSql() {
 		  int nargs=entityValues.size();
-		  if (nargs==0) return "";
-		  StringBuilder ss = new StringBuilder(); 
-		  ss.append("?");
-		  for (int i=1;i<=nargs;i++) {
+		  StringBuilder ss = new StringBuilder(); 		
+		  ss.append("?" ); 
+		  for (int i=1;i<nargs;i++) {
 			  ss.append(", ?" ); 		  
 		  }	  
 		  return ss.toString();
 	  }
 	  
-	  public String numArgsToSql(int nargs) {
-		  if (nargs==0) return "";
-		  StringBuilder ss = new StringBuilder(); 
-		  ss.append("?");
-		  for (int i=1;i<=nargs;i++) {
-			  ss.append(", ?" );}
-		  
-		  return ss.toString();
-	  }
 	  
 	  public Integer getSize() {
 		  return entityValues.size();
@@ -184,6 +163,17 @@ abstract public class Entity implements absEntity{
 	  
 	  public String[] getFieldsList() {
 			 return entityValues.keySet().toArray(new String[this.getSize()]);	
+		  }
+	  public String[] getFieldsList(boolean chnull) {
+		   if (chnull) {
+			 ArrayList<String> ar = new ArrayList<String>(); 
+			 for (Map.Entry<String,Object> entry: entityValues.entrySet()) {		
+				 if (entry.getValue()!=null) {
+					 ar.add(entry.getKey());} 
+			 }			   
+			 return ar.toArray(new String[this.getSize()]);  
+		   }
+		   return entityValues.keySet().toArray(new String[this.getSize()]);	
 		  }
 	
 }

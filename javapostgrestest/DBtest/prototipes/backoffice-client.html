@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin, Manager</div>				   				
+			</div>
+			<div class="main-content">			
+			
+				   <h2 class="page-title">Client</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">			
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">userid</th>
+							<th class="table__header">countryid</th>
+							<th class="table__header">address</th>							
+							<th class="table__header">phoneno</th>	
+							<th class="table__header">bonuspoints</th>
+							<th class="table__header">creationdate</th>													
+							<th class="table__header">Action</th>
+												
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tuserid">							                           
+		                       <select  multiple style="height:20px;">
+                                 <option value=5>Name1</option>		                         	                    
+		                       </select>	                		                  	
+							</td>							
+							<td class="table__cell" id="tcountryid">
+							   <select multiple style="height:20px;">
+                                 <option value=1>USA</option>		                         	                    
+		                       </select>	
+							</td>
+							<td class="table__cell" id="taddress">address1</td>
+							<td class="table__cell" id="tphoneno">+111(11) 123-45-67</td>
+							<td class="table__cell_numeric" id="tbonuspoints">0</td>																																															
+							<td class="table__cell" id="tcreationdate">2020.01.01</td>								
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+ 						    <td class="table__cell_numeric" id="tid">1</td>
+                            <td class="table__cell" id="tuserid">							                           
+		                       <select  multiple style="height:20px;">
+                                 <option value=5>Name1</option>		                         	                    
+		                       </select>	                		                  	
+							</td>							
+							<td class="table__cell" id="tcountryid">
+							   <select multiple style="height:20px;">
+                                 <option value=1>USA</option>		                         	                    
+		                       </select>	
+							</td>
+							<td class="table__cell" id="taddress">address1</td>
+							<td class="table__cell" id="tphoneno">+111(11) 123-45-67</td>
+							<td class="table__cell_numeric" id="tbonuspoints">0</td>																																															
+							<td class="table__cell" id="tcreationdate">2020.01.01</td>																																														
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+ 						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tuserid">							                           
+		                       <select  multiple style="height:20px;">
+                                 <option value=6>Name2</option>		                         	                    
+		                       </select>	                		                  	
+							</td>							
+							<td class="table__cell" id="tcountryid">
+							   <select multiple style="height:20px;">
+                                 <option value=3>GB</option>		                         	                    
+		                       </select>	
+							</td>	
+							<td class="table__cell" id="taddress">address1</td>
+							<td class="table__cell" id="tphoneno">+111(11) 123-45-67</td>	
+							<td class="table__cell_numeric" id="tbonuspoints">0</td>																																															
+							<td class="table__cell" id="tcreationdate">2020.01.01</td>																																																						
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+  						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tuserid">							                           
+		                       <select  multiple style="height:20px;">
+                                 <option value=7>Name3</option>		                         	                    
+		                       </select>	                		                  	
+							</td>							
+							<td class="table__cell" id="tcountryid">
+							   <select multiple style="height:20px;">
+                                 <option value=4>Mexico</option>		                         	                    
+		                       </select>	
+							</td>	
+							<td class="table__cell" id="taddress">address1</td>
+							<td class="table__cell" id="tphoneno">+111(11) 123-45-67</td>
+							<td class="table__cell_numeric" id="tbonuspoints">0</td>																																															
+							<td class="table__cell" id="tcreationdate">2020.01.01</td>																																																							
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+   						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tuserid">							                           
+		                       <select  multiple style="height:20px;">
+                                 <option value=5>Name1</option>		                         	                    
+		                       </select>	                		                  	
+							</td>							
+							<td class="table__cell" id="tcountryid">
+							   <select multiple style="height:20px;">
+                                 <option value=2>Europe</option>		                         	                    
+		                       </select>	
+							</td>	
+							<td class="table__cell" id="taddress">address1</td>
+							<td class="table__cell" id="tphoneno">+111(11) 123-45-67</td>	
+							<td class="table__cell_numeric" id="tbonuspoints">0</td>																																															
+							<td class="table__cell" id="tcreationdate">2020.01.01</td>																																																						
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+					</table>
+				</div>	
+		
+				
+				<div>
+			        <form  action="save.html" style="width: 350px">
+			            <div style="display:block; margin-top:20px;"><strong>EDIT FORM</strong></div>
+			            <div style="display:block; float:left; margin-top:20px; margin-bottom:10px;">			             
+			              <label for="id">Client id:</label>
+			              <input style="width:50px;" id="id" type="number" name="id" value="1" readonly>			             	
+			            </div>			         
+			           <table class="table fleft">			           
+			            <tr>
+			                <th class="table__header">userid</th>
+							<th class="table__header">countryid</th>								
+							<th class="table__header">address1</th>	
+							<th class="table__header">phoneno</th>	
+							<th class="table__header">bonuspoints</th>													
+			            </tr>
+			            <tr>
+			            	<td class="table__cell">						     						   
+						       <select style="width:250px;" id="userid" name="userid" required>
+		                         <option value=5>Name1</option>
+		                         <option value=6>Name2</option>			                     
+			                     <option value=7>Name3</option>			                     			                     
+		                       </select>	
+							</td>
+							<td class="table__cell">						     						      
+						      <select style="width:100px;" id="countryid" name="countryid" required>
+		                         <option value=1>USA</option>
+		                         <option value=2>Europe</option>			                     
+			                     <option value=3>GB</option>
+			                     <option value=4>Mexico</option>				                     			                     
+		                       </select>		
+							</td>								
+							<td class="table__cell">                              
+						      <input style="width:200px;" id="address" type="text" name="address" value="" required>	
+                            </td>
+							<td class="table__cell">							  
+						      <input style="width:150px;" id="phoneno" type="tel" name="phoneno" value="">	
+							</td>
+							<td class="table__cell">							
+						      <input style="width:70px;" id="bonuspoints" type="number" name="bonuspoints" value="0">								
+							</td>																			  			          										   					  													   					  								
+ 					  </table>			
+	
+			          <table class="table">
+			            <tr>						
+							<th class="table__header">basket</th>
+							<th class="table__header">orders</th>
+							<th class="table__header">sales</th>
+							<th class="table__header">recentitems</th>
+			            </tr>
+			            <tr>                          
+						<td  class="table__cell" >													      	
+						       <select style="width:100px;" id="basket"  multiple>
+		                         <option value=1>01505_01</option>
+		                         <option value=2>37284903</option>
+			                     <option value=3>37112005</option>
+		                       </select>								
+							</td>	
+							<td  class="table__cell" >													      	
+						       <select style="width:200px;" id="orders"  multiple>
+		                         <option value=1>№1 2020.01.01</option>
+		                         <option value=2>№2 2020.02.01</option>
+			                     <option value=3>№3 2020.04.01</option>			                     
+		                       </select>								
+							</td>		
+							<td  class="table__cell" >													      	
+						        <select style="width:200px;" id="orders" multiple>
+		                         <option value=1>№1 2020.01.01</option>
+		                         <option value=2>№2 2020.02.01</option>
+			                     <option value=3>№3 2020.04.01</option>			                     
+		                       </select>									
+							</td>
+					      <td  class="table__cell" >
+ 					         <select style="width:200px;" id="orders"  multiple>
+		                         <option value=1>01505_01</option>
+		                         <option value=3>37284903</option>
+			                     <option value=5>37112005</option>			                     
+		                       </select>		
+ 					      </td>																										
+						</tr>								  			          										   					  													   					  								
+ 					  </table>						
+ 					   						
+						<button class="form__button" type="submit">Save</button>
+						<button class="form__button_danger" type="button">Delete</button>
+						<button class="form__button" type="reset">Cancel</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">          
+          document.querySelector('#table').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {        	
+        			Edit(e.target);
+        	     }         	          	          	          			
+        	  });                   
+                     
+          function Edit(e){        	  
+        	  var pnode = e.parentNode.parentNode;        
+        	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+        	  var id= pnode.childNodes[1].innerHTML; 
+        	  var list11 = pnode.childNodes[3];
+        	  list11=list11.childNodes[1];
+        	  
+        	  var list12 = pnode.childNodes[5]; //model  
+        	  list12=list12.childNodes[1];
+        	  
+        	  var address = pnode.childNodes[7].innerHTML; //discount
+        	  var phoneno = pnode.childNodes[9].innerHTML; //name
+        	  var bonuspoints = pnode.childNodes[11].innerHTML; //name  
+         	  
+        	  document.getElementById('id').value = id;
+        	 
+        	  document.getElementById('address').value = address;
+        	  document.getElementById('phoneno').value =phoneno; 
+        	  document.getElementById('bonuspoints').value = bonuspoints; 
+        	          	 
+             var list21=document.getElementById('userid');
+             var list22=document.getElementById('countryid');
+                     	   
+        	 for (var j=0, m=list21.options.length;j<m;j++) {     			  
+     				list21.options[j].selected=false;}
+        	 for (var j=0, m=list22.options.length;j<m;j++) {     			  
+  				list22.options[j].selected=false;}
+        	  
+        	 for (var i=0, n=list21.options.length;i<n;i++) { // looping over the options
+        			for (var j=0, m=list11.options.length;j<m;j++) {
+        			   if (list21.options[i].value==list11.options[j].value) {
+        				list21.options[i].selected=true; continue;
+        			   }  				           			   
+        			}
+               } 
+        	  	
+        	 for (var i=0, n=list22.options.length;i<n;i++) { // looping over the options
+     			for (var j=0, m=list12.options.length;j<m;j++) {
+     			   if (list22.options[i].value==list12.options[j].value) {
+     				list22.options[i].selected=true; continue;
+     			   }  				           			   
+     			}
+            }
+        	  
+          }
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

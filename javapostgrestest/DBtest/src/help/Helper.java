@@ -3,10 +3,11 @@ package help;
 //import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public class Helper {
+public class Helper {	
 	
 	public static String intArrayToString(Integer[] i) {
 	   StringBuilder sb=new StringBuilder(); 
+	   if (i==null) return null;
 	   if (i.length>0) {sb.append(i[0]);}	
 	   for (int j=1;j<i.length;j++) {sb.append(new String(", " + i[j]));}
 	   return sb.toString();
@@ -19,6 +20,7 @@ public class Helper {
 		}
 	
 	public static Integer[] objToIntArray(Object o) {		
+        if (o == null ) return null;
 		String ss0= new String(o.toString().split("=")[1].substring(1));
 		String[] ss=ss0.substring(0,ss0.length()-1).split(",");
 		ArrayList<Integer> ali = new ArrayList<Integer>();
@@ -32,8 +34,11 @@ public class Helper {
 		return ali.toArray(new Integer[ali.size()]);
 	}
 	public static Long[] objToLongArray(Object o) {
-		String ss0= new String(o.toString().split("=")[1].substring(1));
-		String[] ss=ss0.substring(0,ss0.length()-1).split(",");
+		if (o==null) {return null;}
+		String ss0=new String(o.toString());
+		if (ss0.indexOf('=')>=0) {
+		ss0= new String(o.toString().split("=")[1].substring(1));}		
+		String[] ss=ss0.substring(1,ss0.length()-1).split(",");
 		ArrayList<Long> ali = new ArrayList<Long>();
 		int i=-1;
 		try {

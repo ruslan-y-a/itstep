@@ -19,13 +19,38 @@ public class DBServiceImpl implements DBService {
   
   /*===============================================================*/
   /*===============================================================*/
-  public List<Entity> readAll(String dbName) throws LogicException {
+  public List<Entity> read(String dbName) throws LogicException {
 		try {
 			List<Entity> entities = dbDao.read(dbName);
-			for(Entity entity : entities) {
-				
-			}
 			return entities;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+  public List<Entity> categoryListing(Long idCategotes[]) throws LogicException {
+		try {
+			Long[] ids = dbDao.readIDOr("itemcatgory","classification",idCategotes);
+		//	Long[] idsT = dbDao.readIDToArray("tagcloud","classification",idCategotes);	
+		//	List<Entity> tags = dbDao.read("tagurl","id", idsT);
+			List<Entity> entities = dbDao.read("items","id", ids);
+			return entities;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+    public List<Entity> tagList(Long idCategotes[]) throws LogicException {
+		try {			
+			Long[] idsT = dbDao.readIDOr("tagcloud","classification",idCategotes);	
+			List<Entity> tags = dbDao.read("tagurl","id", idsT);			
+			return tags;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+    public List<Entity> imgList(Long idItem) throws LogicException {
+		try {						
+			List<Entity> imgs = dbDao.read("img","id", idItem);			
+			return imgs;
 		} catch(DaoException e) {
 			throw new LogicException(e);
 		}

@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 //import java.sql.PreparedStatement;
 //import java.sql.ResultSet;
 //import java.util.ArrayList;
-import java.util.HashMap;
+//import java.util.HashMap;
 
 import postgres.DaoException;
 //import help.Helper;
@@ -27,7 +27,7 @@ public class User extends Entity {
 	
   public User() {	  		  
     super("users");
-    entityValues = new HashMap<String,Object>();
+    //entityValues = new HashMap<String,Object>();
     entityValues.put("id", null);
     entityValues.put("name", null);
     entityValues.put("password", null);

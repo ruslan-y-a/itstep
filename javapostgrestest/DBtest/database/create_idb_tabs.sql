@@ -1,0 +1,177 @@
+﻿DROP TABLE IF EXISTS "color";
+CREATE TABLE "color" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL UNIQUE
+);
+DROP TABLE IF EXISTS "size";
+CREATE TABLE "size" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL UNIQUE
+);
+-------------------------------------------------------------------------
+DROP TABLE IF EXISTS "category";
+CREATE TABLE "category" (
+	"id" SERIAL PRIMARY KEY,
+	"parentid" INTEGER NULL REFERENCES "category" ON DELETE RESTRICT ON UPDATE CASCADE, 
+--	"longname" VARCHAR(100) NOT NULL,
+	"name" VARCHAR(50) NOT NULL	
+);
+-------------------------------------------------------------------------
+DROP TABLE IF EXISTS "classification";
+CREATE TABLE "classification" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(50) NOT NULL UNIQUE,	
+	"parentid" INTEGER NULL REFERENCES "classification" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"categoryid" INTEGER NULL REFERENCES "category" ON DELETE RESTRICT ON UPDATE CASCADE
+);
+--------------------------------------------------
+DROP TABLE IF EXISTS "tagurl";
+CREATE TABLE "tagurl" (
+	"id" SERIAL PRIMARY KEY,	
+    "tagname" VARCHAR(100),    
+	"url" VARCHAR(200) NULL UNIQUE
+);
+------------------------------------
+DROP TABLE IF EXISTS "tagcloud";
+CREATE TABLE "tagcloud" (
+	"id" SERIAL PRIMARY KEY,
+	"classification" INTEGER NOT NULL REFERENCES "classification" ON DELETE RESTRICT ON UPDATE CASCADE,
+    "tagurl" INTEGER NOT NULL REFERENCES "tagurl" ON DELETE RESTRICT ON UPDATE CASCADE   	
+);
+
+
+DROP TABLE IF EXISTS "items";
+CREATE TABLE "items" (
+	"id" SERIAL PRIMARY KEY,
+	"articul" VARCHAR(20) NOT NULL, 
+	"model" VARCHAR(20) NOT NULL,	
+	"baseprice" BIGINT NOT NULL,
+	"discount" INTEGER NULL,
+	"title" VARCHAR(150) NULL,
+	"text" TEXT NULL,
+	"name" VARCHAR(100) NULL,
+	"description" VARCHAR(250) NULL,	
+    "tagurl" INTEGER NULL REFERENCES "tagurl" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"keywords" VARCHAR(250) NULL,	
+	"mainimgurl" VARCHAR(250) NULL,
+	"url" VARCHAR(200) NULL UNIQUE
+);
+---------------------------------------
+DROP TABLE IF EXISTS "img";
+CREATE TABLE "img" (
+	"id" SERIAL PRIMARY KEY,	
+	"item" INTEGER NOT NULL REFERENCES "item" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"title"  VARCHAR(50) NULL, 	     
+	"alt"  VARCHAR(50) NULL,
+	"url"  VARCHAR(200) NOT NULL UNIQUE
+);
+DROP TABLE IF EXISTS "itemcatgory";
+--------------
+CREATE TABLE "itemcatgory" (
+	"id" SERIAL PRIMARY KEY,
+	"items" INTEGER NOT NULL REFERENCES "items" ON DELETE RESTRICT ON UPDATE CASCADE, 
+    "classification" INTEGER NOT NULL REFERENCES "classification" ON DELETE RESTRICT ON UPDATE CASCADE,
+	UNIQUE ("items", "classification")
+);
+-----------------------------------------
+DROP TABLE IF EXISTS "currency";
+CREATE TABLE "currency" (
+	"id" SERIAL PRIMARY KEY,	
+	"name"  VARCHAR(3) NOT NULL, 	     
+	"rate" REAL NOT NULL
+);
+DROP TABLE IF EXISTS "country";
+CREATE TABLE "country" (
+	"id" SERIAL PRIMARY KEY,	
+	"name"  VARCHAR(20) NOT NULL, 	 
+    "currency" INTEGER NOT NULL REFERENCES "currency" ON DELETE RESTRICT ON UPDATE RESTRICT	
+);
+--ALTER SEQUENCE "country_id_sequence" OWNED BY "country"."id";
+------------------------------------
+DROP TABLE IF EXISTS "baseitem";
+CREATE TABLE "baseitem" (
+	"id" SERIAL PRIMARY KEY,
+	"itemid" INTEGER NOT NULL REFERENCES "items" ON DELETE CASCADE ON UPDATE CASCADE,
+	"color" INTEGER NOT NULL REFERENCES "color" ON DELETE CASCADE ON UPDATE CASCADE,
+	"size" INTEGER NOT NULL REFERENCES "size" ON DELETE CASCADE ON UPDATE CASCADE,
+	"name" VARCHAR(20) NULL UNIQUE,
+	"quantity" INTEGER NULL,
+	"baseprice" BIGINT NULL,
+    "currency" INTEGER NOT NULL DEFAULT 1 REFERENCES "currency" ON DELETE CASCADE ON UPDATE	CASCADE,
+	UNIQUE ("itemid", "color", "size")                                                                            
+);
+-------------------------------------
+DROP TABLE IF EXISTS "users";
+CREATE TABLE "users" (
+	"id" SERIAL PRIMARY KEY,
+	"name" VARCHAR(100) NULL, 	
+	"password" CHAR(128) NOT NULL,
+    "email" VARCHAR(40) NOT NULL,
+	"roleid" SMALLINT NOT NULL CHECK ("roleid" IN (0, 1, 2, 3, 4))	
+	/*
+	 * 0 - ADMIN
+	 * 1 - CLIENT
+	 * 2 - PRODUCT MANAGER
+	 * 3 - MANAGER
+	 * 4 - CASHIER
+	 */
+);
+
+-------------------------------------------------------------------------
+DROP TABLE IF EXISTS "client";
+CREATE TABLE "client" (
+	"id" SERIAL PRIMARY KEY,
+--	"name" VARCHAR(100) NULL, 
+	"countryid" INTEGER NOT NULL REFERENCES "country" ON DELETE RESTRICT ON UPDATE RESTRICT,
+	"address" VARCHAR(150) NULL,
+	"creationdate" DATE NOT NULL DEFAULT CURRENT_DATE,	
+	"userid" INTEGER NOT NULL REFERENCES "users" ON DELETE CASCADE ON UPDATE CASCADE,
+	"bonuspoints" INTEGER NULL,
+	"phoneno" VARCHAR(30) NULL,
+	"recentitems" INTEGER[] NULL	
+);
+-------------------------------------------------------------------------
+--CREATE TYPE ordertype AS ENUM ('1-delivery to home', '2 - pickup', '3- delivery by post');
+DROP TABLE IF EXISTS "orders";
+CREATE TABLE "orders" (
+	"id" SERIAL PRIMARY KEY,
+	"number" INTEGER NOT NULL,
+	"datetime" TIMESTAMP NOT NULL,
+	"dateexpired" DATE NOT NULL,
+	"baseitemid" INTEGER NOT NULL REFERENCES "baseitem" ON DELETE RESTRICT ON UPDATE RESTRICT,
+	"customerid" INTEGER NOT NULL REFERENCES "client" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"quantity" INTEGER NOT NULL,
+	"sum" BIGINT NOT NULL,
+	"currencyid" INTEGER NOT NULL REFERENCES "country" ON DELETE RESTRICT ON UPDATE RESTRICT,
+	"ordertype" INTEGER NOT NULL DEFAULT 1,
+    "active" BOOLEAN NOT NULL DEFAULT TRUE, 
+	"status" INTEGER NOT NULL DEFAULT 0,
+	CHECK ("dateexpired" > "datetime")
+);
+-------------------------------------------------------------------------
+
+CREATE TYPE robotstype AS ENUM ('index,follow', 'noindex,nofollow', 'noindex,follow');
+DROP TABLE IF EXISTS "webpages";
+CREATE TABLE "webpages" (
+	"id" SERIAL PRIMARY KEY,
+	"url" VARCHAR(200) NULL UNIQUE, 
+	"title" VARCHAR(150) NULL UNIQUE,
+	"description" VARCHAR(250) NULL,
+	"keywords" VARCHAR(250) NULL,
+	"h1" VARCHAR(100) NULL UNIQUE,
+	"text" TEXT NULL,
+	"categoryid" INTEGER NULL REFERENCES "category" ON UPDATE CASCADE,	
+	"tagurl" INTEGER NULL REFERENCES "tagurl" ON UPDATE CASCADE,	
+	"robots" robotstype NOT NULL DEFAULT 'index,follow'
+);
+--------------------------------------------------------------------
+DROP TABLE IF EXISTS "sale";
+CREATE TABLE "sale" (
+	"id" SERIAL PRIMARY KEY,
+	"datetime" TIMESTAMP NOT NULL,
+	"orderid" INTEGER NOT NULL REFERENCES "orders" ON DELETE RESTRICT ON UPDATE CASCADE,	
+    "return" BOOLEAN NOT NULL DEFAULT FALSE,
+    "currencyid" INTEGER NOT NULL REFERENCES "country" ON DELETE RESTRICT ON UPDATE RESTRICT
+);
+-------------------------------------------------------------------------
+--INSERT INTO "country" ("id", "name", "currency","rate") VALUES (1, 'USA', 'usd',1)

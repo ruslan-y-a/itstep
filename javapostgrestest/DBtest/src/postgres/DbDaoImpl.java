@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import help.SqlHelp;
 import tabs.Entity;
 import tabs.Mapper;
 
@@ -28,10 +29,11 @@ public class DbDaoImpl implements DbDao {
 	//////////////////////////////////////////////////
 	//////////////////////////////////////////////////
 	public String sqlInsert(Entity entity,boolean check) {		
-		return "INSERT INTO \"" + entity.getDBName() + "\"(" + entity.fieldsToSql(check) +") VALUES (" + entity.numArgsToSql(check) + ")";		
+		return "INSERT INTO \"" + entity.getDBName() + "\" (" + entity.fieldsToSql(check) +") VALUES (" + entity.numArgsToSql(check) + ")";		
 	}
 	//////////////////////////////////////////////////
 	//////////////////////////////////////////////////
+	@Override
 	public Long create(Entity entity) throws DaoException {
 		//String sql = "INSERT INTO \"account\"(\"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\") VALUES (?, ?, ?, ?, ?)";
 		String sql = sqlInsert(entity,true);
@@ -57,7 +59,7 @@ public class DbDaoImpl implements DbDao {
 		}
 	}				
 
-//	@Override
+	@Override
 	public List<Entity> read(String name) throws DaoException {   //Long id
 		String sql="SELECT * FROM \"" + name + "\"";
 		List<Entity> list=new ArrayList<Entity>();
@@ -66,17 +68,18 @@ public class DbDaoImpl implements DbDao {
 		int ifields;
 		String columnName;
 		try {
-			Entity entity = mapper.getEntity(name);
+			Entity entity; // = mapper.getEntity(name);
 			s= c.createStatement();
 			r=s.executeQuery(sql);			
 			while(r.next()) {
+				entity = mapper.getEntity(name);
 				entity.setDBName(name);
 				ifields=r.getMetaData().getColumnCount();
 				 for(int i=0;i<ifields;i++) {
 					 columnName= r.getMetaData().getColumnName(i+1); // getColumnClassName(i+1);
-					 entity.getFromTab(r, columnName);					
+					 entity.getNameFromTab(r, columnName);					
 			      }   									
-				list.add(entity);				
+				list.add(entity);					
 			}
 			return list;
 		} catch(SQLException e) {
@@ -86,9 +89,9 @@ public class DbDaoImpl implements DbDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}	
-		
+	@Override	
 	public Entity read(String name,long id) throws DaoException {   //Long id
-		//String sql="SELECT  \"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\" FROM \"account\" WHERE \"id\" = ?";
+		//String sql="SELECT* FROM \"" + name + "\" WHERE \"id\" = ?";";
 		String sql="SELECT * FROM \"" + name + "\" WHERE \"id\" = ?";
 		PreparedStatement s = null;
 		ResultSet r = null;		
@@ -104,7 +107,7 @@ public class DbDaoImpl implements DbDao {
 			  ifields=r.getMetaData().getColumnCount();
 			  for(int i=0;i<ifields;i++) {
 				 columnName= r.getMetaData().getColumnName(i+1);
-				 entity.getFromTab(r, columnName);					
+				 entity.getNameFromTab(r, columnName);					
 		       }
 			 }  
 			return entity;
@@ -115,9 +118,9 @@ public class DbDaoImpl implements DbDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}
-	
-	public Entity read(String name, String field, Object fValue) throws DaoException {   //Long id
-		//String sql="SELECT  \"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\" FROM \"account\" WHERE \"id\" = ?";
+	@Override
+	public List<Entity> read(String name, String field, Object fValue) throws DaoException {   //Long id
+		//String sql="SELECT FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
 		String sql="SELECT * FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
 		PreparedStatement s = null;
 		ResultSet r = null;		
@@ -125,18 +128,21 @@ public class DbDaoImpl implements DbDao {
 		String columnName;
 		try {
 			s = c.prepareStatement(sql);
-			Entity entity = mapper.getEntity(name);
-			entity.setDBName(name);
+			List<Entity> entities=new ArrayList<Entity>();
+			Entity entity = mapper.getEntity(name);			
 			entity.setForSelect(s, 1, field, fValue);			
 			r = s.executeQuery();				
-			if(r.next()) {			
+			while(r.next()) {			  		
+			  entity.setDBName(name);
 			  ifields=r.getMetaData().getColumnCount();
 			  for(int i=0;i<ifields;i++) {
 				 columnName= r.getMetaData().getColumnName(i+1);
-				 entity.getFromTab(r, columnName);					
-		       }
+				 entity.getNameFromTab(r, columnName);					
+		       }			  
+			  entities.add(entity);
+			  entity = mapper.getEntity(name);			 
 			 }  
-			return entity;
+			return entities;
 		} catch(SQLException e) {
 			throw new DaoException(e);
 		} finally {
@@ -144,17 +150,386 @@ public class DbDaoImpl implements DbDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}
-
+	
+	@Override
+	public List<Entity> read(String name, String[] field, Object[] fValue) throws DaoException {   //Long id
+		//String sql="SELECT FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);
+		int flength=field.length;
+		if (flength!=fValue.length) {
+			System.out.println("the amount of fields is not equal to the amount of values");
+			throw new DaoException("the amount of fields is not equal to the amount of values");
+		}	
+		String sql="SELECT * FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);		
+		PreparedStatement s = null;
+		ResultSet r = null;		
+		int ifields;
+		String columnName;
+		try {
+			s = c.prepareStatement(sql);
+			List<Entity> entities=new ArrayList<Entity>();
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<field.length;i++) {
+				entity.setForSelect(s, i+1, field[i], fValue[i]);}
+		   			
+			r = s.executeQuery();				
+			while(r.next()) {		
+		      
+			  entity.setDBName(name);
+			  ifields=r.getMetaData().getColumnCount();
+			  for(int i=0;i<ifields;i++) {
+				 columnName= r.getMetaData().getColumnName(i+1);
+				 entity.getNameFromTab(r, columnName);					
+		       }
+			  entities.add(entity);
+			  entity = mapper.getEntity(name);	
+			 }  
+			return entities;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	
+	@Override
+	public List<Entity> read(String name, String field, Object[] fValue) throws DaoException {   //Long id
+		//String sql="SELECT FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);
+		int ifields =fValue.length;
+		String sql="SELECT * FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereOrEquals(field,ifields);		
+		PreparedStatement s = null;
+		ResultSet r = null;		
+		
+		String columnName;
+		try {
+			s = c.prepareStatement(sql);
+			List<Entity> entities=new ArrayList<Entity>();
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<ifields;i++) {
+				entity.setForSelect(s, i+1, field, fValue[i]);}
+		   			
+			r = s.executeQuery();				
+			while(r.next()) {		
+		      
+			  entity.setDBName(name);
+			  ifields=r.getMetaData().getColumnCount();
+			  for(int i=0;i<ifields;i++) {
+				 columnName= r.getMetaData().getColumnName(i+1);
+				 entity.getNameFromTab(r, columnName);					
+		       }
+			  entities.add(entity);
+			  entity = mapper.getEntity(name);	
+			 }  
+			return entities;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	
+	@Override
+	public Long[] readID(String name, String field, Object fValue) throws DaoException {   //Long id
+		//String sql="SELECT FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
+		String sql="SELECT * FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
+		PreparedStatement s = null;
+		ResultSet r = null;		
+		try {
+			s = c.prepareStatement(sql);
+			ArrayList<Long> entities=new ArrayList<Long>();
+			Entity entity = mapper.getEntity(name);			
+			entity.setForSelect(s, 1, field, fValue);			
+			
+			r = s.executeQuery();				
+			while(r.next()) {				      			  
+				  entities.add(r.getLong("id"));}
+			
+			Long[] array  = new Long[entities.size()];
+			for (int i=0;i<entities.size();i++) {
+				array[i]=entities.get(i);}
+			
+			return array;
+			
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	
+	public Long[] readIDAnd(String name, String field, Object[] fValue) throws DaoException {   //Long id
+		//String sql="SELECT FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);
+		int ifields =fValue.length;
+		String sql="SELECT * FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereOrEquals(field,ifields);		
+		PreparedStatement s = null;
+		ResultSet r = null;		
+		
+		try {
+			s = c.prepareStatement(sql);
+			ArrayList<Long> entities=new ArrayList<Long>();
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<ifields;i++) {
+				entity.setForSelect(s, i+1, field, fValue[i]);}
+		   			
+			r = s.executeQuery();				
+			while(r.next()) {				      			  
+			  entities.add(r.getLong("id"));}
+			
+			Long[] array  = new Long[entities.size()];
+			for (int i=0;i<entities.size();i++) {
+				array[i]=entities.get(i);}
+			
+			return array;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	
+	public Long[] readIDOr(String name, String field, Object[] fValue) throws DaoException {   //Long id
+		//String sql="SELECT FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);
+		int ifields =fValue.length;
+		String sql="SELECT * FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereOrEquals(field,ifields);		
+		PreparedStatement s = null;
+		ResultSet r = null;		
+		
+		try {
+			s = c.prepareStatement(sql);
+			ArrayList<Long> entities=new ArrayList<Long>();
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<ifields;i++) {
+				entity.setForSelect(s, i+1, field, fValue[i]);}
+		   			
+			r = s.executeQuery();				
+			while(r.next()) {				      			  
+			  entities.add(r.getLong("id"));}
+			
+			Long[] array  = new Long[entities.size()];
+			for (int i=0;i<entities.size();i++) {
+				array[i]=entities.get(i);}
+			
+			return array;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	
+	@Override
+	public List<Entity> read(String name, String[] field, Number[] fValue, byte[] signs) throws DaoException {   //Long id
+		//String sql="SELECT  \"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\" FROM \"account\" WHERE \"id\" = ?";
+		int flength=field.length;
+		if (flength!=fValue.length) {
+			System.out.println("the amount of fields is not equal to the amount of values");
+			throw new DaoException("the amount of fields is not equal to the amount of values");
+		}
+		PreparedStatement s = null;
+		ResultSet r = null;	
+		try {
+		String sql="SELECT * FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAnd(field,signs);	
+		int ifields;
+		String columnName;
+		
+			s = c.prepareStatement(sql);
+			List<Entity> entities=new ArrayList<Entity>();
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<field.length;i++) {
+				entity.setForSelect(s, i+1, field[i], fValue[i]);}
+		   			
+			r = s.executeQuery();				
+			while(r.next()) {				      
+			  entity.setDBName(name);
+			  ifields=r.getMetaData().getColumnCount();
+			  for(int i=0;i<ifields;i++) {
+				 columnName= r.getMetaData().getColumnName(i+1);
+				 entity.getNameFromTab(r, columnName);					
+		       }
+			  entities.add(entity);
+			  entity = mapper.getEntity(name);	
+			 }  
+			return entities;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} catch(Exception f) {
+			throw new DaoException(f);
+		}finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	@Override
+	public void update(String name, String field, Object fValue, String tfield, Object tValue) throws DaoException {
+	//String str="UPDATE + field + SET  \"balance\" = ?, \"typeid\" = ?, \"lastsumm\" = ?, \"date\" = ?, \"id\" = ? WHERE \"number\" = ?";
+		PreparedStatement s = null;		
+		try {
+		String sql="UPDATE \""+ name +"\" SET \"" + field + "\" = ? WHERE \"" + tfield + "\"= ?";	
+	
+			s = c.prepareStatement(sql);		
+			Entity entity = mapper.getEntity(name);			
+			entity.setForSelect(s, 1, field, fValue);
+			entity.setForSelect(s, 2, tfield, tValue);
+			s.executeUpdate();				
+		
+		} catch(SQLException e) {
+			throw new DaoException(e);	
+		}finally {		
+			try { s.close(); } catch(Exception e) {}
+		}
+		
+	}
+	@Override
+	public void update(String name, String field[], Object fValue[], String tfield[], Object tValue[]) throws DaoException {
+		int flength=field.length;
+		if (flength!=fValue.length) {
+			System.out.println("the amount of fields is not equal to the amount of values");
+			throw new DaoException("the amount of fields is not equal to the amount of values");
+		}
+		int tlength=tfield.length;
+		if (tlength!=tValue.length) {
+			System.out.println("the amount of fields is not equal to the amount of values");
+			throw new DaoException("the amount of fields is not equal to the amount of values");
+		}
+		PreparedStatement s = null;		
+		try {
+		String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(field) + " WHERE " + SqlHelp.sqlWhereAndEquals(tfield);		
+			s = c.prepareStatement(sql);					
+			int ifields=0;					
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<flength;i++) {
+					entity.setForSelect(s, ++ifields, field[i], fValue[i]);
+			}
+			for (int i=0;i<tlength;i++) {
+				entity.setForSelect(s, ++ifields, tfield[i], tValue[i]);
+		   }
+			
+			s.executeUpdate();				
+		
+		} catch(SQLException e) {
+			throw new DaoException(e);	
+		}finally {		
+			try { s.close(); } catch(Exception e) {}
+		}
+		
+	}
+	
 	@Override
 	public void update(Entity entity) throws DaoException {
+		String name = entity.getDBName();
+		PreparedStatement s = null;		
+		String field;
+		Object fValue;
+		int counter=0;
+		try {
+			
+			String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(entity.getFieldsList()) +" WHERE id=?";
+			s = c.prepareStatement(sql);	
+			for (Map.Entry<String,Object> entry: entity.getEntityValues().entrySet()) {				
+				fValue =  entry.getValue();
+			//	if (fValue==null) {continue;}
+				   field = entry.getKey();
+				   entity.setForSelect(s, ++counter, field, fValue);				   	
+		    }						
+															
+			s.executeUpdate();				
+		
+		} catch(SQLException e) {
+			throw new DaoException(e);	
+		}finally {		
+			try { s.close(); } catch(Exception e) {}
+		}
+		
+	}
+	@Override
+	public void update(Entity entity, boolean chnull) throws DaoException {
+		String name = entity.getDBName();
+		PreparedStatement s = null;		
+		String field;
+		Object fValue;
+		int counter=0;
+		try {
+			
+			String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(entity.getFieldsList(chnull)) +" WHERE id=?";
+			s = c.prepareStatement(sql);	
+			for (Map.Entry<String,Object> entry: entity.getEntityValues().entrySet()) {				
+				fValue =  entry.getValue();
+				if (chnull && fValue==null) {continue;}
+				   field = entry.getKey();
+				   entity.setForSelect(s, ++counter, field, fValue);				   	
+		    }						
+															
+			s.executeUpdate();				
+		
+		} catch(SQLException e) {
+			throw new DaoException(e);	
+		}finally {		
+			try { s.close(); } catch(Exception e) {}
+		}
 		
 	}
 	
 	@Override
 	public boolean delete(String name, Long id) throws DaoException {
-		// TODO Auto-generated method stub
-		return false;
+		String sql="DELETE FROM \"" + name + "\" WHERE \"id\" = ?";		
+		PreparedStatement s = null;
+		//Boolean res=false;
+		try {
+			s = c.prepareStatement(sql);
+			s.setLong(1, id);
+			s.executeUpdate();			
+			return true;
+		  } catch(SQLException e) { 
+			return false;			
+		 } finally {
+			try { s.close(); } catch(Exception e) {}			
+		 }
 	}
+	@Override
+	public boolean delete(String name,  String field, Object fValue) throws DaoException {
+		String sql="DELETE FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
+	//	String sql="DELETE FROM \"" + name + "\" WHERE \"id\" = ?";		
+		PreparedStatement s = null;
+		try {
+			s = c.prepareStatement(sql);
+			Entity entity = mapper.getEntity(name);			
+			entity.setForSelect(s, 1, field, fValue);			
+			s.executeUpdate();			
+			return true;
+		  } catch(SQLException e) { 
+			return false;			
+		 } finally {
+			try { s.close(); } catch(Exception e) {}			
+		 }
+	}
+	@Override
+	public boolean delete(String name,  String[] field, Object[] fValue) throws DaoException {
+		int flength=field.length;
+		if (flength!=fValue.length) {
+			System.out.println("the amount of fields is not equal to the amount of values");
+			throw new DaoException("the amount of fields is not equal to the amount of values");
+		}	
+		String sql="DELETE FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);		
+		PreparedStatement s = null;
+		try {
+			s = c.prepareStatement(sql);			
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<field.length;i++) {
+				entity.setForSelect(s, i+1, field[i], fValue[i]);}
+			
+			s.executeUpdate();			
+			return true;
+		  } catch(SQLException e) { 
+			return false;			
+		 } finally {
+			try { s.close(); } catch(Exception e) {}			
+		 }
+	}
+
 	
 	/*	
 	@Override

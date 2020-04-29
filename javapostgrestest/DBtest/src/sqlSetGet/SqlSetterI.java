@@ -16,6 +16,15 @@ public class SqlSetterI implements SqlSetter{
 		 }
 	}
 	
+	@Override
+	public void sqlSet(PreparedStatement s, Integer i, String ss) throws DaoException {
+		 try {
+			s.setInt(i, Integer.parseInt(ss));
+		 } catch (SQLException e) {			
+			e.printStackTrace();
+			throw new DaoException("Error in saving " + ss);
+		 }
+	}
 }
 
 

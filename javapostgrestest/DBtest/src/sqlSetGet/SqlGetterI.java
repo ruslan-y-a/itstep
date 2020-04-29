@@ -9,7 +9,7 @@ public class SqlGetterI implements SqlGetter{
 	@Override
 	public Object sqlGet(ResultSet r,String name) throws DaoException {
 		 try {
-			return r.getInt(name);
+			return r.getInt(name); 
 		 } catch (SQLException e) {			
 			e.printStackTrace();
 			throw new DaoException("Error in getting " + name);

@@ -27,6 +27,11 @@ abstract public class Entity implements absEntity{
 	}
 
 	  @Override
+	  public void setToTab (PreparedStatement s, Integer i,String columnName, Object o) throws DaoException {	
+		  SqlSetter sqlSetter = tabSetter.get(columnName);         
+		  sqlSetter.sqlSet(s, i, o);            
+	  }
+	  @Override
 	  public void setToTab (PreparedStatement s, Integer i,String columnName) throws DaoException {	
 		  SqlSetter sqlSetter = tabSetter.get(columnName);         
 		  Object o = entityValues.get(columnName);
@@ -46,6 +51,11 @@ abstract public class Entity implements absEntity{
 	  
 	  @Override
 	  public void setForSelect (PreparedStatement s, Integer i,String columnName, Object o) throws DaoException {	
+		  SqlSetter sqlSetter = tabSetter.get(columnName);         		 
+		  sqlSetter.sqlSet(s, i, o);            
+	  }
+	  @Override
+	  public void setForSelect (PreparedStatement s, Integer i,String columnName, String o) throws DaoException {	
 		  SqlSetter sqlSetter = tabSetter.get(columnName);         		 
 		  sqlSetter.sqlSet(s, i, o);            
 	  }

@@ -1,5 +1,7 @@
 package help;
 
+import java.util.ArrayList;
+
 public class SqlHelp {
 
 	 public static String fieldsToSql(String[] args) {		  
@@ -28,6 +30,16 @@ public class SqlHelp {
 			  ss.append(", \"" + args[i] +"\"= ?");}		  
 		  return ss.toString();
 	  }
+	  
+	  public static String sqlUpdate(ArrayList<String> args) {		  
+		  int nargs=args.size();
+		  StringBuilder ss = new StringBuilder(); 
+		  ss.append("\"" + args.get(0) +"\"= ?");
+		  for (int i=1;i<nargs;i++) {
+			  ss.append(", \"" + args.get(i) +"\"= ?");}		  
+		  return ss.toString();
+	  }
+	  
 	  public static String sqlWhereAndEquals(String[] args) {		  
 		  int nargs=args.length;
 		  StringBuilder ss = new StringBuilder(); 

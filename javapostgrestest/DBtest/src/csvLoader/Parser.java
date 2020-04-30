@@ -45,7 +45,7 @@ public void setState(State state) {
 	this.state = state;}
 
 public ArrayList<String> getOutputHeadList() {
-	if (outputHeadList==null) {return new ArrayList<String>();}
+	if (outputHeadList==null) {outputHeadList=new ArrayList<String>();}
 	return outputHeadList;
 }
 //////////////////////////////////////////	
@@ -54,7 +54,7 @@ public ArrayList<String> getOutputHeadList() {
 	  ArrayList<String> headers; // = new ArrayList<String>();
 	  Character ch=null;
 	  ArrayList<String> mapValues;
-	  int nColumn=0;
+	  int nColumn=-1;
 	  Integer columnsNumber=null;
 	  boolean firstRow=true;
 	  for (String s: inputList) {
@@ -70,10 +70,10 @@ public ArrayList<String> getOutputHeadList() {
 					  headers.add(row.toString()); 
 					  outputMap.put(headers.get(++nColumn), new ArrayList<String>());}
 				  else {
-					  mapValues=outputMap.get(headers.get(++nColumn));
+					  mapValues=outputMap.get(headers.get(++nColumn)); 
 					  mapValues.add(row.toString());					  
 				  }
-				   row = null;   
+				   row.delete(0, row.length());   
 			   } else {
 				   row.append(ch);
 			   } 
@@ -82,11 +82,19 @@ public ArrayList<String> getOutputHeadList() {
 				  if (columnsNumber!=null && columnsNumber!=nColumn) {
 					 throw new ParserException("Wrong amount of columns.Bad column"+ nColumn +". Bad row:" + outputMap.get(headers.get(nColumn)).size());
 				  } else {
-				    row = new StringBuilder(); firstRow=false; nColumn=0;
+				    row = new StringBuilder(); firstRow=false; nColumn=-1;
 				  }
 			 }
 		 }
-		 row= new StringBuilder(); firstRow=false; nColumn=0;
+		 //row= new StringBuilder(); firstRow=false; nColumn=-1;
+		 if (firstRow) {
+			  headers.add(row.toString()); 
+			  outputMap.put(headers.get(++nColumn), new ArrayList<String>());}
+		  else {
+			  mapValues=outputMap.get(headers.get(++nColumn)); 
+			  mapValues.add(row.toString());					  
+		  }
+		 row= new StringBuilder(); firstRow=false; nColumn=-1;
 	  }
 	  
 	  return outputMap;

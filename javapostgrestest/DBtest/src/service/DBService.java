@@ -2,9 +2,11 @@ package service;
 
 import java.util.List;
 
+import postgres.DaoException;
 import tabs.Entity;
 
 public interface DBService {
+	void createCsvLoad(String dbName) throws LogicException, DaoException;
 	List<Entity> read(String dbName) throws LogicException;
 	List<Entity> categoryListing(Long idCategotes[]) throws LogicException;
 	List<Entity> tagList(Long idCategotes[]) throws LogicException;

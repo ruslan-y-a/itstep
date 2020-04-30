@@ -32,5 +32,5 @@ public class Mapper {
 	if (name.equals("color"))  {return new Variant("color");}
 	return null;    
   }
-  
+   
 }

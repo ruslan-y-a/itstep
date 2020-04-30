@@ -11,7 +11,8 @@ public class SqlSetterArr implements SqlSetter{
 	@Override
 	public void sqlSet(PreparedStatement s, Integer i, Object o) throws DaoException {
 		 try {		
-			s.setArray(i, (Array) o);
+			 s.setObject(i, o);
+			//s.setArray(i, (Array) o);
 		 } catch (SQLException e) {			
 			e.printStackTrace();
 			throw new DaoException("Error in saving " + o);
@@ -19,16 +20,19 @@ public class SqlSetterArr implements SqlSetter{
 	}
 	@Override
 	public void sqlSet(PreparedStatement s, Integer i, String ss) throws DaoException {
-		 try {		
-			 Object o=null;
-			if (ss.indexOf(',')!=-1) {			
-		      o=ss.split(",");
-			}			
-			s.setArray(i, (Array)o);
-		 } catch (SQLException e) {			
-			e.printStackTrace();
-			throw new DaoException("Error in saving " + ss);
-		 }
+		 int im[]=null;
+		 String smas[];
+		if (ss.indexOf(',')!=-1) {
+		   smas=ss.split(",");
+		   im=new int[smas.length];
+		   for(int ii=0;ii<smas.length;ii++) {
+			   im[ii]=Integer.parseInt(smas[ii]);}
+		   
+		}			
+		Object o= im;
+		this.sqlSet(s, i, o);
+		//s.setObject(i, o);
+		//s.setArray(i, (Array) o);
 	}
 	
 }

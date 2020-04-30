@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 //import java.util.Date;
 //import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,9 @@ public class DbDaoImpl implements DbDao {
 	//////////////////////////////////////////////////
 	public String sqlInsert(Entity entity,boolean check) {		
 		return "INSERT INTO \"" + entity.getDBName() + "\" (" + entity.fieldsToSql(check) +") VALUES (" + entity.numArgsToSql(check) + ")";		
+	}
+	public String sqlInsert(String name,String...args) {		
+		return "INSERT INTO \"" + name + "\" (" +SqlHelp.fieldsToSql(args) +") VALUES (" + SqlHelp.numArgsToSql(args.length) + ")";		
 	}
 	//////////////////////////////////////////////////
 	//////////////////////////////////////////////////
@@ -57,7 +61,59 @@ public class DbDaoImpl implements DbDao {
 			try { s.close(); } catch(Exception e) {}
 			try { r.close(); } catch(Exception e) {}
 		}
-	}				
+	}	
+	@Override
+	public Long create(String name,HashMap<String,Object> mapTab) throws DaoException {
+		//String sql = "INSERT INTO \"account\"(\"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\") VALUES (?, ?, ?, ?, ?)";
+		Entity entity = mapper.getEntity(name);
+		String sql = sqlInsert(entity,true);
+		PreparedStatement s = null;
+		ResultSet r = null;
+		int fieldCounter=0;
+		try {
+			s = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // просим, чтобы statement МОГ получить ключи
+	       for (Map.Entry<String,Object> entry: mapTab.entrySet()) {
+			 if (entry.getValue()==null) {continue;}
+			   entity.setToTab(s, ++fieldCounter, entry.getKey(),entry.getValue());			
+	         }
+		
+			s.executeUpdate();
+			r = s.getGeneratedKeys(); // ПОЛУЧАЕМ сгенерированные ключи (не работает без Statement.RETURN_GENERATED_KEYS)
+			r.next();
+			return r.getLong(1);
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { s.close(); } catch(Exception e) {}
+			try { r.close(); } catch(Exception e) {}
+		}
+	}	
+	@Override
+	public Long create(String name,ArrayList<String> fields, ArrayList<String> values) throws DaoException {
+		//String sql = "INSERT INTO \"account\"(\"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\") VALUES (?, ?, ?, ?, ?)";
+		Entity entity = mapper.getEntity(name);
+		String sql = sqlInsert(name,fields.toArray(new String[fields.size()]));
+		PreparedStatement s = null;
+		ResultSet r = null;	
+		int fieldCounter=0;
+		try {
+			s = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS); // просим, чтобы statement МОГ получить ключи
+	       for (int i=0;i<fields.size();i++) {
+			 if (values.get(i)==null) {continue;}
+			   entity.setToTab(s, ++fieldCounter, fields.get(i),values.get(i));			
+	         }
+		
+			s.executeUpdate();
+			r = s.getGeneratedKeys(); // ПОЛУЧАЕМ сгенерированные ключи (не работает без Statement.RETURN_GENERATED_KEYS)
+			r.next();
+			return r.getLong(1);
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { s.close(); } catch(Exception e) {}
+			try { r.close(); } catch(Exception e) {}
+		}
+	}		
 
 	@Override
 	public List<Entity> read(String name) throws DaoException {   //Long id
@@ -383,6 +439,7 @@ public class DbDaoImpl implements DbDao {
 		}
 		
 	}
+	
 	@Override
 	public void update(String name, String field[], Object fValue[], String tfield[], Object tValue[]) throws DaoException {
 		int flength=field.length;
@@ -408,6 +465,34 @@ public class DbDaoImpl implements DbDao {
 				entity.setForSelect(s, ++ifields, tfield[i], tValue[i]);
 		   }
 			
+			s.executeUpdate();				
+		
+		} catch(SQLException e) {
+			throw new DaoException(e);	
+		}finally {		
+			try { s.close(); } catch(Exception e) {}
+		}
+		
+	}
+	
+	
+	public void update(String name, Long id, ArrayList<String> fields, ArrayList<String> values) throws DaoException {
+		int flength=fields.size();
+		if (flength!=values.size()) {
+			System.out.println("the amount of fields is not equal to the amount of values");
+			throw new DaoException("the amount of fields is not equal to the amount of values");
+		}
+		
+		PreparedStatement s = null;		
+		try {
+		String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(fields) + " WHERE \"id\"=?";		
+			s = c.prepareStatement(sql);					
+			int ifields=0;					
+			Entity entity = mapper.getEntity(name);			
+			for (int i=0;i<flength;i++) {
+					entity.setForSelect(s, ++ifields, fields.get(i), values.get(i));
+			}		
+			s.setLong(++ifields, id);
 			s.executeUpdate();				
 		
 		} catch(SQLException e) {

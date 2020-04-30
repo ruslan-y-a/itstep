@@ -1,11 +1,15 @@
 package postgres;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import tabs.Entity;
 
 public interface Dao<T extends Entity> {
 	Long create(T entity) throws DaoException;
+	Long create(String name,HashMap<String,Object> mapTab) throws DaoException;
+	Long create(String name,ArrayList<String> fields, ArrayList<String> values) throws DaoException;
 	T read(String name,long id) throws DaoException;
 	List<T> read(String name) throws DaoException;
 	List<T> read(String name, String field, Object fValue) throws DaoException;
@@ -16,6 +20,7 @@ public interface Dao<T extends Entity> {
 	Long[] readIDAnd(String name, String field, Object[] fValue) throws DaoException;
 	Long[] readID(String name, String field, Object fValue) throws DaoException;
 	void update(T entity) throws DaoException;	
+	void update(String name, Long id, ArrayList<String> fields, ArrayList<String> values) throws DaoException;
 	void update(String name, String field, Object fValue, String tfield, Object tValue) throws DaoException;
 	void update(String name, String field[], Object fValue[], String tfield[], Object tValue[]) throws DaoException;
 	void update(T entity, boolean chnull) throws DaoException;

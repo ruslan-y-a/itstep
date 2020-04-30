@@ -23,7 +23,7 @@ public class SqlSetterDt implements SqlSetter{
 	@Override
 	public void sqlSet(PreparedStatement s, Integer i, String ss) throws DaoException {
 		 try {
-			 SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			 SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
 			 Date d1 = format1.parse(ss);			
 			 s.setDate(i,new java.sql.Date(d1.getTime()));
 		 } catch (SQLException | ParseException e) {			

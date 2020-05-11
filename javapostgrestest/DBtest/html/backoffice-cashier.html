@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin, Manager, Cashier</div>				   				
+			</div>
+			<div class="main-content">
+				   <h2 class="page-title">sale</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">
+			<!-- 		"id","date"                 ,"orderid","return","currencyid" -->
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">date</th>
+							<th class="table__header">order id</th>
+							<th class="table__header">return</th>
+							<th class="table__header">currency id</th>
+							<th class="table__header">Action</th>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2.3</td>
+							<td class="table__cell" id="tdate">2020-01-01T18:18:18</td>
+							<td class="table__cell_numeric" id="torder">2</td>
+							<td class="table__cell" id="treturn">0</td>
+						    <td class="table__cell" id="tcurrencyid">USD</td>
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2.3</td>
+							<td class="table__cell" id="tdate">2020-01-02T18:18:18</td>
+							<td class="table__cell_numeric" id="torder">3</td>
+							<td class="table__cell" id="treturn">0</td>
+						    <td class="table__cell" id="tcurrencyid">USD</td>
+		                    <td class="table__cell" ><img src="img/edit.png" id="edit" ></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2.3</td>
+							<td class="table__cell" id="tdate">2020-01-03T18:18:18</td>
+							<td class="table__cell_numeric" id="torder">4</td>
+							<td class="table__cell" id="treturn">0</td>
+						    <td class="table__cell" id="tcurrencyid">USD</td>
+			                <td class="table__cell"  ><img src="img/edit.png" id="edit" ></td> <!-- onclick="Edit(this)" -->
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2.3</td>
+							<td class="table__cell" id="tdate">2020-01-04T18:18:18</td>
+							<td class="table__cell_numeric" id="torder">5</td>
+							<td class="table__cell" id="treturn">0</td>
+						    <td class="table__cell" id="tcurrencyid">USD</td>
+		                    <td class="table__cell" ><img src="img/edit.png" id="edit" ></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2.3</td>
+							<td class="table__cell" id="tdate">2020-01-05T18:18:18</td>
+							<td class="table__cell_numeric" id="torder">6</td>
+							<td class="table__cell" id="treturn">1</td>
+						    <td class="table__cell" id="tcurrencyid">EUR</td>
+			                <td class="table__cell"  ><img src="img/edit.png" id="edit" ></td> <!-- onclick="Edit(this)" -->
+						</tr>
+					</table>
+				</div>	
+				
+				<h2 class="backoffice-edit-form">Edit Form</h2>
+				<div>
+			        <form class="backoffice-edit-form" action="save.html" style="width: 350px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="id">id:</label>
+						<input class="backoffice-form__text-input" id="id" type="text" name="id" value="0" readonly>
+					  </fieldset> 
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="date">date:</label>
+						<input class="backoffice-form__text-input" id="date" type="datetime" name="date" value="2020-01-01T10:00:00" required>
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="orderid">orderid:</label>
+						<input class="backoffice-form__text-input" id="orderid" type="text" name="orderid" value="1" required>		
+					   </fieldset> 			
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="return">return:</label>
+						<input class="backoffice-form__text-input" id="return" type="text" name="return" value="false" required>		
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">
+					    <label class="sform__label" for="currencyid">currencyid:</label>
+		                <select class="sform__text-input" id="currencyid" name="currencyid" required>
+		                  <option value=0 selected>USD</option>
+		                  <option value=1>EUR</option>
+			              <option value=2>GBP</option>			            
+		                </select>	
+					  </fieldset> 							
+						<button class="form__button" type="submit">Save</button>
+						<button class="form__button_danger" type="button">Delete</button>
+						<button class="form__button" type="reset">Cancel</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">          
+          document.querySelector('#table').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {        	
+        			Edit(e.target);
+        	     }         	          	          	          			
+        	  });                   
+                     
+          function Edit(e){        	  
+        	  var pnode = e.parentNode.parentNode;        
+        	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+        	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
+        	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;
+        	  var password = pnode.childNodes[5].innerHTML; //getchildid(pnode,'tpassword').innerHTML;
+        	  var email = pnode.childNodes[7].innerHTML; //getchildid(pnode,'te-mail').innerHTML;
+        	  var role = pnode.childNodes[9].innerHTML; //getchildid(pnode,'trole').innerHTML;
+        	          	  
+        	  document.getElementById('id').value = id;
+        	  document.getElementById('date').value = name;
+        	  document.getElementById('orderid').value = password;
+        	  document.getElementById('return').value = email;
+        	  role=getrole(role);
+        	  document.getElementById('currencyid').value = role;
+           }	
+          
+          function getsrole(role){
+        	  switch (role) {
+        	  case 0: return 'USD'; break;
+        	  case 1: return 'EUR'; break;
+        	  case 2: return 'GBP'; break;        	 
+        	}
+        	  return 'Client';
+          } 
+          
+          function getrole(role){
+        	  switch (role) {
+        	  case 'USD': return 0; break;
+        	  case 'EUR': return 1; break;
+        	  case 'GBP': return 2; break;      	 
+        	}
+        	  return 1;
+          } 
+          
+          function getchildid(e,f){
+        	   var echildren=e.childNodes;
+        	   var res=null;
+        	   echildren.forEach((element) => {
+        		   if (element.id==f) {
+        			   res= element;  
+        		   }
+        		 })  	  
+        	
+        	  return res;
+          }
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

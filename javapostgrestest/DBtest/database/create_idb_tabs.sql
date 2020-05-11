@@ -35,7 +35,7 @@ CREATE TABLE "tagurl" (
 DROP TABLE IF EXISTS "tagcloud";
 CREATE TABLE "tagcloud" (
 	"id" SERIAL PRIMARY KEY,
-	"classification" INTEGER NOT NULL REFERENCES "classification" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"classification" INTEGER[] NOT NULL, /* REFERENCES "classification" ON DELETE RESTRICT ON UPDATE CASCADE,*/
     "tagurl" INTEGER NOT NULL REFERENCES "tagurl" ON DELETE RESTRICT ON UPDATE CASCADE   	
 );
 
@@ -45,14 +45,14 @@ CREATE TABLE "items" (
 	"id" SERIAL PRIMARY KEY,
 	"articul" VARCHAR(20) NOT NULL, 
 	"model" VARCHAR(20) NOT NULL,	
-	"baseprice" BIGINT NOT NULL,
+	"category" INTEGER NOT NULL REFERENCES "category" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"baseprice" BIGINT NULL,
 	"discount" INTEGER NULL,
 	"title" VARCHAR(150) NULL,
 	"text" TEXT NULL,
 	"name" VARCHAR(100) NULL,
 	"description" VARCHAR(250) NULL,	
-    "tagurl" INTEGER NULL REFERENCES "tagurl" ON DELETE RESTRICT ON UPDATE CASCADE,
-	"keywords" VARCHAR(250) NULL,	
+   	"keywords" VARCHAR(250) NULL,	
 	"mainimgurl" VARCHAR(250) NULL,
 	"url" VARCHAR(200) NULL UNIQUE
 );
@@ -60,7 +60,7 @@ CREATE TABLE "items" (
 DROP TABLE IF EXISTS "img";
 CREATE TABLE "img" (
 	"id" SERIAL PRIMARY KEY,	
-	"item" INTEGER NOT NULL REFERENCES "item" ON DELETE RESTRICT ON UPDATE CASCADE,
+	"items" INTEGER NOT NULL REFERENCES "items" ON DELETE RESTRICT ON UPDATE CASCADE,
 	"title"  VARCHAR(50) NULL, 	     
 	"alt"  VARCHAR(50) NULL,
 	"url"  VARCHAR(200) NOT NULL UNIQUE
@@ -72,6 +72,13 @@ CREATE TABLE "itemcatgory" (
 	"items" INTEGER NOT NULL REFERENCES "items" ON DELETE RESTRICT ON UPDATE CASCADE, 
     "classification" INTEGER NOT NULL REFERENCES "classification" ON DELETE RESTRICT ON UPDATE CASCADE,
 	UNIQUE ("items", "classification")
+);
+-----------------------------------------
+CREATE TABLE "itemtagurl" (
+	"id" SERIAL PRIMARY KEY,
+	"items" INTEGER NOT NULL REFERENCES "items" ON DELETE RESTRICT ON UPDATE CASCADE, 
+    "tagurl" INTEGER NOT NULL REFERENCES "tagurl" ON DELETE RESTRICT ON UPDATE CASCADE,
+	UNIQUE ("items", "tagurl")
 );
 -----------------------------------------
 DROP TABLE IF EXISTS "currency";

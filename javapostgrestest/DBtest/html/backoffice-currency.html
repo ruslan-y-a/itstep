@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin, Manager</div>				   				
+			</div>
+			<div class="main-content">
+				   <h2 class="page-title">country</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">
+			<!-- 		id", "name"     , "currency",  "rate" -->
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">name</th>						
+							<th class="table__header">rate</th>	
+							<th class="table__header">Action</th>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tname">USD</td>
+							<td class="table__cell_numeric" id="trate">1</td>						 
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2</td>
+							<td class="table__cell" id="tname">EUR</td>
+							<td class="table__cell" id="trate">1.1</td>	
+		                    <td class="table__cell" ><img src="img/edit.png" id="edit" ></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">3</td>
+							<td class="table__cell" id="tname">GBP</td>
+							<td class="table__cell" id="trate">1.9</td>						    
+		                    <td class="table__cell" ><img src="img/edit.png" id="edit" ></td>
+						</tr>
+					</table>
+				</div>	
+				
+				<h2 class="backoffice-edit-form">Edit Form</h2>
+				<div>
+			        <form class="backoffice-edit-form" action="save.html" style="width: 350px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="id">id:</label>
+						<input class="backoffice-form__text-input" id="id" type="text" name="id" value="0" readonly>
+					  </fieldset> 
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="name">name:</label>
+						<input class="backoffice-form__text-input" id="name" type="text" name="name" value="USA" required>
+					  </fieldset>  		
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="rate">rate:</label>
+						<input class="backoffice-form__text-input" id="rate" type="text" name="rate" value="1" required>		
+					  </fieldset> 					  						
+						<button class="form__button" type="submit">Save</button>
+						<button class="form__button_danger" type="button">Delete</button>
+						<button class="form__button" type="reset">Cancel</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">          
+          document.querySelector('#table').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {        	
+        			Edit(e.target);
+        	     }         	          	          	          			
+        	  });                   
+                     
+          function Edit(e){        	  
+        	  var pnode = e.parentNode.parentNode;        
+        	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+        	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
+        	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;        
+        	  var rate = pnode.childNodes[5].innerHTML; //getchildid(pnode,'te-mail').innerHTML;        
+        	          	  
+        	  document.getElementById('id').value = id;
+        	  document.getElementById('name').value = name;        	  
+        	  document.getElementById('rate').value = rate;        	          	                  
+          }
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

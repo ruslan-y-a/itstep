@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin, Manager</div>				   				
+			</div>
+			<div class="main-content">			
+	<!-- 		 "id","number","date"                   ,"dateexpired","baseitemid","customerid","quantity","sum",
+ "currencyid","ordertype" ,"rejectionreason"  ,"statussold"  -->
+				   <h2 class="page-title">Orders</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">			
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">number</th>
+							<th class="table__header">date</th>
+							<th class="table__header">dateexpired</th>							
+							<th class="table__header">baseitemid</th>	
+							<th class="table__header">customerid</th>
+							<th class="table__header">quantity</th>	
+							<th class="table__header">currencyid</th>
+							<th class="table__header">ordertype</th>
+							<th class="table__header">active</th>
+							<th class="table__header">sold</th>																					
+							<th class="table__header">Action</th>
+												
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tnumber">1</td>							
+							<td class="table__cell" id="tdate">2020-02-01</td>
+							<td class="table__cell" id="tdateexpired">2020-02-08</td>
+							<td class="table__cell" id="tbaseitemid">
+                               <select multiple style="height:20px;">
+                                 <option value=1>01505_01</option> <!--  <option value=2>37284903</option> -->                                 		                         	                   
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tcustomerid">
+                               <select multiple style="height:20px;">
+		                         <option value=5>Name1</option>		                         			                     			                    
+		                       </select>
+                            </td>
+							<td class="table__cell" id="tquantity">2</td>
+							<td class="table__cell" id="tcurrencyid">
+                               <select multiple style="height:20px;">
+			                     <option value=1>USD</option>			                     
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tordertype">
+                              <select multiple style="height:20px;">
+		                         <option value=1>post mail</option>		                         			                     			                    
+		                       </select>
+                            </td>														
+							<td class="table__cell" id="tactive">true</td>																																															
+							<td class="table__cell" id="tstatussold">true</td>								
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tnumber">1</td>							
+							<td class="table__cell" id="tdate">2020-02-01</td>
+							<td class="table__cell" id="tdateexpired">2020-02-08</td>
+							<td class="table__cell" id="tbaseitemid">
+                               <select multiple style="height:20px;">
+                                 <option value=1>01505_01</option> <!--  <option value=2>37284903</option> -->                                 		                         	                   
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tcustomerid">
+                               <select multiple style="height:20px;">
+		                         <option value=5>Name1</option>		                         			                     			                    
+		                       </select>
+                            </td>
+							<td class="table__cell" id="tquantity">2</td>
+							<td class="table__cell" id="tcurrencyid">
+                               <select multiple style="height:20px;">
+			                     <option value=1>USD</option>			                     
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tordertype">
+                              <select multiple style="height:20px;">
+		                         <option value=1>post mail</option>		                         			                     			                    
+		                       </select>
+                            </td>														
+							<td class="table__cell" id="tactive">true</td>																																															
+							<td class="table__cell" id="tstatussold">true</td>								
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2</td>
+							<td class="table__cell" id="tnumber">2</td>							
+							<td class="table__cell" id="tdate">2020-02-02</td>
+							<td class="table__cell" id="tdateexpired">2020-02-09</td>
+							<td class="table__cell" id="tbaseitemid">
+                               <select multiple style="height:20px;">
+                                 <option value=2>37284903</option> <!--  <option value=2>37284903</option> -->                                 		                         	                   
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tcustomerid">
+                               <select multiple style="height:20px;">
+		                         <option value=6>Name2</option>		                         			                     			                    
+		                       </select>
+                            </td>
+							<td class="table__cell" id="tquantity">3</td>
+							<td class="table__cell" id="tcurrencyid">
+                               <select multiple style="height:20px;">
+			                     <option value=2>EUR</option>			                     
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tordertype">
+                              <select multiple style="height:20px;">
+		                         <option value=1>post mail</option>		                         			                     			                    
+		                       </select>
+                            </td>														
+							<td class="table__cell" id="tactive">false</td>																																															
+							<td class="table__cell" id="tstatussold">false</td>								
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tnumber">1</td>							
+							<td class="table__cell" id="tdate">2020-02-01</td>
+							<td class="table__cell" id="tdateexpired">2020-02-08</td>
+							<td class="table__cell" id="tbaseitemid">
+                               <select multiple style="height:20px;">
+                                 <option value=1>01505_01</option> <!--  <option value=2>37284903</option> -->                                 		                         	                   
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tcustomerid">
+                               <select multiple style="height:20px;">
+		                         <option value=5>Name1</option>		                         			                     			                    
+		                       </select>
+                            </td>
+							<td class="table__cell" id="tquantity">2</td>
+							<td class="table__cell" id="tcurrencyid">
+                               <select multiple style="height:20px;">
+			                     <option value=1>USD</option>			                     
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tordertype">
+                              <select multiple style="height:20px;">
+		                         <option value=1>post mail</option>		                         			                     			                    
+		                       </select>
+                            </td>														
+							<td class="table__cell" id="tactive">true</td>																																															
+							<td class="table__cell" id="tstatussold">true</td>								
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tnumber">1</td>							
+							<td class="table__cell" id="tdate">2020-02-01</td>
+							<td class="table__cell" id="tdateexpired">2020-02-08</td>
+							<td class="table__cell" id="tbaseitemid">
+                               <select multiple style="height:20px;">
+                                 <option value=1>01505_01</option> <!--  <option value=2>37284903</option> -->                                 		                         	                   
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tcustomerid">
+                               <select multiple style="height:20px;">
+		                         <option value=5>Name1</option>		                         			                     			                    
+		                       </select>
+                            </td>
+							<td class="table__cell" id="tquantity">2</td>
+							<td class="table__cell" id="tcurrencyid">
+                               <select multiple style="height:20px;">
+			                     <option value=1>USD</option>			                     
+		                       </select>	
+                            </td>
+							<td class="table__cell" id="tordertype">
+                              <select multiple style="height:20px;">
+		                         <option value=1>post mail</option>		                         			                     			                    
+		                       </select>
+                            </td>														
+							<td class="table__cell" id="tactive">true</td>																																															
+							<td class="table__cell" id="tstatussold">true</td>								
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+					</table>
+				</div>	
+		
+				
+				<div>
+			        <form  action="save.html" style="width: 350px">
+			            <div style="display:block; margin-top:20px;"><strong>EDIT FORM</strong></div>
+			            <div style="display:block; float:left; margin-top:20px;">			             
+			              <label for="id">Order id:</label>
+			              <input style="width:50px;" id="id" type="number" name="id" value="1" readonly>			             	
+			            </div>			       
+			            <div style="display:block;  margin-top:20px; margin-bottom:10px;">			             			              			             			               
+			                <label for="number">Order N:</label><input style="width:70px;" id="number" type="text" name="number" value="" required>				             	
+			            </div>		  
+			           <table class="table fleft">			           
+			            <tr>
+			                <th class="table__header">userid</th>
+							<th class="table__header">date expired</th>	
+							<th class="table__header">baseitemid</th>												
+							<th class="table__header">delivery type</th>	
+							<th class="table__header">active</th>		
+							<th class="table__header">status sold</th>												
+			            </tr>
+			            <tr>
+			            	<td class="table__cell">						     					            	   				  
+                               <select style="width:200px;" id="userid" name="userid" required>
+		                         <option value=5>Name1</option>
+		                         <option value=6>Name2</option>			                     
+			                     <option value=7>Name3</option>			                     			                     
+		                       </select>		
+							</td>
+							<td class="table__cell">						     						      
+	                            <input style="width:100px;" id="dateexpired" type="date" name="dateexpired" value="" required>		
+							</td>								
+		                    <td  class="table__cell" >													      	
+						       <select style="width:100px;" id="baseitemid" required>
+		                         <option value=1>01505_01</option>
+		                         <option value=2>37284903</option>
+			                     <option value=3>37112005</option>
+		                       </select>								
+							</td>							
+							<td class="table__cell">													      	
+						        <select style="width:150px;" id="ordertype" name="ordertype">
+		                         <option value=1 selected>post mail</option>		                         			                     			                    
+		                       </select>							
+							</td>
+							
+							<td class="table__cell">													    
+						      <label>Y</label><input id="activet" type="radio" name="active" value=true checked><br>
+						      <label>N</label><input id="activef" type="radio" name="active" value=false>							
+							</td>
+							<td class="table__cell">							
+						       <label>Y</label><input id="statussoldt" type="radio" name="statussold" value=true checked><br>
+						       <label>N</label><input id="statussoldf" type="radio" name="statussold" value=false>									
+							</td>																				  			          										   					  													   					  								
+ 					  </table>			
+	
+			          <table class="table">
+			            <tr>									
+							<th class="table__header">price</th>
+							<th class="table__header">quantity</th>
+							<th class="table__header">sum</th>
+							<th class="table__header">currency id</th>
+			            </tr>
+			            <tr>                          						
+							<td class="table__cell" >
+                               <input style="width:80px;" id="price" type="number" name="price" value=60 readonly>
+                            </td>		
+							<td class="table__cell">							  
+						      <input style="width:50px;" id="quantity" type="number" name="quantity" value=1 required>	
+							</td>
+							<td class="table__cell" > 
+							<input style="width:100px;" id="sum" type="number" name="sum" value=0 readonly required>	
+							</td>
+					        <td  class="table__cell" >
+ 					           <select style="width:100px;" id="currencyid" name="currencyid">
+			                     <option value=1 selected>USD</option>
+			                     <option value=2>EUR</option>
+			                     <option value=3>GBP</option>
+		                       </select>	
+ 					        </td>																										
+						</tr>								  			          										   					  													   					  								
+ 					  </table>						
+ 					   						
+						<button class="form__button" type="submit">Save</button>
+						<button class="form__button_danger" type="button">Delete</button>
+						<button class="form__button" type="reset">Cancel</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">          
+          document.querySelector('#table').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {        	
+        			Edit(e.target);
+        	     }         	          	          	          			
+        	  });                   
+                     
+          function Edit(e){        	  
+        	  var pnode = e.parentNode.parentNode;        
+        	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+        	  var id= pnode.childNodes[1].innerHTML;
+        	  var nu= pnode.childNodes[3].innerHTML; 
+        	  var date1= pnode.childNodes[5].innerHTML; 
+        	  var date2= pnode.childNodes[7].innerHTML; 
+        	  var list11 = pnode.childNodes[9];//item
+        	  list11=list11.childNodes[1];
+        	  
+        	  var list12 = pnode.childNodes[11]; //user 
+        	  list12=list12.childNodes[1];
+        	  var q= pnode.childNodes[13].innerHTML; 
+        	  
+        	  var list13 = pnode.childNodes[15]; //curr 
+        	  list13=list13.childNodes[1];
+        	  var list14 = pnode.childNodes[15]; //deliver 
+        	  list14=list14.childNodes[1];
+        	  var active = pnode.childNodes[19].innerHTML; //name
+        	  var statussold = pnode.childNodes[21].innerHTML; //name  
+         	  
+        	  document.getElementById('id').value = id;
+        	  document.getElementById('number').value = nu;
+        	  
+        	  var list22=document.getElementById('userid');
+        	  document.getElementById('dateexpired').value = date2;
+        	  var list21=document.getElementById('baseitemid');
+        	  var list23=document.getElementById('currencyid');
+        	  var list24=document.getElementById('ordertype');
+        	          	  
+        	  document.getElementById('quantity').value = q;
+        	  var pr =document.getElementById('price').value;
+        	  document.getElementById('sum').value=pr*q;
+        	  
+        	  
+        	  if (active=='true') {
+        		  var sa=document.getElementById('activet');
+        		  sa.checked=true;
+        	  } else {
+        		  var sa=document.getElementById('activef');
+        		  sa.checked=true;
+        	  }
+        	  if (active=='true') {
+        		  var sa=document.getElementById('statussoldt');
+        		  sa.checked=true;
+        	  } else {
+        		  var sa=document.getElementById('statussoldf');
+        		  sa.checked=true;
+        	  }
+            
+                     	   
+        	 for (var j=0, m=list21.options.length;j<m;j++) {     			  
+     				list21.options[j].selected=false;}
+        	 for (var j=0, m=list22.options.length;j<m;j++) {     			  
+  				list22.options[j].selected=false;}
+        	 for (var j=0, m=list23.options.length;j<m;j++) {     			  
+  				list23.options[j].selected=false;}
+     	     for (var j=0, m=list24.options.length;j<m;j++) {     			  
+				list24.options[j].selected=false;} 
+        	 
+        	 for (var i=0, n=list21.options.length;i<n;i++) { // looping over the options
+        			for (var j=0, m=list11.options.length;j<m;j++) {
+        			   if (list21.options[i].value==list11.options[j].value) {
+        				list21.options[i].selected=true; continue;
+        			   }  				           			   
+        			}
+               } 
+        	  	
+        	 for (var i=0, n=list22.options.length;i<n;i++) { // looping over the options
+     			for (var j=0, m=list12.options.length;j<m;j++) {
+     			   if (list22.options[i].value==list12.options[j].value) {
+     				list22.options[i].selected=true; continue;
+     			   }  				           			   
+     			}
+            }
+        	 
+        	 
+        	 for (var i=0, n=list23.options.length;i<n;i++) { // looping over the options
+      			for (var j=0, m=list13.options.length;j<m;j++) {
+      			   if (list23.options[i].value==list13.options[j].value) {
+      				list23.options[i].selected=true; continue;
+      			   }  				           			   
+      			}
+             }
+        	 
+        	 for (var i=0, n=list24.options.length;i<n;i++) { // looping over the options
+      			for (var j=0, m=list14.options.length;j<m;j++) {
+      			   if (list24.options[i].value==list14.options[j].value) {
+      				list24.options[i].selected=true; continue;
+      			   }  				           			   
+      			}
+             }        	         	         	 
+        	  
+          }
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

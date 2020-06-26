@@ -15,71 +15,77 @@ import sqlSetGet.SqlSetterL;
 import sqlSetGet.SqlSetterTm;
 
 public class Sale extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6848366157522796084L;
 	private Date datetime;
-	private Long orderid;
-	private boolean bReturn;
-	private Integer currencyid;
+	private Orders order;
+	private Boolean returned;
+	private Currency currency;
 	
 	public Sale() {
 		super("sale");
 		entityValues.put("id", null);
 		entityValues.put("datetime", null);
-		entityValues.put("orderid", null);
-		entityValues.put("return", null);
-		entityValues.put("currencyid", null);
+		entityValues.put("order", null);
+		entityValues.put("returned", null);
+		entityValues.put("currency", null);
 		
 		tabSetter.put("id", new SqlSetterL());
 		tabSetter.put("datetime", new SqlSetterTm());
-		tabSetter.put("orderid", new SqlSetterL());
-		tabSetter.put("return", new SqlSetterB());
-		tabSetter.put("currencyid", new SqlSetterI());
+		tabSetter.put("order", new SqlSetterL());
+		tabSetter.put("returned", new SqlSetterB());
+		tabSetter.put("currency", new SqlSetterI());
 				
 		tabGetter.put("id", new SqlGetterL());
 		tabGetter.put("datetime", new SqlGetterDt());
-		tabGetter.put("orderid", new SqlGetterL());
-		tabGetter.put("return", new SqlGetterB());
-		tabGetter.put("currencyid", new SqlGetterI());		
+		tabGetter.put("order", new SqlGetterL());
+		tabGetter.put("returned", new SqlGetterB());
+		tabGetter.put("currency", new SqlGetterI());		
 	}
 
 	public Date getDatetime() {
 		return datetime;}
-	public Long getOrderid() {
-		return orderid;}
-	public boolean isReturn() {
-		return bReturn;}
-	public Integer getCurrencyid() {
-		return currencyid;}
+	public Orders getOrder() {
+		return order;}
+	public boolean isReturned() {
+		return returned;}
+	public Currency getCurrencyid() {
+		return currency;}
 
 	public Date getDatetime(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "datetime");  return datetime;}
-	public Long getOrderid(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "orderid"); return orderid;}
-	public boolean isReturn(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "return"); return bReturn;}
-	public Integer getCurrencyid(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "currencyid"); return currencyid;}
+	public Orders getOrderid(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "order"); return order;}
+	public boolean isReturned(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "returned"); return returned;}
+	public Currency getCurrency(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "currency"); return currency;}
 
 	@Override
 	  public String toString() {		  
-		 return "id:" + this.DBgetId() + "\ndatetime:"+ this.datetime + "\norderid:"+ this.orderid
-				 + "\nreturn:"+ this.bReturn + "\ncurrencyid:"+ this.currencyid; }		
+		 return "id:" + this.DBgetId() + "\ndatetime:"+ this.datetime + "\norderid:"+ this.order
+				 + "\nreturn:"+ this.returned + "\ncurrencyid:"+ this.currency; }		
 	
 	@Override
 	public void cast() {
 		this.DBsetId((Long) entityValues.get("id"));		
-		this.datetime= (Date) entityValues.get("datetime");
-		this.orderid= (Long) entityValues.get("orderid");
-		this.bReturn= (boolean) entityValues.get("return");
-		this.currencyid= (Integer) entityValues.get("currencyid");
+		this.datetime= (Date) entityValues.get("datetime");		
+		Orders orders = new Orders(); orders.DBsetId((Long) entityValues.get("order")); this.order = orders;
+		this.returned= (boolean) entityValues.get("returned");		
+		Currency currency = new Currency(); currency.DBsetId((Long) entityValues.get("currency")); this.currency = currency;
 	}
 
 	@Override
 	public void cast(String name) {
 		if (name.equals("id")) {this.DBsetId((Long) entityValues.get("id"));return;} 
 		if (name.equals("datetime")) {this.datetime= (Date) entityValues.get("datetime"); return;}
-		if (name.equals("orderid")) {this.orderid= (Long) entityValues.get("orderid"); return;}
-		if (name.equals("return")) {this.bReturn= (boolean) entityValues.get("return"); return;}
-		if (name.equals("currencyid")) {this.currencyid= (Integer) entityValues.get("currencyid"); }
+		if (name.equals("order")) {
+		 Orders orders = new Orders(); orders.DBsetId((Long) entityValues.get("order")); this.order = orders; return;}
+		if (name.equals("returned")) {this.returned= (boolean) entityValues.get("returned"); return;}
+		if (name.equals("currency")) {
+			Currency currency = new Currency(); currency.DBsetId((Long) entityValues.get("currency")); this.currency = currency; }
 	}	
 		
 }

@@ -6,6 +6,10 @@ import sqlSetGet.SqlSetterL;
 import sqlSetGet.SqlSetterS;
 
 public class Variant  extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7645285328832551175L;
 	private String name;
 	
 	public String getName() {

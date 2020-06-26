@@ -1,35 +1,36 @@
 package tabs;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Date;
-//import java.util.HashMap;
-//import java.util.stream.Stream;
+import java.util.List;
 
 import help.Helper;
 import postgres.DaoException;
-//import sqlSetGet.SqlGetterArr;
 import sqlSetGet.SqlGetterDt;
 import sqlSetGet.SqlGetterI;
 import sqlSetGet.SqlGetterL;
 import sqlSetGet.SqlGetterO;
 import sqlSetGet.SqlGetterS;
 import sqlSetGet.SqlSetterArr;
-//import sqlSetGet.SqlSetterArr;
 import sqlSetGet.SqlSetterDt;
 import sqlSetGet.SqlSetterI;
 import sqlSetGet.SqlSetterL;
-//import sqlSetGet.SqlSetterO;
 import sqlSetGet.SqlSetterS;
 
 public class Client extends Entity {
 	
-	private Integer countryid;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1547671674400170833L;
+	private Country countryid;
 	private String address;
     private Date creationdate;
-    private Long userid;
+    private User userid;
     private Integer bonuspoints;	
     private String phoneno;	
-    private Integer[]recentitems;	
+	private List<Items> recentitems;	
     
 	public Client() {
 		super("client"); 						
@@ -63,63 +64,82 @@ public class Client extends Entity {
 	}
 	@Override
 	  public void cast() {
-				this.DBsetId((Long) entityValues.get("id")); 
-				this.countryid= (Integer) entityValues.get("countryid");
+				this.DBsetId((Long) entityValues.get("id")); 				
+				Country country = new Country(); country.DBsetId((Long) entityValues.get("itemid")); this.countryid = country;
 				this.address= entityValues.get("address").toString();
-				this.creationdate=(Date) entityValues.get("creationdate");;
-				this.userid= (Long) entityValues.get("userid");
+				this.creationdate=(Date) entityValues.get("creationdate");
+				User user = new User(); user.DBsetId((Long) entityValues.get("userid")); this.userid = user;				
 				this.bonuspoints= (Integer) entityValues.get("bonuspoints");
-				this.phoneno= entityValues.get("phoneno").toString();	
-				this.recentitems=Helper.objToIntArray(entityValues.get("recentitems"));			 
+				this.phoneno= entityValues.get("phoneno").toString();							
+				
+				ArrayList<Long> iList= Helper.objToLongArrayList(entityValues.get("recentitems"));	
+			    ArrayList<Items> Litems= new ArrayList<>();					
+				iList.forEach((x) -> {
+					Items cl = new Items();
+					cl.DBsetId(x);
+					Litems.add(cl);
+				  });
+				this.recentitems=Litems;
+						
 		  }
 	@Override
 	  public void cast(String name) {
 		if (name.equals("id")) {this.DBsetId((Long) entityValues.get("id"));return;} 
-		if (name.equals("countryid")) {this.countryid= (Integer) entityValues.get("countryid");return;}
+		if (name.equals("countryid")) {Country country = new Country(); country.DBsetId((Long) entityValues.get("itemid")); this.countryid = country;return;}
 		if (name.equals("address")) {this.address= entityValues.get("address").toString();return;}
 		if (name.equals("creationdate")) {this.creationdate=(Date) entityValues.get("creationdate");return;}
-		if (name.equals("userid")) {this.userid= (Long) entityValues.get("userid");return;}
+		if (name.equals("userid")) {User user = new User(); user.DBsetId((Long) entityValues.get("userid")); this.userid = user;		return;}
 		if (name.equals("bonuspoints")) {this.bonuspoints= (Integer) entityValues.get("bonuspoints");return;}
 		if (name.equals("phoneno")) {this.phoneno= entityValues.get("phoneno").toString();return;}	
-		if (name.equals("recentitems")) {this.recentitems=Helper.objToIntArray(entityValues.get("recentitems"));}			 
-		  }
+		if (name.equals("recentitems")) {
+			
+			ArrayList<Long> iList= Helper.objToLongArrayList(entityValues.get("recentitems"));	
+		    ArrayList<Items> Litems= new ArrayList<>();					
+			iList.forEach((x) -> {
+				Items cl = new Items();
+				cl.DBsetId(x);
+				Litems.add(cl);
+			  });
+			this.recentitems=Litems;		 
+			}
+		}
 	
 	  @Override
 	  public String toString() {		  
 		 return "id:" + this.DBgetId() + "\ncountryid:"+ countryid + "\naddress:" + address + 
 		 "\ncreationdate:"+creationdate +"\nuserid:" + userid+ "\nbonuspoints:" + bonuspoints+
-		 "\nphoneno:" + phoneno + "\nbasket:" + "\nrecentitems:"+ Helper.intArrayToString(recentitems);
+		 "\nphoneno:" + phoneno + "\nbasket:" + "\nrecentitems:"+ recentitems;
 	  }
 /*//////////////////////////////////////////////////////////////////////////*/
 	  /*//////////////////////////////////////////////////////////////////////////*/
-	public Integer getCountryid() {
+	public Country getCountryid() {
 		return countryid;}
 	public String getAddress() {
 		return address;}
 	public Date getCreationdate() {
 		return creationdate;}
-	public Long getUserid() {
+	public User getUserid() {
 		return userid;}
 	public Integer getBonuspoints() {
 		return bonuspoints;}
 	public String getPhoneno() {
 		return phoneno;}
-	public Integer[] getRecentitems() {
+	public List<Items> getRecentitems() {
 		return recentitems;}
 	 
-	public Integer getCountryid(ResultSet r) throws DaoException {
+	public Country getCountryid(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "countryid"); return countryid;}
 	public String getAddress(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "address"); return address;}
 	public Date getCreationdate(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "creationdate"); return creationdate;}
-	public Long getUserid(ResultSet r) throws DaoException {
+	public User getUserid(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "userid"); return userid;}
 	public Integer getBonuspoints(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "bonuspoints"); return bonuspoints;}
 	public String getPhoneno(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "phoneno"); return phoneno;}
-	public Integer[] getRecentitems(ResultSet r) throws DaoException {
+	public List<Items> getRecentitems(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "recentitems"); return recentitems;}
 	  
 }

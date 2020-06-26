@@ -11,11 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reader {
-   private String sFile="src/import.csv";
+   private String sFile="web/import.csv";
    private String encoding="UTF-8";
  //////////////////////////////////////////////////////////  
    public Reader(String sFile, String encoding) {
-		this.sFile = "src/" + sFile + ".csv";
+		//this.sFile = "web/" + sFile + ".csv";
+	    this.sFile = sFile;
 		this.encoding = encoding;
 	}
 	public Reader() {		
@@ -32,9 +33,9 @@ public class Reader {
 ///////////////////////////////////////////////////  
    public List<String> getList() throws IOException{
 	   List<String> list = new ArrayList<>();
-	   File file = new File(sFile);
-	   if (!file.exists()) {return null;}
-	   
+	   File file = new File(sFile);	
+	   if (!file.exists()) {return null;}		
+		
 	    FileInputStream fis = null;
 		InputStreamReader ois = null;
 		BufferedReader br = null;

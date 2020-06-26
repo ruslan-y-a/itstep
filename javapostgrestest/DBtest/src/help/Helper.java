@@ -49,7 +49,8 @@ public class Helper {
 		}				
 		return ali.toArray(new Long[ali.size()]);
 	}
-	public static String[] objToStringArray(Object o) {		
+	public static String[] objToStringArray(Object o) {	
+		if (o==null) {return null;}
 		String ss0= new String(o.toString().split("=")[1].substring(1));
 		String[] ss=ss0.substring(0,ss0.length()-1).split(",");
 		ArrayList<String> ali = new ArrayList<String>();
@@ -63,8 +64,13 @@ public class Helper {
 		return ali.toArray(new String[ali.size()]);
 	}
 	public static ArrayList<Integer> objToIntArrayList(Object o) {
-		String ss0= new String(o.toString().split("=")[1].substring(1));
-		String[] ss=ss0.substring(0,ss0.length()-1).split(",");
+		if (o==null) {return null;}
+		String str= new String(o.toString());
+		String ss0;
+		if (str.contains("=")) {
+		  ss0= str.split("=")[1].substring(1);
+		} else {ss0=str;}
+		String[] ss=ss0.substring(1,ss0.length()-1).split(",");
 		ArrayList<Integer> ali = new ArrayList<Integer>();
 		int i=-1;
 		try {
@@ -76,8 +82,13 @@ public class Helper {
 		return ali;
 	}
 	public static ArrayList<Long> objToLongArrayList(Object o) {
-		String ss0= new String(o.toString().split("=")[1].substring(1));
-		String[] ss=ss0.substring(0,ss0.length()-1).split(",");
+		if (o==null) {return null;}
+		String str= new String(o.toString());
+		String ss0;
+		if (str.contains("=")) {
+		  ss0= str.split("=")[1];
+		} else {ss0=str;}
+		String[] ss=ss0.substring(1,ss0.length()-1).split(",");
 		ArrayList<Long> ali = new ArrayList<Long>();
 		int i=-1;
 		try {
@@ -89,6 +100,7 @@ public class Helper {
 		return ali;
 	}
 	public static ArrayList<String> objToStringArrayList(Object o) {
+		if (o==null) {return null;}
 		String ss0= new String(o.toString().split("=")[1].substring(1));
 		String[] ss=ss0.substring(0,ss0.length()-1).split(",");
 		ArrayList<String> ali = new ArrayList<String>();
@@ -102,4 +114,12 @@ public class Helper {
 		return ali;
 	}
 	
+	public static String findDelimiter(String str) {
+		if (str.indexOf(";")>0) {return ";";}
+		if (str.indexOf("\n")>0) {return "\n";}
+		if (str.indexOf(",")>0) {return ",";}	
+		if (str.indexOf("&")>0) {return "&";}
+		if (str.indexOf("$")>0) {return "$";}		
+		return " ";
+	}
 }

@@ -1,9 +1,13 @@
 package ui;
 
-import java.util.Date;
+import java.io.IOException;
+import java.util.ArrayList;
+//import java.util.Date;
 import java.util.List;
-import javax.servlet.ServletException;
+//import javax.servlet.ServletException;
+import java.util.Map;
 
+import csvLoader.CsvLoader;
 import service.DBService;
 import service.LogicException;
 import tabs.Baseitem;
@@ -26,10 +30,14 @@ import tabs.Webpages;
 
 public class test {
 
-	public static void main(String[] args) throws LogicException {
+	public static void main(String[] args) throws LogicException, IOException {
 		try(Factory factory = new Factory()) {
+			Class.forName("org.postgresql.Driver");			
 			DBService service = factory.getDBService();
-			List<Entity> products;
+			service.createCsvLoad("web/img.csv");				
+			List<Entity> products = service.read("img");
+			products.forEach(x-> System.out.println(x));
+			
 		//	products= service.read("client");printClient(products);
 		//	products= service.read("users");printUser(products);
 		//	products= service.read("baseitem");printBaseitem(products);
@@ -46,12 +54,12 @@ public class test {
 		//	products= service.read("tagurl");printTagurl(products);
 		//	products= service.read("webpages");printWebpages(products);
 		//	products= service.read("size");printVariant(products);																																						
-			products= service.read("color");printVariant(products);
+		//	products= service.read("color");printVariant(products);
 		} catch(LogicException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-
+/*
 	static void printClient(List<Entity> products ) {
 		Client client; 
 		for(Entity product : products) {
@@ -99,8 +107,8 @@ public class test {
          System.out.printf("<tr>");
         System.out.printf("<td>%d</td>\n", baseitem.DBgetId());
          System.out.printf("<td>%d</td>\n", baseitem.getItemid());
-        System.out.printf("<td>%d</td>\n", baseitem.getColorID());
-        System.out.printf("<td>%d</td>\n", baseitem.getSizeID());
+        System.out.printf("<td>%d</td>\n", baseitem.getColorid());
+        System.out.printf("<td>%d</td>\n", baseitem.getSizeid());
         System.out.printf("<td>%s</td>\n", baseitem.getName());		
         System.out.printf("<td>%d</td>\n", baseitem.getQuantity());
         System.out.printf("<td>%d</td>\n", baseitem.getBaseprice());
@@ -205,7 +213,6 @@ System.out.printf("<td>%s</td>\n", item.getTitle());
 System.out.printf("<td>%s</td>\n", item.getText());   
 System.out.printf("<td>%s</td>\n", item.getName());   
 System.out.printf("<td>%s</td>\n", item.getDescription());   
-System.out.printf("<td>%s</td>\n", item.getTagurl());   
 System.out.printf("<td>%s</td>\n", item.getKeywords());   
 System.out.printf("<td>%s</td>\n", item.getMainimgurl());   
 System.out.printf("<td>%s</td>\n", item.getUrl());   
@@ -288,11 +295,13 @@ System.out.printf("<td>%s</td>\n", webpages.getDescription());
 System.out.printf("<td>%s</td>\n", webpages.getKeywords());
 System.out.printf("<td>%s</td>\n", webpages.getH1());
 System.out.printf("<td>%s</td>\n", webpages.getText());
-System.out.printf("<td>%s</td>\n", webpages.getCategoryid());
-System.out.printf("<td>%s</td>\n", webpages.getTagurl());
 System.out.printf("<td>%s</td>\n", webpages.getRobots());
 System.out.printf("</tr>");
 }
 }
 //////////////////////////////////////////////////////////
+ * 
+ * 
+ */
 }
+

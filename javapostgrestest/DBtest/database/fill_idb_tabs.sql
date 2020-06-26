@@ -35,9 +35,7 @@ INSERT INTO "color" ("id","name") VALUES
 (15,'multicolor');
 SELECT setval('color_id_seq', 15);
 --================================================================
-INSERT INTO "category"
----------------------------------------------------
-("id", "name" , "parentid") VALUES
+INSERT INTO "category" ("id", "name" , "parentid") VALUES
 ---------------------------------------------------
 (1,'Special shoes',1),
 (2,'Men shoes',NULL),
@@ -69,9 +67,7 @@ INSERT INTO "category"
 -----------------------------------------------
 SELECT setval('category_id_seq',27);
 --================================================================
-INSERT INTO "classification"
----------------------------------------------------
-("id", "name"  , "parentid", "categoryid") VALUES
+INSERT INTO "classification" ("id", "name"  , "parentid", "categoryid") VALUES
 ---------------------------------------------------
 (1,'Category',NULL,NULL),
 (2,'Special shoes',1,1),
@@ -146,16 +142,16 @@ SELECT setval('classification_id_seq',68);
 --===========================================================================
 INSERT INTO "users"
 ---------------------------------------------------
-("id", "name"     , "password"      , "email"                 ,"roleid") VALUES
+("id", "name"     , "login", "password"      , "email"                 ,"roleid") VALUES
 ---------------------------------------------------
-(   1, 'Admin'    ,  '5105565Aa'    , 'ruslan-y-a@mail.ru'    , 0      ),
-(   2, 'Product'  ,  '5105565Pp'    , 'ruslan-y-a@mail.ru'    , 2      ),
-(   3, 'Manager'  ,  '5105565Mm'    , 'ruslan-y-a@mail.ru'    , 3      ),
-(   4, 'Cashier'  ,  '5105565Cc'    , 'ruslan-y-a@mail.ru'    , 4      ),
-(   5, 'Client'  ,  '123456789'    , 'ruslan-y-a@mail.ru'     , 1      ),
-(   6, 'Client2'  ,  '123456789'    , 'ruslan-y-a@mail.ru'    , 1      );
+(   1, 'Admin'    ,  'Admin',  'Admin'    , 'ruslan-y-a@mail.ru'    , 0      ),
+(   2, 'Product'  ,  'Product',  'Product'    , 'ruslan-y-a@mail.ru'    , 2      ),
+(   3, 'Manager'  ,  'Manager', 'Manager'    , 'ruslan-y-a@mail.ru'    , 3      ),
+(   4, 'Cashier'  ,  'Cashier' ,'Cashier'    , 'ruslan-y-a@mail.ru'    , 4      ),
+(   5, 'Client'  ,  'Client', '123456789'    , 'ruslan-y-a@mail.ru'     , 1      ),
+(   6, 'Courier'  , 'Courier' , 'Courier'    , 'ruslan-y-a@mail.ru'     , 5      );
 -----------------------------------------------
-SELECT setval('users_id_seq', 6);
+SELECT setval('users_id_seq', 5);
 --================================================================
 
 INSERT INTO "tagurl"
@@ -175,37 +171,22 @@ INSERT INTO "tagurl"
 -----------------------------------------------
 SELECT setval('tagurl_id_seq', 10);
 --================================================================
-INSERT INTO "tagcloud"
+INSERT INTO "tagcloud"  ("id", "classification") VALUES
 ---------------------------------------------------
-("id", "classification"  , "tagurl"                      ) VALUES
----------------------------------------------------
-(   1, '{10,41}'   , 1  ),
-(   2, '{20,36}'   , 2   ),
-(   3, '{14,36}'   , 3   ),
-(   4, '{16,57}'   , 4   ),
-(   5, '{33,37}'   , 5   );
+(   1, '{10,41}'   ),
+(   2, '{20,36}'     ),
+(   3, '{14,36}'     ),
+(   4, '{16,57}'     ),
+(   5, '{33,37}'     );
 -----------------------------------------------
 SELECT setval('tagcloud_id_seq', 5);
 --================================================================
-
-
 INSERT INTO "items"
----------------------------------------------------
-("id", "articul", "model" , "category", "baseprice", "discount", "title",      
- "text", "name"      , "description", "keywords") VALUES
----------------------------------------------------
-  (1, '01505_01' ,  '01505' , 7,  60, 0, 'Mens shoes of natural leather 01505_01',
-  'Modern allseason black mens shoes of natural leather 01505_01.', 'Mens shoes 01505_01',
-  'Modern allseason black mens shoes of natural leather 01505_01', 
-   'Mens shoes, Mens black shoes'),
-   (2, '37284903' ,  '37284903' , 11, 110, 0, 'Womens sneakers 37284903',
-  'Modern womens sneakers 37284903. Puma sport shoes', 'Womens sneakers 37284903',
-  'Modern womens sneakers 37284903. Puma sport shoes', 
-   'Womens sneakers, womens sport shoes, Womens Puma sneakers'),
-   (3, '37112005' , '37112005' ,18 , 70, 25, 'Mens sneakers 37112005',
-  'Modern black mens sneakers 37112005. Puma sport shoes', 'Mens sneakers 37112005',
-  'Modern black mens sneakers 37112005. Puma sport shoes', 
-   'Mens sneakers, Mens sport shoes, Mens Puma sneakers');
+("id", "articul", "model" , "category", "baseprice", "discount", "name" ,  "classification", "img" ,  "active", "webpages")
+VALUES
+(1, '01505_01', '01505_01',7,60,0,'Mens shoes 01505_01','{2,10,31,39,47}',NULL,true,NULL),
+(2,'37284903','37284903',11,110,0,'Womens sneakers 37284903','{3,20,31,36,42}',NULL,true,NULL),
+(3,'37112005','37112005',18,70,25,'Mens sneakers 37112005','{2,14,31,36,42}',NULL,true,NULL);
 -----------------------------------------------
 SELECT setval('items_id_seq', 3);
 --================================================================
@@ -300,8 +281,8 @@ SELECT setval('client_id_seq',2 );
 --================================================================
 INSERT INTO "orders"
 ---------------------------------------------------
-("id","number","datetime"        ,"dateexpired","baseitemid","customerid","quantity","sum",
- "currencyid","ordertype" ,"active"  ,"status") VALUES
+("id","number","datetime"        ,"dateexpired","baseitem","client","quantity","sum",
+ "currency","delivery" ,"active"  ,"status") VALUES
 ---------------------------------------------------
 (1 ,1  ,  '2019-12-07 14:30:00'  ,'2019-12-12' ,   1         , 1         , 1        , 60  ,
  1           , 1          ,    FALSE           ,   2     ),
@@ -319,20 +300,36 @@ INSERT INTO "orders"
 SELECT setval('orders_id_seq',6 );
 --================================================================
 INSERT INTO "webpages"
----------------------------------------------------
-("id","title"           ,"description"            ,"keywords"                        ,"h1"          ,
-"text"                                        ,"categoryid","tagurl","url") VALUES
----------------------------------------------------
-(1   ,  'IShop'  ,'IShop - internet shopping testing' ,'internet shopping testing'  ,'IShop'        ,
- 'IShop - internet shopping testing'           , NULL      , NULL    ,  ''  ),
-(2   , 'Mens shoes'   ,'Modern mens shoes of famous brands'   ,'Mens shoes,Modern shoes for men','Mens shoes', 'Modern mens shoes of famous brands'    , 2     , NULL  ,  'mens shoes'  ),	
-(3   , 'Womens shoes' ,'Modern womens shoes of famous brands' ,'Womens shoes, Modern shoes for women','Womens shoes', 'Modern womens shoes of famous brands' , 12  , NULL ,'womens shoes'  );		
+("id", "url", "title", "description", "keywords", "h1", "text", "robots")
+VALUES
+(1,'black-men-shoes-01505-01', 
+  'Modern allseason black men shoes of natural leather 01505_01',
+  'Modern allseason black men shoes of natural leather 01505_01',
+  'Mens shoes, Mens black shoes',
+  'Men shoes 01505_01',
+  'Modern allseason black men shoes of natural leather 01505_01.',
+  'index,follow'),
+(2,'modern-women-sneakers-37284903',
+   'Modern women sneakers 37284903. Puma sport shoes',
+   'Modern women sneakers 37284903. Puma sport shoes',
+   'Women sneakers, women sport shoes, Women Puma sneakers',
+   'Mens shoes 01505_01',
+   'Modern women sneakers 37284903. Puma sport shoes',
+   'index,follow'),
+(3,'black-men-sneakers-37112005',
+   'Modern black mens sneakers 37112005. Puma sport shoes',   
+   'Modern black mens sneakers 37112005. Puma sport shoes',
+   'Mens sneakers, Mens sport shoes , Mens Puma sneakers',
+   'Mens sneakers 37112005',
+   'Modern black mens sneakers 37112005. Puma sport shoes',   
+   'index,follow');
+		
 -----------------------------------------------
 SELECT setval('webpages_id_seq',3 );
 --================================================================
 INSERT INTO "sale"
 ---------------------------------------------------
-("id","datetime"                 ,"orderid","return","currencyid") VALUES
+("id","datetime"                 ,"order","returned","currency") VALUES
 ---------------------------------------------------
 (1   , '2018-12-07 14:30:00' , 1       , FALSE  ,1           ),
 (2   , '2018-12-07 14:30:00' , 2       , FALSE  ,1           ),

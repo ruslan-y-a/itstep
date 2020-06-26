@@ -9,6 +9,10 @@ import sqlSetGet.SqlSetterL;
 import sqlSetGet.SqlSetterS;
 
 public class Tagurl extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3054416628412216675L;
 	private String tagname;
 	private String url;
 	

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 //import java.util.Date;
 //import java.util.LinkedList;
 import java.util.List;
@@ -18,11 +19,11 @@ import tabs.Mapper;
 
 public class DbDaoImpl implements DbDao {
 	private Connection c;
-	private Mapper mapper;
+	//private Mapper mapper;
 		
 	public DbDaoImpl(Connection c) {		
 		this.c = c;	
-		this.mapper = new Mapper();
+		//this.mapper = new Mapper();
 	}
 	public void setConnection(Connection c) {
 		this.c = c;
@@ -37,6 +38,7 @@ public class DbDaoImpl implements DbDao {
 	}
 	//////////////////////////////////////////////////
 	//////////////////////////////////////////////////
+	//V//
 	@Override
 	public Long create(Entity entity) throws DaoException {
 		//String sql = "INSERT INTO \"account\"(\"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\") VALUES (?, ?, ?, ?, ?)";
@@ -65,7 +67,7 @@ public class DbDaoImpl implements DbDao {
 	@Override
 	public Long create(String name,HashMap<String,Object> mapTab) throws DaoException {
 		//String sql = "INSERT INTO \"account\"(\"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\") VALUES (?, ?, ?, ?, ?)";
-		Entity entity = mapper.getEntity(name);
+		Entity entity = Mapper.getEntity(name);
 		String sql = sqlInsert(entity,true);
 		PreparedStatement s = null;
 		ResultSet r = null;
@@ -91,7 +93,7 @@ public class DbDaoImpl implements DbDao {
 	@Override
 	public Long create(String name,ArrayList<String> fields, ArrayList<String> values) throws DaoException {
 		//String sql = "INSERT INTO \"account\"(\"number\", \"balance\", \"typeid\", \"lastsumm\", \"date\") VALUES (?, ?, ?, ?, ?)";
-		Entity entity = mapper.getEntity(name);
+		Entity entity = Mapper.getEntity(name);
 		String sql = sqlInsert(name,fields.toArray(new String[fields.size()]));
 		PreparedStatement s = null;
 		ResultSet r = null;	
@@ -128,7 +130,7 @@ public class DbDaoImpl implements DbDao {
 			s= c.createStatement();
 			r=s.executeQuery(sql);			
 			while(r.next()) {
-				entity = mapper.getEntity(name);
+				entity = Mapper.getEntity(name);
 				entity.setDBName(name);
 				ifields=r.getMetaData().getColumnCount();
 				 for(int i=0;i<ifields;i++) {
@@ -157,7 +159,7 @@ public class DbDaoImpl implements DbDao {
 			s = c.prepareStatement(sql);
 			s.setLong(1, id);
 			r = s.executeQuery();			
-			Entity entity = mapper.getEntity(name);
+			Entity entity = Mapper.getEntity(name);
 			if(r.next()) {
 			  entity.setDBName(name);
 			  ifields=r.getMetaData().getColumnCount();
@@ -175,9 +177,64 @@ public class DbDaoImpl implements DbDao {
 		}
 	}
 	@Override
+	public Map<Long,Object> readField(String name, String tarfield, String field, Object fValue) throws DaoException {   //Long id	
+		String sql;
+		if (fValue==null) {
+		  sql="SELECT \"id\",\""+tarfield +"\" FROM \"" + name + "\" WHERE \"" +field +"\" IS NULL";
+		} else { 
+		  sql="SELECT \"id\",\""+tarfield +"\" FROM \"" + name + "\" WHERE \"" +field +"\" = ?";}
+		PreparedStatement s = null;
+		ResultSet r = null;			
+		try {
+			s = c.prepareStatement(sql);
+			Map<Long,Object> entities=new LinkedHashMap<Long,Object>();
+			Entity entity = Mapper.getEntity(name);			
+			if (fValue!=null) {entity.setForSelect(s, 1, field, fValue);}			
+			r = s.executeQuery();				
+			while(r.next()) {			  					 			
+				 entity.getNameFromTab(r, "id");
+				 entities.put(entity.DBgetId(), entity.getObjectFromTab(r, tarfield));
+		       }	
+				 
+			  
+			return entities;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	@Override
+	public Map<Long,Object> readField(String name, String tarfield, String field, String expr) throws DaoException {   //Long id	
+		String sql="SELECT \"id\",\""+tarfield +"\" FROM \"" + name + "\" WHERE \"" +field +"\"" + expr;		
+		PreparedStatement s = null;
+		ResultSet r = null;			
+		try {
+			s = c.prepareStatement(sql);
+			Map<Long,Object> entities=new LinkedHashMap<Long,Object>();
+			Entity entity = Mapper.getEntity(name);									
+			r = s.executeQuery();				
+			while(r.next()) {			  					 			
+				 entity.getNameFromTab(r, "id");
+				 entities.put(entity.DBgetId(), entity.getObjectFromTab(r, tarfield));
+		       }					 
+			  
+			return entities;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+	/////////////////////////////////
 	public List<Entity> read(String name, String field, Object fValue) throws DaoException {   //Long id
-		//String sql="SELECT FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
-		String sql="SELECT * FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
+		String sql;
+		if (fValue==null) {
+		  sql="SELECT * FROM \"" + name + "\" WHERE \"" +field +"\" IS NULL";	
+		} else {
+		 sql="SELECT * FROM \"" + name + "\" WHERE \"" +field +"\" = ?";}
 		PreparedStatement s = null;
 		ResultSet r = null;		
 		int ifields;
@@ -185,8 +242,8 @@ public class DbDaoImpl implements DbDao {
 		try {
 			s = c.prepareStatement(sql);
 			List<Entity> entities=new ArrayList<Entity>();
-			Entity entity = mapper.getEntity(name);			
-			entity.setForSelect(s, 1, field, fValue);			
+			Entity entity = Mapper.getEntity(name);			
+			if (fValue!=null) {entity.setForSelect(s, 1, field, fValue);}			
 			r = s.executeQuery();				
 			while(r.next()) {			  		
 			  entity.setDBName(name);
@@ -196,7 +253,7 @@ public class DbDaoImpl implements DbDao {
 				 entity.getNameFromTab(r, columnName);					
 		       }			  
 			  entities.add(entity);
-			  entity = mapper.getEntity(name);			 
+			  entity = Mapper.getEntity(name);			 
 			 }  
 			return entities;
 		} catch(SQLException e) {
@@ -207,6 +264,37 @@ public class DbDaoImpl implements DbDao {
 		}
 	}
 	
+	public List<Entity> read(String name, String field, String expr) throws DaoException {   //Long id
+		String sql="SELECT * FROM \"" + name + "\" WHERE \"" +field +"\"" + expr;			
+		PreparedStatement s = null;
+		ResultSet r = null;		
+		int ifields;
+		String columnName;
+		try {
+			s = c.prepareStatement(sql);
+			List<Entity> entities=new ArrayList<Entity>();
+			Entity entity = Mapper.getEntity(name);								
+			r = s.executeQuery();				
+			while(r.next()) {			  		
+			  entity.setDBName(name);
+			  ifields=r.getMetaData().getColumnCount();
+			  for(int i=0;i<ifields;i++) {
+				 columnName= r.getMetaData().getColumnName(i+1);
+				 entity.getNameFromTab(r, columnName);					
+		       }			  
+			  entities.add(entity);
+			  entity = Mapper.getEntity(name);			 
+			 }  
+			return entities;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////
 	@Override
 	public List<Entity> read(String name, String[] field, Object[] fValue) throws DaoException {   //Long id
 		//String sql="SELECT FROM \"" + name + "\" WHERE " + SqlHelp.sqlWhereAndEquals(field);
@@ -223,7 +311,7 @@ public class DbDaoImpl implements DbDao {
 		try {
 			s = c.prepareStatement(sql);
 			List<Entity> entities=new ArrayList<Entity>();
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<field.length;i++) {
 				entity.setForSelect(s, i+1, field[i], fValue[i]);}
 		   			
@@ -237,7 +325,7 @@ public class DbDaoImpl implements DbDao {
 				 entity.getNameFromTab(r, columnName);					
 		       }
 			  entities.add(entity);
-			  entity = mapper.getEntity(name);	
+			  entity = Mapper.getEntity(name);	
 			 }  
 			return entities;
 		} catch(SQLException e) {
@@ -260,7 +348,7 @@ public class DbDaoImpl implements DbDao {
 		try {
 			s = c.prepareStatement(sql);
 			List<Entity> entities=new ArrayList<Entity>();
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<ifields;i++) {
 				entity.setForSelect(s, i+1, field, fValue[i]);}
 		   			
@@ -274,7 +362,7 @@ public class DbDaoImpl implements DbDao {
 				 entity.getNameFromTab(r, columnName);					
 		       }
 			  entities.add(entity);
-			  entity = mapper.getEntity(name);	
+			  entity = Mapper.getEntity(name);	
 			 }  
 			return entities;
 		} catch(SQLException e) {
@@ -294,7 +382,7 @@ public class DbDaoImpl implements DbDao {
 		try {
 			s = c.prepareStatement(sql);
 			ArrayList<Long> entities=new ArrayList<Long>();
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			entity.setForSelect(s, 1, field, fValue);			
 			
 			r = s.executeQuery();				
@@ -325,7 +413,7 @@ public class DbDaoImpl implements DbDao {
 		try {
 			s = c.prepareStatement(sql);
 			ArrayList<Long> entities=new ArrayList<Long>();
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<ifields;i++) {
 				entity.setForSelect(s, i+1, field, fValue[i]);}
 		   			
@@ -356,7 +444,7 @@ public class DbDaoImpl implements DbDao {
 		try {
 			s = c.prepareStatement(sql);
 			ArrayList<Long> entities=new ArrayList<Long>();
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<ifields;i++) {
 				entity.setForSelect(s, i+1, field, fValue[i]);}
 		   			
@@ -394,7 +482,7 @@ public class DbDaoImpl implements DbDao {
 		
 			s = c.prepareStatement(sql);
 			List<Entity> entities=new ArrayList<Entity>();
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<field.length;i++) {
 				entity.setForSelect(s, i+1, field[i], fValue[i]);}
 		   			
@@ -407,7 +495,7 @@ public class DbDaoImpl implements DbDao {
 				 entity.getNameFromTab(r, columnName);					
 		       }
 			  entities.add(entity);
-			  entity = mapper.getEntity(name);	
+			  entity = Mapper.getEntity(name);	
 			 }  
 			return entities;
 		} catch(SQLException e) {
@@ -419,6 +507,10 @@ public class DbDaoImpl implements DbDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}
+	
+	
+////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public void update(String name, String field, Object fValue, String tfield, Object tValue) throws DaoException {
 	//String str="UPDATE + field + SET  \"balance\" = ?, \"typeid\" = ?, \"lastsumm\" = ?, \"date\" = ?, \"id\" = ? WHERE \"number\" = ?";
@@ -427,7 +519,7 @@ public class DbDaoImpl implements DbDao {
 		String sql="UPDATE \""+ name +"\" SET \"" + field + "\" = ? WHERE \"" + tfield + "\"= ?";	
 	
 			s = c.prepareStatement(sql);		
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			entity.setForSelect(s, 1, field, fValue);
 			entity.setForSelect(s, 2, tfield, tValue);
 			s.executeUpdate();				
@@ -457,7 +549,7 @@ public class DbDaoImpl implements DbDao {
 		String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(field) + " WHERE " + SqlHelp.sqlWhereAndEquals(tfield);		
 			s = c.prepareStatement(sql);					
 			int ifields=0;					
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<flength;i++) {
 					entity.setForSelect(s, ++ifields, field[i], fValue[i]);
 			}
@@ -488,7 +580,7 @@ public class DbDaoImpl implements DbDao {
 		String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(fields) + " WHERE \"id\"=?";		
 			s = c.prepareStatement(sql);					
 			int ifields=0;					
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<flength;i++) {
 					entity.setForSelect(s, ++ifields, fields.get(i), values.get(i));
 			}		
@@ -502,8 +594,8 @@ public class DbDaoImpl implements DbDao {
 		}
 		
 	}
-	
-	@Override
+
+	@Override  //V//	
 	public void update(Entity entity) throws DaoException {
 		String name = entity.getDBName();
 		PreparedStatement s = null;		
@@ -512,15 +604,18 @@ public class DbDaoImpl implements DbDao {
 		int counter=0;
 		try {
 			
-			String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(entity.getFieldsList()) +" WHERE id=?";
+			String sql="UPDATE \""+ name +"\" SET " + SqlHelp.sqlUpdate(entity.getFieldsList(true)) +" WHERE id=?";
 			s = c.prepareStatement(sql);	
+			//System.out.println(sql);
 			for (Map.Entry<String,Object> entry: entity.getEntityValues().entrySet()) {				
-				fValue =  entry.getValue();
-			//	if (fValue==null) {continue;}
+				fValue =  entry.getValue(); field = entry.getKey();
+				if (fValue==null || field.equals("id")) {continue;}				
 				   field = entry.getKey();
+				//   System.out.print(field + " ");
 				   entity.setForSelect(s, ++counter, field, fValue);				   	
-		    }						
-															
+		    }			
+			 entity.setForSelect(s, ++counter, "id", entity.DBgetId());
+			//System.out.println(s);												
 			s.executeUpdate();				
 		
 		} catch(SQLException e) {
@@ -557,7 +652,7 @@ public class DbDaoImpl implements DbDao {
 		}
 		
 	}
-	
+	//V//
 	@Override
 	public boolean delete(String name, Long id) throws DaoException {
 		String sql="DELETE FROM \"" + name + "\" WHERE \"id\" = ?";		
@@ -573,7 +668,7 @@ public class DbDaoImpl implements DbDao {
 		 } finally {
 			try { s.close(); } catch(Exception e) {}			
 		 }
-	}
+	}	
 	@Override
 	public boolean delete(String name,  String field, Object fValue) throws DaoException {
 		String sql="DELETE FROM \"" + name + "\" WHERE \"" +field +"\" = ?";
@@ -581,7 +676,7 @@ public class DbDaoImpl implements DbDao {
 		PreparedStatement s = null;
 		try {
 			s = c.prepareStatement(sql);
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			entity.setForSelect(s, 1, field, fValue);			
 			s.executeUpdate();			
 			return true;
@@ -602,7 +697,7 @@ public class DbDaoImpl implements DbDao {
 		PreparedStatement s = null;
 		try {
 			s = c.prepareStatement(sql);			
-			Entity entity = mapper.getEntity(name);			
+			Entity entity = Mapper.getEntity(name);			
 			for (int i=0;i<field.length;i++) {
 				entity.setForSelect(s, i+1, field[i], fValue[i]);}
 			

@@ -3,6 +3,8 @@ package postgres;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import tabs.Entity;
 
 public interface DbDao extends Dao<Entity> {
@@ -12,7 +14,10 @@ public interface DbDao extends Dao<Entity> {
 	Long create(String name,ArrayList<String> fields, ArrayList<String> values) throws DaoException;
 	Entity read(String name,long id) throws DaoException;
 	List<Entity> read(String name) throws DaoException;
+	Map<Long,Object> readField(String name, String tarfield, String field, Object fValue) throws DaoException;
+	Map<Long,Object> readField(String name, String tarfield, String field, String expr) throws DaoException;
 	List<Entity> read(String name, String field, Object fValue) throws DaoException;
+	List<Entity> read(String name, String field, String expr) throws DaoException;
 	List<Entity> read(String name, String[] field, Object[] fValue) throws DaoException;
 	List<Entity> read(String name, String[] field, Number[] fValue, byte[] signs) throws DaoException;
 	List<Entity> read(String name, String field, Object[] fValue) throws DaoException;

@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import service.UserService;
+import service.UserServiceImpl;
+import postgres.UserDao;
+import postgres.UserDbDaoImpl;
+
 import commands.Command;
 import commands.ExitCommand;
 import postgres.DbDao;
@@ -18,8 +23,8 @@ public class Factory  implements AutoCloseable {
 	private DBService dBService = null;
 	
 ///////////////////////////////////////////////////////////////
-   public Factory() throws LogicException, ClassNotFoundException {
-     Class.forName("org.postgresql.Driver");
+   public Factory() throws LogicException {
+  //   Class.forName("org.postgresql.Driver");
     this.connection = getConnection();
    }
 	
@@ -70,7 +75,27 @@ public class Factory  implements AutoCloseable {
   	}
   	return dBService;
   }
-	
+////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////
+	private UserService userService = null;
+	public UserService getUserService() throws LogicException {
+		if(userService == null) {
+			UserServiceImpl service = new UserServiceImpl();
+			userService = service;
+			service.setUserDao(getUserDao());
+		}
+		return userService;
+	}
+  
+	private UserDao userDao = null;
+	public UserDao getUserDao() throws LogicException {
+		if(userDao == null) {
+			UserDbDaoImpl userDaoImpl = new UserDbDaoImpl();
+			userDao = userDaoImpl;
+			userDaoImpl.setConnection(getConnection());
+		}
+		return userDao;
+	}
 ///////////////////////SERVICE COMMANDS//////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	private ExitCommand exitCommand = null;

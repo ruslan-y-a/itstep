@@ -11,6 +11,10 @@ import sqlSetGet.SqlSetterL;
 import sqlSetGet.SqlSetterS;
 
 public class Currency extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8060947453049770818L;
 	private String name;
 	private Double rate;
 	

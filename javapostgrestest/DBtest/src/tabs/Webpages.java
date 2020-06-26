@@ -9,7 +9,12 @@ import sqlSetGet.SqlSetterS;
 
 
 public class Webpages extends Entity {
-	private String[] robotstype ={"index,follow","noindex,nofollow","noindex,follow"};
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5207099217272128948L;
+
+	private static final String[] ROBOTSTYPE ={"index,follow","noindex,nofollow","noindex,follow"};
 	
 	private String url;
 	private String title;
@@ -17,9 +22,7 @@ public class Webpages extends Entity {
 	private String keywords;
 	private String h1;
 	private String text;
-	private Long categoryid;
-	private Long tagurl;
-	private String robots="index,follow";
+	private String robots=ROBOTSTYPE[0];
 	
 	public Webpages() {
 		super("webpages");
@@ -30,8 +33,6 @@ public class Webpages extends Entity {
 		entityValues.put("keywords", null);		
 		entityValues.put("h1", null);
 		entityValues.put("text", null);		
-		entityValues.put("categoryid", null);
-		entityValues.put("tagurl", null);		
 		entityValues.put("robots", "index,follow");		
 	
 		tabSetter.put("id", new SqlSetterL());
@@ -41,8 +42,6 @@ public class Webpages extends Entity {
 		tabSetter.put("keywords", new SqlSetterS());
 		tabSetter.put("h1", new SqlSetterS());
 		tabSetter.put("text", new SqlSetterS());
-		tabSetter.put("categoryid", new SqlSetterL());
-		tabSetter.put("tagurl", new SqlSetterL());	
 		tabSetter.put("robots", new SqlSetterS());
 		
 		tabGetter.put("id", new SqlGetterL());
@@ -52,8 +51,6 @@ public class Webpages extends Entity {
 		tabGetter.put("keywords", new SqlGetterS());
 		tabGetter.put("h1", new SqlGetterS());
 		tabGetter.put("text", new SqlGetterS());
-		tabGetter.put("categoryid", new SqlGetterL());
-		tabGetter.put("tagurl", new SqlGetterL());
 		tabGetter.put("robots", new SqlGetterS());				
 	}
 	
@@ -62,8 +59,7 @@ public class Webpages extends Entity {
 		 return "id:" + this.DBgetId() + "\nurl:"+ this.url + "\ntitle:"+ this.title
 				 + "\ndescription:"+ this.description + "\nkeywords:"+ this.keywords 
 				 + "\nh1:"+ this.h1 + "\ntext:"+ this.text
-				 + "\ncategoryid:"+ this.categoryid + "\ntagurl:"+ this.tagurl
-				 + "\nrobots:"+ this.robots ; }
+				 + "\ncategoryid:"	 + "\nrobots:"+ this.robots ; }
 	
 	public String getUrl() {
 		return url;}
@@ -77,11 +73,7 @@ public class Webpages extends Entity {
 		return h1;}
 	public String getText() {
 		return text;}
-	public Long getCategoryid() {
-		return categoryid;}
-	public Long getTagurl() {
-		return tagurl;}
-	public String getRobots() {
+		public String getRobots() {
 		return robots;}
 
 	public String getUrl(ResultSet r) throws DaoException {
@@ -96,10 +88,6 @@ public class Webpages extends Entity {
 		this.getNameFromTab(r, "h1"); return h1;}
 	public String getText(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "text"); return text;}
-	public Long getCategoryid(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "categoryid"); return categoryid;}
-	public Long getTagurl(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "tagurl"); return tagurl;}
 	public String getRobots(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "robots"); return robots;}
 	
@@ -112,8 +100,6 @@ public class Webpages extends Entity {
 		if (name.equals("keywords")) {this.keywords= entityValues.get("keywords").toString(); return;}
 		if (name.equals("h1")) {this.h1=  entityValues.get("h1").toString(); return;}
 		if (name.equals("text")) {this.text=  entityValues.get("text").toString(); return;}
-		if (name.equals("categoryid")) {this.categoryid= (Long) entityValues.get("categoryid"); return;}
-		if (name.equals("tagurl")) {this.tagurl= (Long) entityValues.get("tagurl"); return;}
 		if (name.equals("robots")) {this.robots= entityValues.get("robots").toString();}		
 	}
 
@@ -126,23 +112,21 @@ public class Webpages extends Entity {
 		this.keywords= entityValues.get("keywords").toString();
 		this.h1=  entityValues.get("h1").toString();
 		this.text=  entityValues.get("text").toString();
-		this.categoryid= (Long) entityValues.get("categoryid");
-		this.tagurl= (Long) entityValues.get("tagurl");
 		this.robots= entityValues.get("robots").toString();
 	}
 	
-	@SuppressWarnings("unused")
+	
 	public void setIndex() {
-		this.robots = robotstype[0];entityValues.put("robots", robotstype[0]);		}
-	@SuppressWarnings("unused")
+		this.robots = ROBOTSTYPE[0];entityValues.put("robots", ROBOTSTYPE[0]);		}
+	
 	public void setNoIndex() {
-		this.robots = robotstype[1];entityValues.put("robots", robotstype[1]);		}
-	@SuppressWarnings("unused")
+		this.robots = ROBOTSTYPE[1];entityValues.put("robots", ROBOTSTYPE[1]);		}
+	
 	public void setFollow() {
-		this.robots = robotstype[2];entityValues.put("robots", robotstype[2]);		}
+		this.robots = ROBOTSTYPE[2];entityValues.put("robots", ROBOTSTYPE[2]);		}
 	
 	public boolean chkRobots(String str) {
-	  if (str.equals(robotstype[0]) || str.equals(robotstype[1]) || str.equals(robotstype[2])){
+	  if (str.equals(ROBOTSTYPE[0]) || str.equals(ROBOTSTYPE[1]) || str.equals(ROBOTSTYPE[2])){
 		return true;}	
 		return false;
 	}

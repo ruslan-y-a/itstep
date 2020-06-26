@@ -36,7 +36,7 @@ public class ProductListServlet extends HttpServlet {
 			List<Entity> products = service.read("client");					
 			req.setAttribute("client", products);
 			req.getRequestDispatcher("/WEB-INF/client/list.html").forward(req, resp);
-		} catch(LogicException | ClassNotFoundException e) {
+		} catch(LogicException e) {
 			throw new ServletException(e);
 		}
 	}

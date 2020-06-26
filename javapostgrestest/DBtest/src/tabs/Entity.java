@@ -1,9 +1,11 @@
 package tabs;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,35 +13,51 @@ import postgres.DaoException;
 import sqlSetGet.SqlGetter;
 import sqlSetGet.SqlSetter;
 
-abstract public class Entity implements absEntity{
+abstract public class Entity implements absEntity, Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7630122116440798619L;
 	protected String DBName;
-	protected HashMap<String,Object> entityValues;
-	protected HashMap<String,SqlSetter> tabSetter;
-	protected HashMap<String,SqlGetter> tabGetter;
+	protected LinkedHashMap<String,Object> entityValues;
+	protected LinkedHashMap<String,SqlSetter> tabSetter;
+	protected LinkedHashMap<String,SqlGetter> tabGetter;
 	
 	private Long id;
 
 	public Entity(String str) {
 	  this.DBName=new String(str);	
-	  this.entityValues = new HashMap<String,Object>();
-	  this.tabSetter = new HashMap<String,SqlSetter>();
-	  this.tabGetter = new HashMap<String,SqlGetter>();
+	  this.entityValues = new LinkedHashMap<String,Object>();
+	  this.tabSetter = new LinkedHashMap<String,SqlSetter>();
+	  this.tabGetter = new LinkedHashMap<String,SqlGetter>();
 	}
 
 	  @Override
 	  public void setToTab (PreparedStatement s, Integer i,String columnName, Object o) throws DaoException {	
+		  try { 
 		  SqlSetter sqlSetter = tabSetter.get(columnName);         
-		  sqlSetter.sqlSet(s, i, o);            
+		  sqlSetter.sqlSet(s, i, o);         
+	    } catch (DaoException e) {
+		  throw new DaoException(e + " " + columnName); 
+	    } 
 	  }
 	  @Override
 	  public void setToTab (PreparedStatement s, Integer i,String columnName) throws DaoException {	
+		  try { 
 		  SqlSetter sqlSetter = tabSetter.get(columnName);         
 		  Object o = entityValues.get(columnName);
 		  sqlSetter.sqlSet(s, i, o);            
+		  } catch (DaoException e) {
+			  throw new DaoException(e + " " + columnName); 
+		    } 
 	  }
 	  public void setToTab (PreparedStatement s, Integer i,String columnName,String value) throws DaoException {	
+		  try { 
 		  SqlSetter sqlSetter = tabSetter.get(columnName);         		  
-		  sqlSetter.sqlSet(s, i, value);            
+		  sqlSetter.sqlSet(s, i, value);      
+	    } catch (DaoException e) {
+		  throw new DaoException(e + " " + columnName); 
+	    } 
 	  }
 	  @Override
 	  public void getNameFromTab (ResultSet r, String columnName) throws DaoException {		  
@@ -47,17 +65,30 @@ abstract public class Entity implements absEntity{
 		  entityValues.put(columnName, sqlGetter.sqlGet(r, columnName));
 		 try { this.cast(columnName);}
 		 catch(NullPointerException e) {}
-	  }  
+	  } 
+	  @Override
+	  public Object getObjectFromTab (ResultSet r, String columnName) throws DaoException {		  
+		  SqlGetter sqlGetter = tabGetter.get(columnName);			   
+		  return sqlGetter.sqlGet(r, columnName);		 
+	  } 
 	  
 	  @Override
 	  public void setForSelect (PreparedStatement s, Integer i,String columnName, Object o) throws DaoException {	
-		  SqlSetter sqlSetter = tabSetter.get(columnName);         		 
-		  sqlSetter.sqlSet(s, i, o);            
+		 try { 
+			 SqlSetter sqlSetter = tabSetter.get(columnName);         		 		 
+		     sqlSetter.sqlSet(s, i, o);
+		  } catch (DaoException e) {
+			  throw new DaoException(e + " " + columnName); 
+		  } 
 	  }
 	  @Override
 	  public void setForSelect (PreparedStatement s, Integer i,String columnName, String o) throws DaoException {	
+		  try { 
 		  SqlSetter sqlSetter = tabSetter.get(columnName);         		 
-		  sqlSetter.sqlSet(s, i, o);            
+		  sqlSetter.sqlSet(s, i, o);  
+		  } catch (DaoException e) {
+			  throw new DaoException(e + " " + columnName); 
+		  } 
 	  }
 /*===================================================================*/	  
 	public void setDBName(String dBName) {
@@ -174,14 +205,21 @@ abstract public class Entity implements absEntity{
 	  public String[] getFieldsList() {
 			 return entityValues.keySet().toArray(new String[this.getSize()]);	
 		  }
+	  public ArrayList<String> getFieldsArrayList() {
+		  ArrayList<String> list = new ArrayList<String>();
+		  for (String str:entityValues.keySet()) {
+			  list.add(str);}
+		    return list;	
+		  }
+	  
 	  public String[] getFieldsList(boolean chnull) {
 		   if (chnull) {
 			 ArrayList<String> ar = new ArrayList<String>(); 
 			 for (Map.Entry<String,Object> entry: entityValues.entrySet()) {		
-				 if (entry.getValue()!=null) {
+				 if (entry.getValue()!=null && !entry.getKey().equals("id")) {
 					 ar.add(entry.getKey());} 
 			 }			   
-			 return ar.toArray(new String[this.getSize()]);  
+			 return ar.toArray(new String[ar.size()]);  
 		   }
 		   return entityValues.keySet().toArray(new String[this.getSize()]);	
 		  }

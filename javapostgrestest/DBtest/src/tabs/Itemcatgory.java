@@ -9,6 +9,10 @@ import sqlSetGet.SqlGetterL;
 import sqlSetGet.SqlSetterL;
 
 public class Itemcatgory  extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5300711199878812807L;
 	public Long items;
 	public Long classification;
 	

@@ -1,61 +1,85 @@
 package tabs;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import help.Helper;
 import postgres.DaoException;
 import sqlSetGet.SqlGetterL;
 import sqlSetGet.SqlGetterO;
-//import sqlSetGet.SqlGetterS;
 import sqlSetGet.SqlSetterArr;
 import sqlSetGet.SqlSetterL;
-//import sqlSetGet.SqlSetterS;
+
 
 public class Tagcloud extends Entity {
-	private Long[] classification;
-	private Long tagurl;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5957592297399170625L;
+	private List<Classification> classification;
+	private Webpages webpages;
 	
 	public Tagcloud() {
 		super("tagcloud");
 		entityValues.put("id", null);
 		entityValues.put("classification", null);
-		entityValues.put("tagurl", null);		
+		entityValues.put("webpages", null);		
 
 		tabSetter.put("id", new SqlSetterL());
 		tabSetter.put("classification", new SqlSetterArr());
-		tabSetter.put("tagurl", new SqlSetterL());
+		tabSetter.put("webpages", new SqlSetterL());
 		
 	    tabGetter.put("id", new SqlGetterL());
 		tabGetter.put("classification", new SqlGetterO());
-		tabGetter.put("tagurl", new SqlGetterL());
+		tabGetter.put("webpages", new SqlGetterL());
 	}
 	
 	@Override
 	  public String toString() {		  
-		 return "id:" + this.DBgetId() + "\ntagurl:"+ this.tagurl + "\nclassification:"+ Helper.objToLongArray(classification); }		
+		 return "id:" + this.DBgetId() + "\nwebpages:"+ this.webpages + "\nclassification:"+ Helper.objToLongArray(classification); }		
 			
-	public Long[] getClassification() {
+	public List<Classification> getClassification() {
 		return classification;}
-	public Long getTagurl() {
-		return tagurl;}
+	public Webpages getWebpages() {
+		return webpages;}
 	
-	public Long[] getClassification(ResultSet r) throws DaoException  {
+	public List<Classification> getClassification(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "classification"); return classification;}
-	public Long getTagurl(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "tagurl"); return tagurl;}
+	public Webpages getWebpages(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "webpages"); return webpages;}
 	
 	@Override
 	public void cast() {
-		this.DBsetId((Long) entityValues.get("id"));
-		this.tagurl= (Long) entityValues.get("tagurl");
-		this.classification=Helper.objToLongArray(entityValues.get("classification"));
+		this.DBsetId((Long) entityValues.get("id"));		
+		Webpages webpages = new Webpages(); webpages.DBsetId((Long) entityValues.get("webpages")); this.webpages = webpages; 
+		
+		ArrayList<Long> iList= Helper.objToLongArrayList(entityValues.get("classification"));	
+	    ArrayList<Classification> Litems= new ArrayList<>();					
+		iList.forEach((x) -> {
+			Classification cl = new Classification();
+			cl.DBsetId(x);
+			Litems.add(cl);
+		  });
+		this.classification=Litems;		
+		
 	}
 
 	@Override
 	public void cast(String name) {		
 		if (name.equals("id")) {this.DBsetId((Long) entityValues.get("id"));return;}
-		if (name.equals("tagurl")) {this.tagurl= (Long) entityValues.get("tagurl");return;}
-		if (name.equals("classification")) {this.classification=Helper.objToLongArray(entityValues.get("classification"));}
+		if (name.equals("webpages")) {
+			Webpages webpages = new Webpages(); webpages.DBsetId((Long) entityValues.get("webpages")); this.webpages = webpages; return;}
+		if (name.equals("classification")) {
+			ArrayList<Long> iList= Helper.objToLongArrayList(entityValues.get("classification"));	
+		    ArrayList<Classification> Litems= new ArrayList<>();					
+			iList.forEach((x) -> {
+				Classification cl = new Classification();
+				cl.DBsetId(x);
+				Litems.add(cl);
+			  });
+			this.classification=Litems;		
+            }
 	}
 
 }

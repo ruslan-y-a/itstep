@@ -1,6 +1,6 @@
 package sqlSetGet;
 
-import java.sql.Array;
+//import java.sql.Array;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 //import java.util.ArrayList;

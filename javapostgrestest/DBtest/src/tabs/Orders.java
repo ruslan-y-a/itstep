@@ -3,31 +3,36 @@ package tabs;
 import java.sql.ResultSet;
 import java.util.Date;
 
+import entities.Delivery;
+import entities.Orderstatus;
+
 import postgres.DaoException;
 import sqlSetGet.SqlGetterB;
 import sqlSetGet.SqlGetterDt;
 import sqlSetGet.SqlGetterI;
 import sqlSetGet.SqlGetterL;
-//import sqlSetGet.SqlGetterS;
 import sqlSetGet.SqlSetterB;
 import sqlSetGet.SqlSetterDt;
 import sqlSetGet.SqlSetterI;
 import sqlSetGet.SqlSetterL;
-//import sqlSetGet.SqlSetterS;//
 import sqlSetGet.SqlSetterTm;
 
 public class Orders extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2447948469031167477L;
 	private Integer number;
 	private Date datetime;
 	private Date dateexpired;
-	private Long baseitemid;
-	private Long customerid;
+	private Baseitem baseitem;
+	private Client client;
 	private Integer quantity;
 	private Long sum;
-	private Long currencyid;
-	private Integer ordertype;
+	private Currency currency;
+	private Delivery delivery;
 	private boolean active;
-	private Integer status;	
+	private Orderstatus status;	
 	
 	public Orders() {
 		super("orders");
@@ -35,12 +40,12 @@ public class Orders extends Entity {
 		entityValues.put("number", null);
 		entityValues.put("datetime", null);		
 		entityValues.put("dateexpired", null);
-		entityValues.put("baseitemid", null);		
-		entityValues.put("customerid", null);
+		entityValues.put("baseitem", null);		
+		entityValues.put("client", null);
 		entityValues.put("quantity", null);		
 		entityValues.put("sum", null);
-		entityValues.put("currencyid", null);		
-		entityValues.put("ordertype", null);
+		entityValues.put("currency", null);		
+		entityValues.put("delivery", null);
 		entityValues.put("active", null);		
 		entityValues.put("status", null);
 		
@@ -48,12 +53,12 @@ public class Orders extends Entity {
 		tabSetter.put("number", new SqlSetterI());
 		tabSetter.put("datetime", new SqlSetterTm());
 		tabSetter.put("dateexpired", new SqlSetterDt());
-		tabSetter.put("baseitemid", new SqlSetterL());
-		tabSetter.put("customerid", new SqlSetterL());
+		tabSetter.put("baseitem", new SqlSetterL());
+		tabSetter.put("client", new SqlSetterL());
 		tabSetter.put("quantity", new SqlSetterI());
 		tabSetter.put("sum", new SqlSetterL());
-		tabSetter.put("currencyid", new SqlSetterL());
-		tabSetter.put("ordertype", new SqlSetterI());
+		tabSetter.put("currency", new SqlSetterL());
+		tabSetter.put("delivery", new SqlSetterI());
 		tabSetter.put("active", new SqlSetterB());
 		tabSetter.put("status", new SqlSetterI());
 		
@@ -61,12 +66,12 @@ public class Orders extends Entity {
 		tabGetter.put("number", new SqlGetterI());
 		tabGetter.put("datetime", new SqlGetterDt());
 		tabGetter.put("dateexpired", new SqlGetterDt());
-		tabGetter.put("baseitemid", new SqlGetterL());
-		tabGetter.put("customerid", new SqlGetterL());
+		tabGetter.put("baseitem", new SqlGetterL());
+		tabGetter.put("client", new SqlGetterL());
 		tabGetter.put("quantity", new SqlGetterI());
 		tabGetter.put("sum", new SqlGetterL());
-		tabGetter.put("currencyid", new SqlGetterL());
-		tabGetter.put("ordertype", new SqlGetterI());
+		tabGetter.put("currency", new SqlGetterL());
+		tabGetter.put("delivery", new SqlGetterI());
 		tabGetter.put("active", new SqlGetterB());
 		tabGetter.put("status", new SqlGetterI());
 	}
@@ -74,10 +79,10 @@ public class Orders extends Entity {
 	@Override
 	  public String toString() {		  
 		 return "id:" + this.DBgetId() + "\nnumber:"+ this.number + "\ndatetime:"+ this.datetime
-				 + "\ndateexpired:"+ this.dateexpired + "\nbaseitemid:"+ this.baseitemid 
-				 + "\ncustomerid:"+ this.customerid + "\nquantity:"+ this.quantity
-				 + "\nsum:"+ this.sum + "\ncurrencyid:"+ this.currencyid
-				 + "\nordertype:"+ this.ordertype + "\nactive:"+ this.active
+				 + "\ndateexpired:"+ this.dateexpired + "\nbaseitemid:"+ this.baseitem 
+				 + "\ncustomerid:"+ this.client + "\nquantity:"+ this.quantity
+				 + "\nsum:"+ this.sum + "\ncurrencyid:"+ this.currency
+				 + "\ndelivery:"+ this.delivery + "\nactive:"+ this.active
 				 + "\nstatus:"+ this.status; }						
 
 	public Integer getNumber() {
@@ -86,21 +91,21 @@ public class Orders extends Entity {
 		return datetime;}
 	public Date getDateexpired() {
 		return dateexpired;}
-	public Long getBaseitemid() {
-		return baseitemid;}
-	public Long getCustomerid() {
-		return customerid;}
+	public Baseitem getBaseitem() {
+		return baseitem;}
+	public Client getClient() {
+		return client;}
 	public Integer getQuantity() {
 		return quantity;}
 	public Long getSum() {
 		return sum;}
-	public Long getCurrencyid() {
-		return currencyid;}
-	public Integer getOrdertype() {
-		return ordertype;}
+	public Currency getCurrency() {
+		return currency;}
+	public Delivery getDelivery() {
+		return delivery;}
 	public boolean isActive() {
 		return active;}
-	public Integer getStatus() {
+	public Orderstatus getStatus() {
 		return status;}
 
 	public Integer getNumber(ResultSet r) throws DaoException {
@@ -109,21 +114,21 @@ public class Orders extends Entity {
 		this.getNameFromTab(r, "datetime"); return datetime;}
 	public Date getDateexpired(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "dateexpired"); return dateexpired;}
-	public Long getBaseitemid(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "baseitemid"); return baseitemid;}
-	public Long getCustomerid(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "customerid"); return customerid;}
+	public Baseitem getBaseitem(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "baseitem"); return baseitem;}
+	public Client getClient(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "client"); return client;}
 	public Integer getQuantity(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "quantity");return quantity;}
 	public Long getSum(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "sum");return sum;}
-	public Long getCurrencyid(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "currencyid");return currencyid;}
-	public Integer getOrdertype(ResultSet r) throws DaoException  {
-		this.getNameFromTab(r, "ordertype");return ordertype;}
+	public Currency getCurrency(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "currency");return currency;}
+	public Delivery getDelivery(ResultSet r) throws DaoException  {
+		this.getNameFromTab(r, "delivery");return delivery;}
 	public boolean isActive(ResultSet r) throws DaoException  {
 		this.getNameFromTab(r, "active");return active;}
-	public Integer getStatus(ResultSet r) throws DaoException {
+	public Orderstatus getStatus(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "status");return status;}
 	
 	@Override
@@ -132,14 +137,14 @@ public class Orders extends Entity {
 		this.number= (Integer) entityValues.get("number");
 		this.datetime= (Date) entityValues.get("datetime");
 		this.dateexpired= (Date) entityValues.get("dateexpired");
-		this.baseitemid= (Long) entityValues.get("baseitemid");
-		this.customerid= (Long) entityValues.get("customerid");
+		Baseitem baseitem = new Baseitem(); baseitem.DBsetId((Long) entityValues.get("baseitem")); this.baseitem = baseitem;
+		Client client = new Client(); client.DBsetId((Long) entityValues.get("client")); this.client = client;
 		this.quantity= (Integer) entityValues.get("quantity");
 		this.sum= (Long) entityValues.get("sum");
-		this.currencyid= (Long) entityValues.get("currencyid");
-		this.ordertype= (Integer) entityValues.get("ordertype");
-		this.active= (boolean) entityValues.get("active");
-		this.status= (Integer) entityValues.get("status");
+		Currency currency = new Currency(); currency.DBsetId((Long) entityValues.get("currency")); this.currency = currency;		
+		this.delivery= Delivery.values()[(Integer) entityValues.get("delivery")];
+		this.active= (boolean) entityValues.get("active");		
+		this.status= Orderstatus.values()[(Integer) entityValues.get("status")];
 	}
 	
 	@Override
@@ -148,14 +153,18 @@ public class Orders extends Entity {
 		if (name.equals("number")) {this.number= (Integer) entityValues.get("number"); return;}
 		if (name.equals("datetime")) {this.datetime= (Date) entityValues.get("datetime"); return;}
 		if (name.equals("dateexpired")) {this.dateexpired= (Date) entityValues.get("dateexpired"); return;}
-		if (name.equals("baseitemid")) {this.baseitemid= (Long) entityValues.get("baseitemid"); return;}
-		if (name.equals("customerid")) {this.customerid= (Long) entityValues.get("customerid"); return;}
+		if (name.equals("baseitem")) {
+			Baseitem baseitem = new Baseitem(); baseitem.DBsetId((Long) entityValues.get("baseitem")); this.baseitem = baseitem;
+			return;}
+		if (name.equals("client")) {
+			Client client = new Client(); client.DBsetId((Long) entityValues.get("client")); this.client = client; return;}
 		if (name.equals("quantity")) {this.quantity= (Integer) entityValues.get("quantity"); return;}
 		if (name.equals("sum")) {this.sum= (Long) entityValues.get("sum");}
-		if (name.equals("currencyid")) {this.currencyid= (Long) entityValues.get("currencyid"); return;}
-		if (name.equals("ordertype")) {this.ordertype= (Integer) entityValues.get("ordertype"); return;}
+		if (name.equals("currency")) {
+			Currency currency = new Currency(); currency.DBsetId((Long) entityValues.get("currency")); this.currency = currency; return;}
+		if (name.equals("delivery")) {this.delivery= Delivery.values()[(Integer) entityValues.get("delivery")]; return;}
 		if (name.equals("active")) {this.active= (boolean) entityValues.get("active"); return;}
-		if (name.equals("status")) {this.status= (Integer) entityValues.get("status");}	
+		if (name.equals("status")) {this.status= Orderstatus.values()[(Integer) entityValues.get("status")];}	
 	}
 
 }

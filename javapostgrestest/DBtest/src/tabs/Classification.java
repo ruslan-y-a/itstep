@@ -9,6 +9,10 @@ import sqlSetGet.SqlSetterL;
 import sqlSetGet.SqlSetterS;
 
 public class Classification  extends Entity {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4741888577354585872L;
 	private Long parentid;
 	private Long categoryid;
 	private String name;

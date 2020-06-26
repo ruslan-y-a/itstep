@@ -11,13 +11,17 @@ import sqlSetGet.SqlSetterL;
 import sqlSetGet.SqlSetterS;
 
 public class Baseitem extends Entity {
-	private Long itemid;
-	private Long color;
-	private Long size;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1964817509967223673L;
+	private Items itemid;
+	private Color colorid;
+	private Size sizeid;
 	private String name;
 	private Integer quantity;
 	private Long baseprice;
-	private Long currency;
+	private Currency currency;
 	
 	public Baseitem() {
 		super("baseitem");
@@ -51,52 +55,53 @@ public class Baseitem extends Entity {
 	
 	@Override
 	  public String toString() {		  
-		 return "id:" + this.DBgetId() + "\nitemid:"+ this.itemid + "\ncolor:"+ this.color
-				 + "\nsize:"+ this.size + "\nname:"+ this.name 
+		 return "id:" + this.DBgetId() + "\nitemid:"+ this.itemid + "\ncolor:"+ this.colorid
+				 + "\nsize:"+ this.sizeid + "\nname:"+ this.name 
 				 + "\nquantity:"+ this.quantity + "\nbaseprice:"+ this.baseprice
 				 + "\ncurrency:"+ this.currency; }						
 
-	public Long getItemid() {
+	public Items getItemid() {
 		return itemid;}
-	public Long getColorID() {
-		return color;}
-	public Long getSizeID() {
-		return size;}
+	public Color getColorid() {
+		return colorid;}
+	public Size getSizeid() {
+		return sizeid;}
 	public String getName() {
 		return name;}
 	public Integer getQuantity() {
 		return quantity;}
 	public Long getBaseprice() {
 		return baseprice;}
-	public Long getCurrency() {
+	public Currency getCurrency() {
 		return currency;}
 
-	public Long getItemid(ResultSet r) throws DaoException {
+	public Items getItemid(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "itemid"); return itemid;}
-	public Long getColorID(ResultSet r) throws DaoException {
-		this.getNameFromTab(r, "color"); return color;}
-	public Long getSizeID(ResultSet r) throws DaoException {
-		this.getNameFromTab(r, "size"); return size;}
+	public Color getColorid(ResultSet r) throws DaoException {
+		this.getNameFromTab(r, "color"); return colorid;}
+	public Size getSizeid(ResultSet r) throws DaoException {
+		this.getNameFromTab(r, "size"); return sizeid;}
 	public String getName(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "name"); return name;}
 	public Integer getQuantity(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "quantity"); return quantity;}
 	public Long getBaseprice(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "baseprice"); return baseprice;}
-	public Long getCurrency(ResultSet r) throws DaoException {
+	public Currency getCurrency(ResultSet r) throws DaoException {
 		this.getNameFromTab(r, "currency"); return currency;}
 
 	@Override
 	public void cast() {
-	  try {	
-		this.DBsetId((Long) entityValues.get("id"));		
-		this.itemid= (Long) entityValues.get("itemid");
-		this.color= (Long) entityValues.get("color");
-		this.size= (Long) entityValues.get("size");
+	  try {			  
+		this.DBsetId((Long) entityValues.get("id"));
+		Items item = new Items(); item.DBsetId((Long) entityValues.get("itemid")); this.itemid = item;
+		Color color = new Color(); color.DBsetId((Long) entityValues.get("color")); this.colorid = color;
+		Size size = new Size(); size.DBsetId((Long) entityValues.get("size")); this.sizeid = size;
 		this.name=entityValues.get("name").toString();
 		this.quantity= (Integer) entityValues.get("quantity");
 		this.baseprice= (Long) entityValues.get("baseprice");
-		this.currency= (Long) entityValues.get("currency");
+		Currency currency=new Currency(); currency.DBsetId((Long) entityValues.get("currency")); this.currency = currency;
+		
 	  } catch(NullPointerException e) {
 		  
 	  }	
@@ -104,14 +109,18 @@ public class Baseitem extends Entity {
 
 	@Override
 	public void cast(String name) {
-		if (name.equals("id")) {this.DBsetId((Long) entityValues.get("id"));return;} 
-		if (name.equals("itemid")) {this.itemid= (Long) entityValues.get("itemid"); return;}
-		if (name.equals("color")) {this.color= (Long) entityValues.get("color"); return;}
-		if (name.equals("size")) {this.size= (Long) entityValues.get("size"); return;}
+		if (name.equals("id")) {this.DBsetId((Long) entityValues.get("id")); return;} 
+		if (name.equals("itemid")) {Items item = new Items(); 
+		   item.DBsetId((Long) entityValues.get("itemid")); this.itemid = item; return;}
+		if (name.equals("color")) {Color color = new Color(); 
+		   color.DBsetId((Long) entityValues.get("color")); this.colorid = color; return;}
+		if (name.equals("size")) {Size size = new Size(); 
+		   size.DBsetId((Long) entityValues.get("size")); this.sizeid = size; return;}
 		if (name.equals("name")) {this.name=entityValues.get("name").toString(); return;}
 		if (name.equals("quantity")) {this.quantity= (Integer) entityValues.get("quantity"); return;}
 		if (name.equals("baseprice")) {this.baseprice= (Long) entityValues.get("baseprice"); return;}
-		if (name.equals("currency")) {this.currency= (Long) entityValues.get("currency");}
+		if (name.equals("currency")) {Currency currency=new Currency();
+		   currency.DBsetId((Long) entityValues.get("currency")); this.currency = currency;}
 	}
 
 }

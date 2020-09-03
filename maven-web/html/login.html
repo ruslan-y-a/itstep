@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+		
+		<link rel="canonical" href="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+		<meta name="description" content="">
+		<meta name="robots" content="index,follow">
+		<meta name="keywords">
+		<link rel="icon" href= "favicon.ico" type="image/x-icon">
+ 		<meta property="og:title" content="" />
+		<meta property="og:description"	content="">
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="" />
+		<meta property="og:site_name" content="" /> 
+	</head>
+	<body>
+		<div class="wrapper">
+			<div class="header">
+			    <div class="site-title fleft">Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+			      <ul class="main-menu">
+					<li class="main-menu__item"><a class="main-menu__item_link" href="index.html">Main</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="products.html">Catalog</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="basket.html">
+					  <img src="img/bag.png"> cart (0)</a></li>				
+					<li class="main-menu__item"><a class="main-menu__item_link" href="login.html">login</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="contact.html">Contacts</a></li>	
+					<li class="main-menu__item"><a class="main-menu__item_link" href="about.html">About</a></li>
+					<li class="main-menu__item"><a class="main-menu__item_link" href="terms.html">Terms</a></li>	
+					<!--  <li class="end"></li>  -->
+				</ul>				
+				<div class="end"></div>
+			</div>		
+			<div>  <!--  class="main" -->
+			<!-- -------------------------------------------------- -->
+			<div class="main-content fleft">
+					<h2 class="page-title">Login</h2>					
+					<form class="form" action="login.html" style="min-width: 300px">
+						<label class="form__label" for="email">e-mail*:</label>
+						<input class="form__text-input" placeholder="email address:" id="email" type="email" name="email" value="ipetrov@gmail.com" required>												
+						<label class="form__label" for="password">password*:</label>
+						<input class="form__text-input" placeholder="password" id="password" type="password" name="password" value="123456789" required>
+						<button class="form__button" type="submit">Login</button>
+						<label for="checkbox"><input type="checkbox" id="checkbox" value="true"> <i>Remember me</i></label>											
+					</form>					
+				</div>
+			<!-- -------------------------------------------------- -->
+				<div class="main-content fleft">
+					<h2 class="page-title">Haven't an account? Register, please!</h2>					
+					<form class="form" action="save.html" style="min-width: 300px">
+						<label class="form__label" for="name">name:</label>
+						<input class="form__text-input" placeholder="first name:" id="name" type="text" name="name" tabindex="1" value="Ivan"  autofocus>
+						<label class="form__label" for="surname">surname:</label>
+						<input class="form__text-input" placeholder="last name:" id="surname" type="text" name="surname" tabindex="2" value="Petrov">
+						<label class="form__label" for="email">e-mail*:</label>
+						<input class="form__text-input" placeholder="email address:" id="email" type="email" name="email" tabindex="3" value="ipetrov@gmail.com" required>
+						<label class="form__label" for="tel">tel*:</label>
+						<input class="form__text-input" placeholder="tel:" id="tel" type="tel" name="tel" tabindex="4" value="123456789" required>
+						
+						<label class="form__label" for="password">password*:</label>
+						<input class="form__text-input" placeholder="password" id="password" type="password" name="password" tabindex="5" value="123456789" required>
+						<label class="form__label" for="retype password">retype password*:</label>
+						<input class="form__text-input" placeholder="retype password" id="retype password" type="password" tabindex="5" value="123456789" required>
+						
+						<div class="form__input">
+							<input id="subscribe" type="checkbox" name="subscribe" value="true">
+							<label for="subscribe">Subscribe</label>
+						</div>
+						<button class="form__button" type="submit">Create</button>
+						<button class="form__button_danger" type="button">Cancel</button>	
+						<p>I agree with the terms and conditions</p>					
+					</form>					
+				</div>
+			
+			<!-- -------------------------------------------------- -->
+			</div>
+			<div class="pusher end"></div>
+		</div>
+		<div class="footer">
+		 &copy; Интернет-магазин &laquo;Всякая всячина&raquo;
+		 <div class="fright"><a href="sitemap.xml">Sitemap</a></div>
+		</div>
+	</body>
+</html>

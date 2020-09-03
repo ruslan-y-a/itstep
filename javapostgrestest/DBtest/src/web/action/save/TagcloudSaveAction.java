@@ -9,6 +9,7 @@ import de_services.TagcloudServiceImpl;
 import entities.Classification;
 import entities.Tagcloud;
 import entities.Webpages;
+import help.Params;
 import service.LogicException;
 import web.action.ActionException;
 import web.action.BaseAction;
@@ -47,7 +48,7 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 	   iwebpages= Long.parseLong(req.getParameter("webpages")); 
  	   if(iwebpages == null || iwebpages<=0) {throw new IllegalArgumentException();}
  	   tagcloud.setWebpages(new Webpages()); tagcloud.getWebpages().setId(iwebpages); 	 
- 	//  System.out.println("====================iwebpages)" +iwebpages);
+ 	  tagcloud.getWebpages().setEntity(Params.WP_TAGCLOUD);  tagcloud.getWebpages().setEntityid(id);
  	  tagcloudServiceImpl.save(tagcloud);
  	 
 	   return new Result("/tagcloud/list");

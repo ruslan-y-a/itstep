@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,15 +15,10 @@ import entities.Variant;
 
 import postgres.DaoException;
 
-public class VariantDaoImpl implements VariantDao {
-    private String name;
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}	
-	public void setName(String name) {
-		this.name = name;
-	}
+public class VariantDaoImpl extends DaoImpl<Variant> implements VariantDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
+	private String name;
+	public void setName(String name) {this.name = name;}
 	private Map<Long, Variant> cache = new HashMap<>();
 		
 	@Override

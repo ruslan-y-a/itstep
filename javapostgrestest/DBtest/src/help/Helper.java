@@ -2,6 +2,8 @@ package help;
 
 //import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Helper {	
 	
@@ -82,18 +84,27 @@ public class Helper {
 		return ali;
 	}
 	public static ArrayList<Long> objToLongArrayList(Object o) {
-		if (o==null) {return null;}
-		String str= new String(o.toString());
+		if (o==null) {return null;}		
+		String[] zz=null;
+		ArrayList<Long> ali = new ArrayList<Long>();
+		try{zz=(String[])o;} catch (Exception e) {}
+		if (zz!=null) {
+			for (String tt:zz) {ali.add(Long.parseLong(tt));} return ali;
+		}		
+		int pp;								
+		String str= o.toString();
 		String ss0;
 		if (str.contains("=")) {
 		  ss0= str.split("=")[1];
 		} else {ss0=str;}
-		String[] ss=ss0.substring(1,ss0.length()-1).split(",");
-		ArrayList<Long> ali = new ArrayList<Long>();
+		String[] ss=ss0.substring(1,ss0.length()-1).split(",");		
 		int i=-1;
 		try {
-		  while (true) {	
-			  ali.add(Long.parseLong(ss[++i]));}
+		  while (true) {
+			  pp=ss[++i].indexOf('"');
+			  if (pp>=0) {ali.add(Long.parseLong(ss[i].replace("\"", "")));}
+			  else {ali.add(Long.parseLong(ss[i]));}
+		   }
 		} catch (Exception e) {
 							
 		}				

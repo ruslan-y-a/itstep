@@ -11,6 +11,7 @@ import sqlSetGet.SqlGetterI;
 import sqlSetGet.SqlGetterL;
 import sqlSetGet.SqlGetterO;
 import sqlSetGet.SqlGetterS;
+import sqlSetGet.SqlSetterArr;
 import sqlSetGet.SqlSetterB;
 import sqlSetGet.SqlSetterI;
 import sqlSetGet.SqlSetterL;
@@ -54,8 +55,8 @@ public class Items extends Entity {
 		    tabSetter.put("baseprice", new SqlSetterL());
 		    tabSetter.put("discount", new SqlSetterI());		    
 		    tabSetter.put("name", new SqlSetterS());
-		    tabSetter.put("classification", new SqlSetterO());
-		    tabSetter.put("img", new SqlSetterO());
+		    tabSetter.put("classification", new SqlSetterArr());
+		    tabSetter.put("img", new SqlSetterArr());
 		    tabSetter.put("active", new SqlSetterB());
 		    tabSetter.put("webpages", new SqlSetterL());		    
 		    

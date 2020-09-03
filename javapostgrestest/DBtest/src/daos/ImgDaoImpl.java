@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +14,8 @@ import java.util.Map;
 import entities.Img;
 import postgres.DaoException;
 
-public class ImgDaoImpl implements ImgDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
-	
+public class ImgDaoImpl extends DaoImpl<Img> implements ImgDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */	
 	private Map<Long, Img> cache = new HashMap<>();
 
 	@Override

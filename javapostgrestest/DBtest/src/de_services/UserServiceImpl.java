@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 		try {
 			Long id =user.getId();
 			if(id == null) {
-				 userDao.create(user);
+				id=userDao.create(user);
 				user.setId(id);
 			} else {
 				userDao.update(user);

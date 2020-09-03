@@ -30,7 +30,9 @@
      <th>keywords</th>
      <th>h1</th> 
      <th>text</th> 
-     <th>robots</th> 
+     <th>robots</th>
+    <th>entity</th> 
+    <th>entityid</th>  
      <th></th>     
    </tr> 
 
@@ -43,7 +45,9 @@
 		   <td>${webpages.keywords}</td>
 		   <td>${webpages.h1}</td>
 		   <td>${webpages.text}</td>	
-		   <td>${webpages.robots}</td>				   		   		    	
+		   <td>${webpages.robots}</td>
+		   <td>${webpages.entity}</td>	
+		   <td>${webpages.entityid}</td>					   		   		    	
 		    <c:url var="editUrl" value="edit.html">
 				<c:param name="id" value="${webpages.id}"/>
 			</c:url>

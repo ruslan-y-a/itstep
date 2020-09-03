@@ -1,6 +1,9 @@
 package help;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +16,8 @@ import daos.ClientDao;
 import daos.ColorDao;
 import daos.CountryDao;
 import daos.CurrencyDao;
+import daos.Dao;
+import daos.DaoImpl;
 import daos.ImgDao;
 import daos.OrdersDao;
 import daos.SaleDao;
@@ -21,7 +26,10 @@ import daos.TagcloudDao;
 import daos.UserDao;
 import daos.WebpagesDao;
 import de_services.BaseService;
+import factories.ImplementationInstantiationIocContainerException;
 import postgres.DaoException;
+import service.LogicException;
+import web.action.Action;
 
 public class Reflection {
 	
@@ -154,4 +162,20 @@ public class Reflection {
 	       e.printStackTrace();}
 	  return daoMap;
   }
+//////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////// 
+//////////////////////////////////////////////////////////////////////////////////////////////
+public static Method getSetter(Object obj, String fieldName, Class<?> cl) {
+
+     try {             		
+       String s1=fieldName.substring(0, 1).toUpperCase();
+       String s2=fieldName.substring(1);
+       Method method = obj.getClass().getDeclaredMethod("set" + s1 + s2,cl);
+       method.setAccessible(true);			  
+       return method;	         
+     } catch (Exception ex) { ex.printStackTrace();}
+
+    return null;
+  }
+//////////////////////////////////////////////////////////////////////////////////////////
 }

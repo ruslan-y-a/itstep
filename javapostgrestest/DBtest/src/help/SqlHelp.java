@@ -3,7 +3,7 @@ package help;
 import java.util.ArrayList;
 
 public class SqlHelp {
-
+	
 	 public static String fieldsToSql(String[] args) {		  
 		  if (args.length==0) return "";
 		  StringBuilder ss = new StringBuilder(); 

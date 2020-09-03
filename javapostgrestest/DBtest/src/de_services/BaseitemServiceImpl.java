@@ -116,4 +116,32 @@ public class BaseitemServiceImpl implements BaseitemService {
 		}
 	}
 	
+	
+	@Override
+	public List<Baseitem> readItemRow(Long itemid) throws LogicException {
+		try {
+			List<Baseitem> list = baseitemDao.readItemRow(itemid);			
+			if (list==null) return null;
+			list.forEach((x) -> {
+				
+				try {
+					Items items = itemsDao.read(x.getItem().getId());
+					x.setItem(items);					
+					Color color=colorDao.read(x.getColor().getId());
+					x.setColor(color);
+					Size size=sizeDao.read(x.getSize().getId());
+					x.setSize(size);
+					Currency currency=currencyDao.read(x.getCurrency().getId());
+					x.setCurrency(currency);	
+				
+				} catch (DaoException e) {
+					e.printStackTrace();}
+							
+			});
+			return list;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+	
 }

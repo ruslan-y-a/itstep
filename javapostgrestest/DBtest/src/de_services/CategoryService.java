@@ -10,4 +10,6 @@ public interface CategoryService extends BaseService<Category> {
 	Long save(Category category) throws LogicException;
 	void delete(Long id) throws LogicException;
 	Category read(Long id) throws LogicException;
+	Category read(String str) throws LogicException;
+	List<Category> readByParent(Long parentid) throws LogicException;
 }

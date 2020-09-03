@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +14,8 @@ import entities.Category;
 import entities.Webpages;
 import postgres.DaoException;
 
-public class CategoryDaoImpl implements CategoryDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
-	
+public class CategoryDaoImpl extends DaoImpl<Category> implements CategoryDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */	
 	private Map<Long, Category> cache = new HashMap<>();
 
 	@Override
@@ -86,8 +81,63 @@ public class CategoryDaoImpl implements CategoryDao {
 		}
 		return category;
 	}
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public Category read(String str) throws DaoException {
+		String sql = "SELECT \"name\", \"parentid\", \"id\" FROM \"category\" WHERE LOWER(\"name\") = ?";
+		Category category = null;
 		
+			PreparedStatement s = null;
+			ResultSet r = null;
+			try {
+				s = c.prepareStatement(sql);
+				s.setString(1, str);
+				r = s.executeQuery();
+				if(r.next()) {
+					category  = new Category();
+					category.setId(r.getLong("id"));
+					category.setName(r.getString("name"));
+					category.setParentid(r.getLong("parentid"));  																		
+				}
+			} catch(SQLException e) {
+				throw new DaoException(e);
+			} finally {
+				try { r.close(); } catch(Exception e) {}
+				try { s.close(); } catch(Exception e) {}
+			}
+		
+		return category;
+	}
+	
+	@Override
+	public List<Category> readByParent(Long parentid) throws DaoException {
+		String sql = "SELECT \"id\", \"name\", \"parentid\", \"webpages\" FROM \"category\" WHERE \"parentid\" = ?";
+		PreparedStatement s = null;
+		ResultSet r = null;
+		try {
+			s = c.prepareStatement(sql);
+			s.setLong(1, parentid);
+			r = s.executeQuery();
+			List<Category> categories = new ArrayList<>();
+			while(r.next()) {
+				Category category = new Category();
+				category.setId(r.getLong("id"));
+				category.setName(r.getString("name"));
+				category.setParentid(r.getLong("parentid"));  				
+		//		if (category.getParentid()>0) {category.setParentname(read(category.getParentid()).getName());}					
+				category.setWebpages(new Webpages()); 
+				category.getWebpages().setId(r.getLong("webpages"));		
+				categories.add(category);
+			}
+			return categories;
+		} catch(SQLException e) {
+			throw new DaoException(e);
+		} finally {
+			try { r.close(); } catch(Exception e) {}
+			try { s.close(); } catch(Exception e) {}
+		}
+	}
+///////////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public void update(Category category) throws DaoException {		
 	    String sql = "UPDATE \"category\" SET \"name\" = ?, \"parentid\" = ?, \"webpages\" = ? WHERE \"id\" = ?";

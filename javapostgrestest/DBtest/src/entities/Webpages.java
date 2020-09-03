@@ -15,13 +15,20 @@ public class Webpages extends Entity {
 	private String h1;
 	private String text;
 	private String robots=ROBOTSTYPE[0];
+	private String entity;
+	private Long entityid;
 			
+	public Long getEntityid() {return entityid;}
+	public void setEntityid(Long entityid) {this.entityid = entityid;}
+	public String getEntity() {return entity;}
+	public void setEntity(String entity) {this.entity = entity;}
+
 	@Override
 	  public String toString() {		  
 		 return "id:" + this.getId() + "\nurl:"+ this.url + "\ntitle:"+ this.title
 				 + "\ndescription:"+ this.description + "\nkeywords:"+ this.keywords 
 				 + "\nh1:"+ this.h1 + "\ntext:"+ this.text				 
-				 + "\nrobots:"+ this.robots ; }
+				 + "\nrobots:"+ this.robots  + "\nentity:"+ this.entity +  "\nentityid:"+ this.entityid;}
 
 	public void setIndex() {
 		this.robots=ROBOTSTYPE[0];

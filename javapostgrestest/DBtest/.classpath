@@ -13,5 +13,7 @@
 	<classpathentry kind="lib" path="web/WEB-INF/lib/jackson-annotations-2.7.3.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/jackson-core-2.7.3.jar"/>
 	<classpathentry kind="lib" path="web/WEB-INF/lib/jackson-databind-2.7.3.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/log4j-api-2.13.3.jar"/>
+	<classpathentry kind="lib" path="web/WEB-INF/lib/log4j-core-2.13.3.jar"/>
 	<classpathentry kind="output" path="web/WEB-INF/classes"/>
 </classpath>

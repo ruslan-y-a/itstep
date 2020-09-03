@@ -31,22 +31,43 @@ import javax.servlet.http.HttpSession;
 import csvLoader.CsvLoader;
 import tabs.Role;
 import entities.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class SequrityFilter implements Filter {
-	/*   public static boolean roleAccess(Set<String> list, String url) {
-		   boolean b1=(url.contains("list.html") || url.contains("edit.html") || url.contains("save.html") || 
-					 url.contains("delete.html"));
-		   
-		   for (String entry: list) {
-			 if (b1 && url.contains(entry)) {return true;}}	  
-		   return false;
-	   }*/
+	private static final Logger logger = LogManager.getLogger();
+    private Boolean chkWhiteUrls(String uri) {
+    	for(String x: whiteURLs) {
+    		if (uri.indexOf(x)>=0) {return true;}
+    	}
+    	return false;
+    }
+	
 	private static Set<String> whiteURLs = new HashSet<>();
 	static {
 		whiteURLs.add("/");
-		whiteURLs.add("/index.html");
-		whiteURLs.add("/login.html");
-		whiteURLs.add("/user.html");		
+		whiteURLs.add("/index.html");  
+		whiteURLs.add("/login.html");  			
+		whiteURLs.add("/catalog.html");
+		whiteURLs.add("/search.html");
+		whiteURLs.add("/product.html");	
+		whiteURLs.add("/product/list.html");
+		whiteURLs.add("/catalog/list.html");		
+		whiteURLs.add("/about.html");
+		whiteURLs.add("/terms.html");
+		whiteURLs.add("/contact.html");
+		whiteURLs.add("/register.html");
+		whiteURLs.add("/registeruser.html");
+		whiteURLs.add("/catalog/search.html");
+		/*whiteURLs.add("/index");  
+		whiteURLs.add("/login");  
+		whiteURLs.add("/user");
+		whiteURLs.add("/catalog");
+		whiteURLs.add("/search");
+		whiteURLs.add("/product");
+		whiteURLs.add("/about");
+		whiteURLs.add("/terms");
+		whiteURLs.add("/contact");*/
 	}
 	private static Map<Role, Set<String>> accessURLs = new HashMap<>();
 	static {
@@ -85,7 +106,7 @@ public class SequrityFilter implements Filter {
 	/*	 if (!file.exists()) {System.out.println("--------------------ONO NO File2)"+file);}
 		 /*
 		 file= Paths.get("\\web\\rolepages.csv").toFile();
-		 System.out.println("=====================)"+file); //new File("/web/WEB-INF/rolepages.csv");
+		  ali.add(Long.parseLong(ss[++i].replace("\"", "")));}
 		 if (!file.exists()) {System.out.println("--------------------ONO NO File2)"+file);}
 		*/
 			
@@ -168,9 +189,17 @@ public class SequrityFilter implements Filter {
 		Set<String> cashierURLs = new HashSet<>();
 		accessURLs.put(Role.CASHIER, cashierURLs);
 		Set<String> clientURLs = new HashSet<>();
+		clientURLs.add("/users/page.html");
 		accessURLs.put(Role.CLIENT, clientURLs);
 		for(Set<String> userURLs : accessURLs.values()) {
 			userURLs.add("/logout.html");
+			userURLs.add("/user.html");
+			userURLs.add("/users/cart.html");
+			userURLs.add("/users/order.html");
+			userURLs.add("/users/checkout.html");
+			userURLs.add("/users/deactiveorder.html");
+			userURLs.add("/users/uncheckout.html");
+			userURLs.add("/product/order.html");
 		}
 	}
 	
@@ -181,8 +210,9 @@ public class SequrityFilter implements Filter {
 		String uri = request.getRequestURI();
 		uri = uri.substring(request.getContextPath().length());		
 		boolean access = false;
-		//System.out.println("SECURITY:"+uri);
-		if(!whiteURLs.contains(uri)) {
+	//	System.out.println("=====================)"+uri);
+		if(!whiteURLs.contains(uri) && uri.indexOf("catalog")==-1) {
+	//	if(chkWhiteUrls(uri)) {	
 			HttpSession session = request.getSession(false);
 			if(session != null) {
 				User user = (User)session.getAttribute("sessionUser");
@@ -200,6 +230,7 @@ public class SequrityFilter implements Filter {
 			chain.doFilter(req, resp);
 		} else {
 			//request.getPathInfo()
+			logger.warn(String.format("Access is denied for the request on URI \"%s\" from the client %s", uri, req.getLocalAddr()));
 			response.sendRedirect(request.getContextPath() + "/login.html?message=" + URLEncoder.encode("Access Denied", "UTF-8"));
 		}
 	}

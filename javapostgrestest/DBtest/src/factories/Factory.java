@@ -1,10 +1,17 @@
 package factories;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+//import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+//import org.itstep.factories.Factory.ActionCommand;
+
+import pool.ConnectionPool;
+import pool.ConnectionPoolException;
 
 import de_services.BaseService;
 import de_services.BaseitemService;
@@ -37,6 +44,10 @@ import de_services.ColorService;
 import de_services.SizeService;
 import de_services.WebpagesService;
 import de_services.WebpagesServiceImpl;
+import help.Reflection;
+/*import main.java.org.itstep.util.ioc.BaseDbDaoImpl;
+import main.java.org.itstep.util.ioc.Factory;
+import main.java.org.itstep.util.ioc.Factory.DependencyInjector;*/
 import daos.BaseitemDao;
 import daos.BaseitemDaoImpl;
 import daos.CategoryDao;
@@ -50,6 +61,9 @@ import daos.CountryDao;
 import daos.CountryDaoImpl;
 import daos.CurrencyDao;
 import daos.CurrencyDaoImpl;
+import daos.Dao;
+//import daos.Dao;
+import daos.DaoImpl;
 import daos.ImgDao;
 import daos.ImgDaoImpl;
 import daos.ItemsDaoImpl;
@@ -60,7 +74,7 @@ import daos.SaleDaoImpl;
 import daos.TagcloudDao;
 import daos.TagcloudDaoImpl;
 import daos.UserDao;
-import daos.UserDbDaoImpl;
+import daos.UserDaoImpl;
 import daos.ColorDao;
 import daos.SizeDao;
 import daos.ColorDaoImpl;
@@ -76,6 +90,10 @@ import web.action.LoginAction;
 import web.action.LogoutAction;
 import web.action.MainAction;
 import web.action.MainUserAction;
+import web.action.catalog.CatalogDispatherAction;
+import web.action.catalog.CatalogListAction;
+import web.action.catalog.ProductListAction;
+import web.action.catalog.SearchAction;
 import web.action.save.BaseitemSaveAction;
 import web.action.save.CategorySaveAction;
 import web.action.save.ClassificationSaveAction;
@@ -91,6 +109,15 @@ import web.action.save.SizeSaveAction;
 import web.action.save.TagcloudSaveAction;
 import web.action.save.UserSaveAction;
 import web.action.save.WebpagesSaveAction;
+import web.action.user.CartAction;
+import web.action.user.CheckoutAction;
+import web.action.user.DeactiveOrderAction;
+import web.action.user.NewOrderAction;
+import web.action.user.RegisterAction;
+import web.action.user.UnCheckoutAction;
+import web.action.user.UserOrderAction;
+import web.action.user.UserPageAction;
+import web.action.user.UserRegisterAction;
 import service.LogicException;
 
 public class Factory  implements AutoCloseable {
@@ -109,7 +136,8 @@ public class Factory  implements AutoCloseable {
 		actions1.put("/", mainActionFactory); //mainActionFactory
 		actions1.put("index", null); //mainActionFactory
 		actions1.put("user", mainUserActionFactory);
-//		actions1.put("backoffice", mainUserActionFactory);
+		actions1.put("register", () -> getRegisterAction());
+		actions1.put("registeruser", () -> getUserRegisterAction());
 		actions1.put("login", () -> getLoginAction());
 		actions1.put("logout", () -> getLogoutAction());
 		actions2.put("list", new ListActionCommand());
@@ -118,18 +146,58 @@ public class Factory  implements AutoCloseable {
 		actions2.put("save", new SaveActionCommand());	
 			
 	}
+	private ActionCommand getSpecialCommand(String str1, String str2, String url) {
+		if (str1.equals("users")) {
+			if (str2.equals("cart")) {
+            ActionCommand AC = new CartActionCommand(); AC.setUri1("/users/cart"); 
+			return AC;} 
+		    if (str2.equals("page")) {
+			ActionCommand AC = new UserPageActionCommand(); AC.setUri1("/users/page"); 
+			return AC;}
+		    if (str2.equals("checkout")) {
+			ActionCommand AC = new CheckoutActionCommand(); AC.setUri1("/users/checkout"); 
+			return AC;}
+		    if (str2.equals("order")) {
+			ActionCommand AC = new UserOrderActionCommand(); AC.setUri1("/users/order"); 
+			return AC;}
+		    if (str2.equals("uncheckout")) {
+			ActionCommand AC = new UnCheckoutActionCommand(); AC.setUri1("/users/uncheckout"); 
+			return AC;}
+		    if (str2.equals("deactiveorder")) {
+			ActionCommand AC = new DeactiveOrderActionCommand(); AC.setUri1("/users/deactiveorder"); 
+			return AC;}
+		}
+		if (str1.equals("product") && str2.equals("order")) {
+			ActionCommand AC = new UserNewOrderActionCommand(); AC.setUri1("/product/order"); 
+			return AC;} 
+		if (str1.equals("product") && str2.equals("list")) {
+			ActionCommand AC = new ProductListActionCommand(); AC.setUri1("/product/list"); 
+			return AC;} 
+		if (str1.equals("catalog") && str2.equals("list")) {
+			ActionCommand AC = new CatalogListActionCommand(); AC.setUri1(url); 
+			return AC;} 
+		
+		return null;
+	}
 
-	public Action getAction(String url) throws LogicException {
-		ActionFactory factory=null;
-    	//System.out.println("---------------ACTION)" + url);
-		if (url.equals("/")) {factory = () -> getMainAction();return factory.getInstance();}
+	public Action getAction(String url, String search) throws LogicException {
+		ActionFactory factory=null;    
+		if (url.equals("/")) {factory = () -> getMainAction();return factory.getInstance();}	
+		if (url.contains("catalog") && (url.contains("category") || (search!=null && search.contains("category")))) {factory = () -> getCatalogDispatherAction(url);return factory.getInstance();}
+	//	System.out.println("---------------ACTION  NON)" + url);
 		String Arr[]=url.substring(1).split("/");		
 		if (Arr.length==1) {
+		//	System.out.println("---------------ACTION Arr[0])" + Arr[0]);
 		factory = actions1.get(Arr[0]);
-		} else if (Arr.length==2) {		
-			ActionCommand AC = actions2.get(Arr[1]);
-			AC.setUri1(Arr[0]);
-			factory = AC;		
+		} else if (Arr.length>=2) {					
+			ActionCommand AC;
+		try {
+			AC=getSpecialCommand(Arr[0],Arr[1],url);
+			if (AC==null) {
+			AC= actions2.get(Arr[1]);
+			AC.setUri1(Arr[0]); }			
+			factory = AC;
+		   } catch (NullPointerException e) {return null;}	
 		}	
 		if(factory != null) {
 			return factory.getInstance();
@@ -137,46 +205,33 @@ public class Factory  implements AutoCloseable {
 		return null;
 	}
 
-	private Action mainAction = null;
-	public Action getMainAction() {
-		if(mainAction == null) {
-			mainAction = new MainAction();
-		}
-		return mainAction;
-	}
-
-	private Action mainUserAction = null;
-	public Action getMainUserAction() {
-		if(mainUserAction == null) {
-			mainUserAction = new MainUserAction();
-		}
-		return mainUserAction;
-	}
+	public Action getMainAction() throws LogicException {return get(MainAction.class);}	
+	public Action getCatalogDispatherAction(String url) throws LogicException {
+		CatalogDispatherAction catalogDispatherActionImpl =get(CatalogDispatherAction.class);
+		catalogDispatherActionImpl.setService(getCategoryService()); catalogDispatherActionImpl.setUrl(url);
+		return catalogDispatherActionImpl;					
+	}	
+	public Action getSearchAction(String str) throws LogicException {
+			SearchAction searchAction =  get(SearchAction.class); searchAction.setService(getItemsService()); 
+			searchAction.setSearchStr(str);			
+		return get(SearchAction.class); //  searchAction;
+	}	
+	public Action getRegisterAction() throws LogicException {return get(RegisterAction.class);}	
 	
-	private Action loginAction = null;
-	public Action getLoginAction() throws LogicException {
-		if(loginAction == null) {
-			LoginAction loginActionImpl = new LoginAction();
-			loginAction = loginActionImpl;
-			loginActionImpl.setUserService(getUserService());
-		}
-		return loginAction;
-	}
-
-	private Action logoutAction = null;
-	public Action getLogoutAction() {
-		if(logoutAction == null) {
-			logoutAction = new LogoutAction();
-		}
-		return logoutAction;
-	}
+	public Action getUserRegisterAction() throws LogicException {
+		UserRegisterAction userRegisterActionImpl = get(UserRegisterAction.class);
+		userRegisterActionImpl.setService(getUserService());return userRegisterActionImpl;}
+	
+	public Action getMainUserAction() throws LogicException {return get(MainUserAction.class);}
+			
+	public Action getLoginAction() throws LogicException {return get(LoginAction.class);}		
+	public Action getLogoutAction() throws LogicException {return get(LogoutAction.class);}	
 //////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////	
 	public BaseService<?> getService(String uri1) throws LogicException {	
 		  BaseService<?> BS=bservices.get(uri1);
 	      if (BS==null) {	    	 
 	    	  BS=CreateBaseServise(uri1);	 
-	//    	  System.out.println("---------------BS)" + BS);
 	    	  bservices.put(uri1,  BS);	    	   
 	      } 	
 		  return BS;
@@ -197,18 +252,12 @@ public class Factory  implements AutoCloseable {
 		 if (surl.equals("size")) {return getSizeService();}
 		 if (surl.equals("tagcloud")) {return getTagcloudService();}
 		 if (surl.equals("users")) {return getUserService();}		 		
-		 if (surl.equals("webpages")) {return getWebpagesService();}
-		
+		 if (surl.equals("webpages")) {return getWebpagesService();}		
 		return BS;
 	}
-
 	private BaseAction getSaveAction(String uri1) throws LogicException {	
-		BaseAction BA =asave.get(uri1);
-	//	System.out.println("-------------GET SAVE ACTION:"+uri1);
-	      if (BA==null) {
-	    	  BA=CreateBaseAction(uri1);
-	    	  asave.put(uri1, BA);	    	   
-	      } 	
+		  BaseAction BA =asave.get(uri1);	
+	      if (BA==null) { BA=CreateBaseAction(uri1); asave.put(uri1, BA);} 	
 		  return BA;
 	    }	
 	private BaseAction CreateBaseAction(String surl) throws LogicException { 
@@ -222,8 +271,17 @@ public class Factory  implements AutoCloseable {
 		 if (surl.equals("currency")) {return new CurrencySaveAction();}
 		 if (surl.equals("img")) {return new ImgSaveAction();}
 		 if (surl.equals("items")) {return new ItemsSaveAction();}
-		 if (surl.equals("orders")) {return new OrdersSaveAction();}
-		 if (surl.equals("sale")) {return new SaleSaveAction(getOrdersService());}
+		 if (surl.equals("orders")) {
+			 OrdersSaveAction osa = new OrdersSaveAction();
+			 osa.setClientService(getClientService()); BA =osa;
+     		 return BA;
+			 }
+		 if (surl.equals("sale")) {//return new SaleSaveAction(getOrdersService());
+		      SaleSaveAction osa = new SaleSaveAction(getOrdersService());
+		      osa.setClientService(getClientService());
+		      osa.setCurrencyService(getCurrencyService()); BA =osa;
+		      return BA;
+		 }
 		 if (surl.equals("tagcloud")) {return new TagcloudSaveAction();}
 		 if (surl.equals("users")) {return new UserSaveAction();}
 		 if (surl.equals("size")) {return new SizeSaveAction();}
@@ -231,391 +289,118 @@ public class Factory  implements AutoCloseable {
 		return BA;
 	}	
 ////////////////////////////////////////////////////////////////////////////////////////	
-/////////////////////////////////////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////////////////////////////////////		
+	private class UserPageActionCommand extends ActionCommand {				
+		@Override public Action getInstance() throws LogicException {
+			UserPageAction userPageAction = get(UserPageAction.class);		
+			userPageAction.setService(getUserService()); return userPageAction;}}	
+	
 	private class ListActionCommand extends ActionCommand {				
 		@Override
 		public Action getInstance() throws LogicException {
-			ListAction listActionImpl = new ListAction();
-			Action listAction = listActionImpl;
-		//	System.out.println("---------------LIST)" + this.uri1);
-			listActionImpl.setService(getService(this.uri1));
-			return listAction;
+			ListAction listActionImpl = new ListAction(); Action listAction = listActionImpl;
+			listActionImpl.setService(getService(this.uri1)); return listAction;
 		}		
 	}
-
 	private class EditActionCommand extends ActionCommand {		
 		@Override
 		public Action getInstance() throws LogicException {
 			EditAction listActionImpl = new EditAction();
-			Action editAction = listActionImpl;
-			listActionImpl.setService(getService(this.uri1));
+			Action editAction = listActionImpl;	listActionImpl.setService(getService(this.uri1));
 			return editAction;
 		}	
-	}
-		
-
+	}		
 	private class DeleteActionCommand extends ActionCommand {		
 		@Override
 		public Action getInstance() throws LogicException {
 			DeleteAction deleteActionImpl = new DeleteAction();
 			Action deleteAction = deleteActionImpl;
-			deleteActionImpl.setService(getService(this.uri1));
-			deleteActionImpl.setPath(this.uri1);
+			deleteActionImpl.setService(getService(this.uri1));	deleteActionImpl.setPath(this.uri1);
 			return deleteAction;
-		}
-		
-	}		
-	
+		}		
+	}			
 	private class SaveActionCommand extends ActionCommand {		
-		@Override
-		public Action getInstance() throws LogicException {
-	//		System.out.println("-------------SAVE ACTION:");
-			BaseAction saveAction = getSaveAction(this.uri1);	
-			saveAction.setService(getService(this.uri1));
+		@Override public Action getInstance() throws LogicException {
+			BaseAction saveAction = getSaveAction(this.uri1); saveAction.setService(getService(this.uri1));
 			return saveAction;
-		}
-		
-	}	
-	
+		}		
+	}		
+	private class CartActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			CartAction saveAction = get(CartAction.class);	saveAction.setService(getOrdersService());			
+			return saveAction;}}	
+	private class CheckoutActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			CheckoutAction saveAction = get(CheckoutAction.class); saveAction.setService(getOrdersService());	
+			return saveAction;}}	
+	private class UnCheckoutActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			UnCheckoutAction saveAction = get(UnCheckoutAction.class); saveAction.setService(getOrdersService());	
+			return saveAction;}}	
+	private class DeactiveOrderActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			DeactiveOrderAction saveAction = get(DeactiveOrderAction.class);saveAction.setService(getOrdersService());	
+			return saveAction;}}		
+	private class UserOrderActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			UserOrderAction saveAction = get(UserOrderAction.class); saveAction.setService(getOrdersService());
+			return saveAction;}}		
+	private class UserNewOrderActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			NewOrderAction saveAction = get(NewOrderAction.class); saveAction.setService(getOrdersService());	
+			return saveAction;}}	
+	private class ProductListActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+			ProductListAction saveAction = get(ProductListAction.class); saveAction.setService(getItemsService());	
+			return saveAction;}}  	
+	private class CatalogListActionCommand extends ActionCommand {		
+		@Override public Action getInstance() throws LogicException {
+		CatalogListAction saveAction = get(CatalogListAction.class);  saveAction.setService(getItemsService());
+		saveAction.setUrl(uri1);return saveAction;}}
 ///////////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////
-	private  ColorService colorService = null;  //ColorServiceImpl
-	public  ColorService getColorService() throws LogicException {
-		if(colorService == null) {
-			ColorServiceImpl service = new ColorServiceImpl();
-			colorService = service;
-			service.setColorDao(getColorDao());				
-		}
-		return colorService;}
-	
-	private  SizeService sizeService = null;  //SizeServiceImpl
-	public  SizeService getSizeService() throws LogicException {
-		if(sizeService == null) {
-			SizeServiceImpl service = new SizeServiceImpl();
-			sizeService = service;
-			service.setVariantDao(getSizeDao());				
-		}
-		return sizeService;}
-	
-
-	
-	private  TagcloudService tagcloudService = null;
-	public  TagcloudService getTagcloudService() throws LogicException {
-		if(tagcloudService == null) {
-			TagcloudServiceImpl service = new TagcloudServiceImpl();
-			tagcloudService = service;
-			service.setTagcloudDao(getTagcloudDao());		
-			service.setClassificationDao(getClassificationDao());
-			service.setWebpagesDao(getWebpagesDao());
-		}
-		return tagcloudService;}
-	
-	private  WebpagesService webpagesService = null;
-	public  WebpagesService getWebpagesService() throws LogicException {
-		if(webpagesService == null) {
-			WebpagesServiceImpl service = new WebpagesServiceImpl();
-			webpagesService = service;
-			service.setWebpagesDao(getWebpagesDao());
-		}
-		return webpagesService;}
-	
-	private  SaleService saleService = null;
-	public  SaleService getSaleService() throws LogicException {
-		if(saleService == null) {
-			SaleServiceImpl service = new SaleServiceImpl();
-			saleService = service;
-			service.setSaleDao(getSaleDao());	
-			service.setOrdersDao(getOrdersDao());	
-			service.setCurrencyDao(getCurrencyDao());	
-			service.setClientDao(getClientDao());	
-		}
-		return saleService;}
-	
-	private ImgService imgService = null;
-	public ImgService getImgService() throws LogicException {
-		if(imgService == null) {
-			ImgServiceImpl service = new ImgServiceImpl();
-			imgService = service;
-			service.setImgDao(getImgDao());				
-		}
-		return imgService;}
-	
-	private ItemsService itemsService = null;
-	public ItemsService getItemsService() throws LogicException {		
-		if(itemsService == null) {
-			ItemsServiceImpl service = new ItemsServiceImpl();			
-			itemsService = service;						
-			service.setItemsDao(getItemsDao());					
-			service.setCategoryDao(getCategoryDao());					
-			service.setWebpagesDao(getWebpagesDao());				
-			service.setClassificationDao(getClassificationDao());				
-			service.setImgDao(getImgDao());		
-		}		
-		return itemsService;}
-	
-	private OrdersService ordersService = null;
-	public OrdersService getOrdersService() throws LogicException {
-		if(ordersService == null) {
-			OrdersServiceImpl service = new OrdersServiceImpl();
-			ordersService = service;
-			service.setOrdersDao(getOrdersDao());			
-			service.setClientDao(getClientDao());	
-			service.setBaseitemDao(getBaseitemDao());	
-			service.setCurrencyDao(getCurrencyDao());			
-			service.setUserDao(getUserDao());	
-		}
-		return ordersService;}
-	
-	private CurrencyService сurrencyService = null;
-	public CurrencyService getCurrencyService() throws LogicException {
-		if(сurrencyService == null) {
-			CurrencyServiceImpl service = new CurrencyServiceImpl();
-			сurrencyService = service;
-			service.setCurrencyDao(getCurrencyDao());				
-		}
-		return сurrencyService;}
-	
-	private CountrySevice countrySevice = null;
-	public CountrySevice getCountrySevice() throws LogicException {
-		if(countrySevice == null) {
-			CountrySeviceImpl service = new CountrySeviceImpl();
-			countrySevice = service;
-			service.setCurrencyDao(getCurrencyDao());
-			service.setCountryDao(getCountryDao());					
-		}
-		return countrySevice;}
-	
-	private ClientService clientService = null;
-	public ClientService getClientService() throws LogicException {
-		if(clientService == null) {
-			ClientServiceImpl service = new ClientServiceImpl();
-			clientService = service;
-			service.setClientDao(getClientDao());
-			service.setCountryDao(getCountryDao());		
-			service.setUserDao(getUserDao());		
-			service.setItemsDao(getItemsDao());		
-		}
-		return clientService;}
-	
-	private ClassificationService classificationService = null;
-	public ClassificationService getClassificationService() throws LogicException {
-		if(classificationService == null) {
-			ClassificationServiceImpl service = new ClassificationServiceImpl();
-			classificationService = service;
-			service.setClassificationDao(getClassificationDao());			
-		}
-		return classificationService;}
-	
-	private CategoryService categoryService = null;
-	public CategoryService getCategoryService() throws LogicException {
-		if(categoryService == null) {
-			CategoryServiceImpl service = new CategoryServiceImpl();
-			categoryService = service;
-			service.setCategoryDao(getCategoryDao());
-			service.setWebpagesDao(getWebpagesDao());
-			service.setClassificationDao(getClassificationDao());
-		}
-		return categoryService;}
-
-	private BaseitemService baseitemService = null;
-	public BaseitemService getBaseitemService() throws LogicException {
-		if(baseitemService == null) {
-			BaseitemServiceImpl service = new BaseitemServiceImpl();
-			baseitemService = service;
-			service.setBaseitemDao(getBaseitemDao());
-			service.setItemsDao(getItemsDao());
-			service.setColorDao(getColorDao());
-			service.setSizeDao(getSizeDao());
-			service.setCurrencyDao(getCurrencyDao());
-		}
-		return baseitemService;}
-
-	private UserService userService = null;
-	public UserService getUserService() throws LogicException {
-		if(userService == null) {
-			UserServiceImpl service = new UserServiceImpl();
-			userService = service;
-			//System.out.println("GET USER SERVICE:"+userService);
-			service.setUserDao(getUserDao());
-
-		}
-		return userService;}
-//////////////////////////////////////////////////////////////////
-	//////////////////////////////////////////////////////////
-	private WebpagesDao webpagesDao = null;
-	public WebpagesDao getWebpagesDao() throws LogicException {
-		if(webpagesDao == null) {
-			WebpagesDaoImpl webpagesDaoImpl = new WebpagesDaoImpl();
-			webpagesDao = webpagesDaoImpl;
-			webpagesDaoImpl.setConnection(getConnection());
-		}
-		return webpagesDao;
-	}
-
-	
-	private ColorDao colorDao = null;
-	public ColorDao getColorDao() throws LogicException {
-		if(colorDao == null) {
-			ColorDaoImpl variantDaoImpl = new ColorDaoImpl();
-			colorDao = variantDaoImpl;
-			variantDaoImpl.setConnection(getConnection());
-		}
-		return colorDao;
-	}
-	
-	private SizeDao sizeDao = null;
-	public SizeDao getSizeDao() throws LogicException {
-		if(sizeDao == null) {
-			SizeDaoImpl variantDaoImpl = new SizeDaoImpl();
-			sizeDao = variantDaoImpl;
-			variantDaoImpl.setConnection(getConnection());
-		}
-		return sizeDao;
-	}
-
-	private CategoryDao categoryDao = null;
-	public CategoryDao getCategoryDao() throws LogicException {
-		if(categoryDao == null) {
-			CategoryDaoImpl categoryDaoImpl = new CategoryDaoImpl();
-			categoryDao = categoryDaoImpl;
-			categoryDaoImpl.setConnection(getConnection());
-		}
-		return categoryDao;
-	}
-
-	private UserDao userDao = null;
-	public UserDao getUserDao() throws LogicException {
-		if(userDao == null) {
-			UserDbDaoImpl userDaoImpl = new UserDbDaoImpl();
-			userDao = userDaoImpl;
-			userDaoImpl.setConnection(getConnection());
-		}
-		return userDao;
-	}
-	
-	private TagcloudDao tagcloudDao = null;
-	public TagcloudDao getTagcloudDao() throws LogicException {
-		if(tagcloudDao == null) {
-			TagcloudDaoImpl tagcloudDaoImpl = new TagcloudDaoImpl();
-			tagcloudDao = tagcloudDaoImpl;
-			tagcloudDaoImpl.setConnection(getConnection());
-		}
-		return tagcloudDao;
-	}
-	
-	private SaleDao saleDao = null;
-	public SaleDao getSaleDao() throws LogicException {
-		if(saleDao == null) {
-			SaleDaoImpl saleDaoImpl = new SaleDaoImpl();
-			saleDao = saleDaoImpl;
-			saleDaoImpl.setConnection(getConnection());
-		}
-		return saleDao;
-	}
-	
-	private OrdersDao ordersDao = null;
-	public OrdersDao getOrdersDao() throws LogicException {
-		if(ordersDao == null) {
-			OrdersDaoImpl ordersDaoImpl = new OrdersDaoImpl();
-			ordersDao = ordersDaoImpl;
-			ordersDaoImpl.setConnection(getConnection());
-		}
-		return ordersDao;
-	}
-	
-	private ItemsDao itemsDao = null;
-	public ItemsDao getItemsDao() throws LogicException {
-		if(itemsDao == null) {
-			ItemsDaoImpl itemsDaoImpl = new ItemsDaoImpl();
-			itemsDao = itemsDaoImpl;			
-			itemsDaoImpl.setConnection(getConnection());			
-		}		
-		return itemsDao;
-	}
-	
-	private ImgDao imgDao = null;
-	public ImgDao getImgDao() throws LogicException {
-		if(imgDao == null) {
-			ImgDaoImpl imgDaoImpl = new ImgDaoImpl();
-			imgDao = imgDaoImpl;
-			imgDaoImpl.setConnection(getConnection());
-		}
-		return imgDao;
-	}
-	
-	private CurrencyDao currencyDao = null;
-	public CurrencyDao getCurrencyDao() throws LogicException {
-		if(currencyDao == null) {
-			CurrencyDaoImpl currencyDaoImpl = new CurrencyDaoImpl();
-			currencyDao = currencyDaoImpl;
-			currencyDaoImpl.setConnection(getConnection());
-		}
-		return currencyDao;
-	}
-	
-	private CountryDao countryDao = null;
-	public CountryDao getCountryDao() throws LogicException {
-		if(countryDao == null) {
-			CountryDaoImpl countryDaoImpl = new CountryDaoImpl();
-			countryDao = countryDaoImpl;
-			countryDaoImpl.setConnection(getConnection());
-		}
-		return countryDao;
-	}
-	
-	private ClientDao clientDao = null;
-	public ClientDao getClientDao() throws LogicException {
-		if(clientDao == null) {
-			ClientDaoImpl clientDaoImpl = new ClientDaoImpl();
-			clientDao = clientDaoImpl;
-			clientDaoImpl.setConnection(getConnection());
-		}
-		return clientDao;
-	}
-	
-	private ClassificationDao classificationDao = null;
-	public ClassificationDao getClassificationDao() throws LogicException {
-		if(classificationDao == null) {
-			ClassificationDaoImpl classificationDaoImpl = new ClassificationDaoImpl();
-			classificationDao = classificationDaoImpl;
-			classificationDaoImpl.setConnection(getConnection());
-		}
-		return classificationDao;
-	}
-	
-	private BaseitemDao baseitemDao = null;
-	public BaseitemDao getBaseitemDao() throws LogicException {
-		if(baseitemDao == null) {
-			BaseitemDaoImpl baseitemDaoImpl = new BaseitemDaoImpl();
-			baseitemDao = baseitemDaoImpl;
-			baseitemDaoImpl.setConnection(getConnection());
-		}
-		return baseitemDao;
-	}
+	public ColorService getColorService() throws LogicException {return get(ColorService.class);}		
+	public SizeService getSizeService() throws LogicException {return get(SizeService.class);}		
+	public TagcloudService getTagcloudService() throws LogicException {return get(TagcloudService.class);}	
+	public WebpagesService getWebpagesService() throws LogicException {return get(WebpagesService.class);}	
+	public SaleService getSaleService() throws LogicException {return get(SaleService.class);}	
+	public ImgService getImgService() throws LogicException {return get(ImgService.class);}	
+	public ItemsService getItemsService() throws LogicException { return get(ItemsService.class);}	
+	public OrdersService getOrdersService() throws LogicException {return get(OrdersService.class);}	
+	public CurrencyService getCurrencyService() throws LogicException {return get(CurrencyService.class);}		
+	public CountrySevice getCountrySevice() throws LogicException {return get(CountrySevice.class);}	
+	public ClientService getClientService() throws LogicException {return get(ClientService.class);}	
+	public ClassificationService getClassificationService() throws LogicException {return  get(ClassificationService.class);}	
+	public CategoryService getCategoryService() throws LogicException {return get(CategoryService.class);}
+	public BaseitemService getBaseitemService() throws LogicException {return get(BaseitemService.class);}
+	public UserService getUserService() throws LogicException {return get(UserService.class);}
+	public WebpagesDao getWebpagesDao() throws LogicException {return get(WebpagesDao.class);}	
+	public ColorDao getColorDao() throws LogicException {return get(ColorDao.class);}	
+	public SizeDao getSizeDao() throws LogicException {return get(SizeDao.class);}
+	public CategoryDao getCategoryDao() throws LogicException {return get(CategoryDao.class);}
+	public UserDao getUserDao() throws LogicException {return get(UserDao.class);}	
+	public TagcloudDao getTagcloudDao() throws LogicException {return get(TagcloudDao.class);}	
+	public SaleDao getSaleDao() throws LogicException {return get(SaleDao.class);}
+	public OrdersDao getOrdersDao() throws LogicException {return get(OrdersDao.class);}
+	public ItemsDao getItemsDao() throws LogicException {return get(ItemsDao.class);}
+	public ImgDao getImgDao() throws LogicException {return get(ImgDao.class);}
+	public CurrencyDao getCurrencyDao() throws LogicException {return get(CurrencyDao.class);}	
+	public CountryDao getCountryDao() throws LogicException {return get(CountryDao.class);}
+	public ClientDao getClientDao() throws LogicException {return get(ClientDao.class);}	
+	public ClassificationDao getClassificationDao() throws LogicException {return get(ClassificationDao.class);}	
+	public BaseitemDao getBaseitemDao() throws LogicException {return get(BaseitemDao.class);}
 /////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////
 	private Connection connection = null;
 	public Connection getConnection() throws LogicException {
 		if(connection == null) {
 			try {
-			connection = DriverManager.getConnection("jdbc:postgresql://localhost/ishop", "root", "root");
-		    } catch(SQLException e) {
-			  throw new LogicException(e);
+				connection = ConnectionPool.getInstance().getConnection();
+			} catch(ConnectionPoolException e) {
+				throw new LogicException(e);
 			}
-		 }
-			return connection;
 		}
-	public Connection getConnection(String db,String user, String pass) throws LogicException {
-		if(connection == null) {
-			try {
-			connection = DriverManager.getConnection("jdbc:postgresql://localhost/" + db +", " + user + ", " + pass);
-		    } catch(SQLException e) {
-			  throw new LogicException(e);
-			}
-		 }
-			return connection;
-		}
-	
+		return connection;
+	}
 
 	@Override
 	public void close() {
@@ -624,12 +409,66 @@ public class Factory  implements AutoCloseable {
 
 	private abstract class ActionCommand implements ActionFactory {
 		String uri1;
-/*
-		public String getUri1() {
-			return uri1;}
-*/
-		public void setUri1(String uri1) {
-			this.uri1 = uri1;}				
+		public void setUri1(String uri1) {this.uri1 = uri1;}				
 	}
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////	
+	private Map<Class<?>, Object> cache = new HashMap<>();
+//	private static Map<Class<?>, CustomFactory<?>> factories = new HashMap<>();	
 	
+	 @SuppressWarnings("unchecked")
+	  public <T> T get(Class<T> i) throws LogicException {
+		//	System.out.println("==================="+i);
+			Object o = cache.get(i);
+			if(o == null) {
+				Class<?> c=null;
+				if(i.isInterface()) {
+					try {c = Class.forName(i.getName() + "Impl");} catch (ClassNotFoundException e) {}	
+				} else {
+					c = i;
+				}
+				if(c != null) {
+					try {																				
+						  o = c.getConstructor().newInstance();
+						  cache.put(i, o);
+						//  System.out.println("==========Dao========="+o);
+						    if (Dao.class.isInstance(o)) {
+					//	    	 System.out.println("==========Dao2========="+o);						    					    	
+						    	 Method setConnection = DaoImpl.class.getDeclaredMethod("setConnection", Connection.class);
+						    	 setConnection.setAccessible(true);	
+						    	 setConnection.invoke(o,getConnection());
+						    } else if (Action.class.isInstance(o) || BaseService.class.isInstance(o)) {					    
+						    	 for (Field field : o.getClass().getDeclaredFields()) {
+						    		 Object obj=null;
+						    	   if(field.getType().isInterface()) {
+						    		 field.setAccessible(true);						 
+						    		 try {					    								    			 
+						    			 obj = get(field.getType());
+						    		 } catch (Exception e) 
+						    		 {e.printStackTrace(); System.out.println("==========ERROR CREATION=========" + field);}
+						    		 Method setter = Reflection.getSetter(o,field.getName(),field.getType());
+						    		 if (setter!=null) {setter.invoke(o,obj);}
+						    	   }	 
+						    	 } 
+						   }
+						} catch(InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
+						   throw new ImplementationInstantiationIocContainerException(e);
+						}
+				 } else {System.out.println("==========Dao FAIL=========)" + i);}
+			}
+			return (T)o;
+		}  
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////	
+
+	private static interface DependencyInjector {
+		void inject(Object obj, Factory factory) throws LogicException;
+	}
+
+	public static interface CustomFactory<T> {
+		T newInstance() throws LogicException;
+	}
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////	
 }

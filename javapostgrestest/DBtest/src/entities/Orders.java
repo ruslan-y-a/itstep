@@ -28,21 +28,21 @@ public class Orders extends Entity {
 	private boolean active;
 	private Orderstatus status;	
 			
+	@Override
+	  public String toString() {		  
+		 return "id:" + this.getId() + "\nnumber:"+ this.number + "\ndatetime:"+ TIMEFORMAT.format(datetime) 
+				 + "\ndateexpired:"+ FORMAT.format(dateexpired) + "\nbaseitemid:"+ this.baseitem 
+				 + "\ncustomerid:"+ this.client.getId() + "\nquantity:"+ this.quantity
+				 + "\nsum:"+ this.sum  + "\nbonuspoints:"+ this.bonuspoints + "\ncurrencyid:"+ this.currency
+				 + "\ndelivery:"+ this.delivery + "\nactive:"+ this.active
+				 + "\nstatus:"+ this.status;}
+
 	public Integer getBonuspoints() {
 		return bonuspoints;}
 
 	public void setBonuspoints(Integer bonuspoints) {
 		this.bonuspoints = bonuspoints;}
-
-	@Override
-	  public String toString() {		  
-		 return "id:" + this.getId() + "\nnumber:"+ this.number + "\ndatetime:"+ TIMEFORMAT.format(datetime) 
-				 + "\ndateexpired:"+ FORMAT.format(dateexpired) + "\nbaseitemid:"+ this.baseitem 
-				 + "\ncustomerid:"+ this.client + "\nquantity:"+ this.quantity
-				 + "\nsum:"+ this.sum  + "\nbonuspoints:"+ this.bonuspoints + "\ncurrencyid:"+ this.currency
-				 + "\ndelivery:"+ this.delivery + "\nactive:"+ this.active
-				 + "\nstatus:"+ this.status;}
-
+	
 	public Integer getNumber() {
 		return number;
 	}

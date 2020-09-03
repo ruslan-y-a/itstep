@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin</div>				   				
+			</div>
+			<div class="main-content">
+				   <h2 class="page-title">users</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">
+						<tr>
+						    <th class="table__header">ID</th>
+							<th class="table__header">Name</th>
+							<th class="table__header">Password</th>
+							<th class="table__header">e-mail</th>
+							<th class="table__header">Role</th>
+							<th class="table__header">Action</th>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tname">a</td>
+							<td class="table__cell" id="tpassword">a</td>
+							<td class="table__cell" id="te-mail">a</td>
+						    <td class="table__cell" id="trole">Admin</td>
+						    <td class="table__cell"><img id="edit" src="img/edit.png"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2</td>
+							<td class="table__cell" id="tname">a</td>
+							<td class="table__cell" id="tpassword">a</td>
+							<td class="table__cell" id="te-mail">a</td>
+						    <td class="table__cell" id="trole">Client</td>
+		                    <td class="table__cell" ><img id="edit" src="img/edit.png"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">3</td>
+							<td class="table__cell" id="tname">a</td>
+							<td class="table__cell" id="tpassword">a</td>
+							<td class="table__cell" id="te-mail">a</td>
+						    <td class="table__cell" id="trole">Product</td>
+			                <td class="table__cell"  ><img id="edit" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">4</td>
+							<td class="table__cell" id="tname">a</td>
+							<td class="table__cell" id="tpassword">a</td>
+							<td class="table__cell" id="te-mail">a</td>
+						    <td class="table__cell" id="trole">Manager</td>
+		                    <td class="table__cell" ><img id="edit" src="img/edit.png"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">5</td>
+							<td class="table__cell" id="tname">a</td>
+							<td class="table__cell" id="tpassword">a</td>
+							<td class="table__cell" id="te-mail">a</td>
+						    <td class="table__cell" id="trole">Cashier</td>
+			                <td class="table__cell"  ><img id="edit" src="img/edit.png"></td> <!-- onclick="Edit(this)" -->
+						</tr>
+					</table>
+				</div>	
+				
+				<h2 class="backoffice-edit-form">Edit Form</h2>
+				<div>
+			        <form class="backoffice-edit-form" action="save.html" style="width: 350px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="id">id:</label>
+						<input class="backoffice-form__text-input" id="id" type="text" name="id" value="0" readonly>
+					  </fieldset>
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="name">name:</label>
+						<input class="backoffice-form__text-input" id="name" type="text" name="name" value="Иван" required>
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="password">password:</label>
+						<input class="backoffice-form__text-input" id="password" type="text" name="password" value="Петров" required>		
+					   </fieldset> 			
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="e-mail">e-mail:</label>
+						<input class="backoffice-form__text-input" id="e-mail" type="text" name="e-mail" value="Петров" required>		
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">
+					    <label class="sform__label" for="roleid">role:</label>
+		                <select class="sform__text-input" id="roleid" name="roleid" required>
+		                  <option value=0>Admin</option>
+		                  <option value=1 selected>Client</option>
+			              <option value=2>Product</option>
+			              <option value=3>Manager</option>
+			              <option value=4>Cashier</option>
+		                </select>	
+					  </fieldset> 							
+						<button class="form__button" type="submit">Save</button>
+						<button class="form__button_danger" type="button">Delete</button>
+						<button class="form__button" type="reset">Cancel</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">
+        document.querySelector('#table').addEventListener('click', function(e){         
+      	  var id = e.target.id; 
+      	  var tmp=id.substring(0,4);
+      	  if (tmp=='edit') {        	
+      			Edit(e.target);
+      	     }         	          	          	          			
+      	  });                   
+                   
+        function Edit(e){        	  
+      	  var pnode = e.parentNode.parentNode;        
+      	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+      	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
+      	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;
+      	  var password = pnode.childNodes[5].innerHTML; //getchildid(pnode,'tpassword').innerHTML;
+      	  var email = pnode.childNodes[7].innerHTML; //getchildid(pnode,'te-mail').innerHTML;
+      	  var role = pnode.childNodes[9].innerHTML; //getchildid(pnode,'trole').innerHTML;
+        	    
+        	  document.getElementById('id').value = id;
+        	  document.getElementById('name').value = name;
+        	  document.getElementById('password').value = password;
+        	  document.getElementById('e-mail').value = email;
+        	  role=getrole(role);
+        	  document.getElementById('roleid').value = role;
+           }	
+          
+          function getsrole(role){
+        	  switch (role) {
+        	  case 0: return 'Admin'; break;
+        	  case 1: return 'Client'; break;
+        	  case 2: return 'Product'; break;
+        	  case 3: return 'Manager'; break;
+        	  case 4: return 'Cashier'; break;        	  
+        	}
+        	  return 'Client';
+          } 
+          
+          function getrole(role){
+        	  switch (role) {
+        	  case 'Admin': return 0; break;
+        	  case 'Client': return 1; break;
+        	  case 'Product': return 2; break;
+        	  case 'Manager': return 3; break;
+        	  case 'Cashier': return 4; break;        	  
+        	}
+        	  return 1;
+          } 
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

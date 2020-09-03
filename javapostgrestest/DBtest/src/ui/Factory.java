@@ -9,8 +9,8 @@ import service.UserServiceImpl;
 import postgres.UserDao;
 import postgres.UserDbDaoImpl;
 
-import commands.Command;
-import commands.ExitCommand;
+//import commands.Command;
+//import commands.ExitCommand;
 import postgres.DbDao;
 import postgres.DbDaoImpl;
 import service.DBService;
@@ -97,15 +97,6 @@ public class Factory  implements AutoCloseable {
 		return userDao;
 	}
 ///////////////////////SERVICE COMMANDS//////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-	private ExitCommand exitCommand = null;
 
-	public Command getExitCommand() {
-		ExitCommand command=exitCommand;
-		if(command == null) {
-		  command = new ExitCommand(this);						
-		}
-		return command;
-	}
 	
 }

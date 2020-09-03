@@ -12,6 +12,42 @@
         <session-timeout>30</session-timeout>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
+
+    <context-param> 
+       <description>Location to store uploaded file</description> 
+       <param-name>file-upload</param-name> 
+       <param-value>            
+         c:\Users\Admin\eclipse-workspace\DBtest\web\
+       </param-value> 
+    </context-param>
+    <context-param>
+        <param-name>jdbc-driver</param-name>
+        <param-value>org.postgresql.Driver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>jdbc-url</param-name>
+        <param-value>jdbc:postgresql://localhost/ishop</param-value>
+    </context-param>
+    <context-param>
+        <param-name>jdbc-user</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>jdbc-password</param-name>
+        <param-value>root</param-value>
+    </context-param>
+    <context-param>
+        <param-name>connection-pool-min-size</param-name>
+        <param-value>5</param-value>
+    </context-param>
+    <context-param>
+        <param-name>connection-pool-max-size</param-name>
+        <param-value>20</param-value>
+    </context-param>
+    <context-param>
+        <param-name>connection-pool-validation-timeout</param-name>
+        <param-value>1000</param-value>
+    </context-param>
 	
     <servlet>
       <servlet-name>DispatcherServlet</servlet-name>
@@ -22,163 +58,6 @@
         <servlet-name>DispatcherServlet</servlet-name>
         <url-pattern>*.html</url-pattern>
     </servlet-mapping>
-<!--			
-	 <servlet>
-      <servlet-name>Main</servlet-name>
-      <servlet-class>web.Main</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Main</servlet-name>
-        <url-pattern>/index.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>Backoffice</servlet-name>
-      <servlet-class>web.Backoffice</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>Backoffice</servlet-name>
-        <url-pattern>/backoffice.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>MainServlet</servlet-name>
-      <servlet-class>web.MainServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>MainServlet</servlet-name>
-        <url-pattern>/user.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>LoginServlet</servlet-name>
-      <servlet-class>web.LoginServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LoginServlet</servlet-name>
-        <url-pattern>/login.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>LogoutServlet</servlet-name>
-      <servlet-class>web.LogoutServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>LogoutServlet</servlet-name>
-        <url-pattern>/logout.html</url-pattern>
-    </servlet-mapping>
-
-	<servlet>
-      <servlet-name>EditServlet</servlet-name>
-      <servlet-class>web.EditServlet</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>EditServlet</servlet-name>
-		<url-pattern>/category/edit.html</url-pattern>
-        <url-pattern>/users/edit.html</url-pattern>
-		<url-pattern>/items/edit.html</url-pattern>		
-		<url-pattern>/baseitem/edit.html</url-pattern>
-		<url-pattern>/classification/edit.html</url-pattern>
-    </servlet-mapping>
-
-	<servlet>
-      <servlet-name>SaveItemServlet</servlet-name>
-      <servlet-class>web.SaveItemServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SaveItemServlet</servlet-name>
-		<url-pattern>/items/save.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>SaveParamsServlet</servlet-name>
-      <servlet-class>web.SaveParamsServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SaveParamsServlet</servlet-name>
-		<url-pattern>/items/saveparams.html</url-pattern>
-    </servlet-mapping>  
-	
-	<servlet>
-      <servlet-name>SaveImgServlet</servlet-name>
-      <servlet-class>web.SaveImgServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SaveImgServlet</servlet-name>
-		<url-pattern>/img/save.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>SaveUserServlet</servlet-name>
-      <servlet-class>web.SaveUserServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SaveUserServlet</servlet-name>
-		<url-pattern>/users/save.html</url-pattern>
-    </servlet-mapping>
-	
-	<servlet>
-      <servlet-name>SaveCategoryServlet</servlet-name>
-      <servlet-class>web.SaveCategoryServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SaveCategoryServlet</servlet-name>
-		<url-pattern>/category/save.html</url-pattern>
-    </servlet-mapping>	 
-	
-	<servlet>
-      <servlet-name>SaveClassificationServlet</servlet-name>
-      <servlet-class>web.SaveClassificationServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SaveClassificationServlet</servlet-name>
-		<url-pattern>/classification/save.html</url-pattern>
-    </servlet-mapping>	
-	
-	<servlet>
-      <servlet-name>DeleteServlet</servlet-name>
-      <servlet-class>web.DeleteServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DeleteServlet</servlet-name>
-		<url-pattern>/category/delete.html</url-pattern>
-        <url-pattern>/items/delete.html</url-pattern>
-		<url-pattern>/users/delete.html</url-pattern>
-	   	<url-pattern>/baseitem/delete.html</url-pattern>
-		<url-pattern>/classification/delete.html</url-pattern>
-    </servlet-mapping>   	   	
-
-	
-	<servlet>
-      <servlet-name>ListServlet</servlet-name>
-      <servlet-class>web.ListServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ListServlet</servlet-name>
-        <url-pattern>/users/list.html</url-pattern>
-		<url-pattern>/client/list.html</url-pattern>
-		<url-pattern>/category/list.html</url-pattern>
-		<url-pattern>/classification/list.html</url-pattern>
-		<url-pattern>/country/list.html</url-pattern>
-		<url-pattern>/currency/list.html</url-pattern>
-		<url-pattern>/img/list.html</url-pattern>
-		<url-pattern>/itemcatgory/list.html</url-pattern>
-		<url-pattern>/items/list.html</url-pattern>
-		<url-pattern>/baseitem/list.html</url-pattern>
-		<url-pattern>/sale/list.html</url-pattern>
-		<url-pattern>/tagcloud/list.html</url-pattern>
-		<url-pattern>/tagurl/list.html</url-pattern>
-		<url-pattern>/webpages/list.html</url-pattern>
-		<url-pattern>/size/list.html</url-pattern>
-		<url-pattern>/color/list.html</url-pattern>
-    </servlet-mapping>
-   -->
 
  <filter>
         <filter-name>EncodingFilter</filter-name>

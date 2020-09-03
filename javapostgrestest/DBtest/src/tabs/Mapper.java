@@ -37,7 +37,7 @@ public class Mapper {
 	if (name.equals("itemtagurl"))  {return new Itemtagurl();}
 	return null;    
   }
-   
+   /*
   public static String addServlet(String str) {
 	  if (str.isBlank()) {return null;} 
 	  if (str.indexOf("users")>=0)       {return new String("/WEB-INF/jsp/users/edit.jsp");}  
@@ -60,7 +60,7 @@ public class Mapper {
 	  if (str.indexOf("itemtagurl")>=0)       {return new String("/WEB-INF/jsp/itemtagurl/edit.jsp");}	
 		return null;	  
 	  }
-  
+
   public static Entity saveServlet(String str) {
 	  if (str.isBlank()) {return null;} 
 	  if (str.indexOf("users")>=0)       {return new User();}  
@@ -83,7 +83,7 @@ public class Mapper {
 	  if (str.indexOf("itemtagurl")>=0)  {return new Itemtagurl();}
 		return null;	  
 	  }
-  
+    */
   public static String getDBName(String str) {
 	  if (str.isBlank()) {return null;} 
 	  if (str.indexOf("users")>=0)       {return "users";}  
@@ -110,10 +110,10 @@ public class Mapper {
    public static ArrayList<String> getEntityFieldsforName(String name){	    
 	return getEntity(name).getFieldsArrayList();	   
    }
-   public static ArrayList<String> getEntityFieldsforUri(String name){	    
+  /* public static ArrayList<String> getEntityFieldsforUri(String name){	    
 	return saveServlet(name).getFieldsArrayList();	   
    }
- 
+ */
    
 
    

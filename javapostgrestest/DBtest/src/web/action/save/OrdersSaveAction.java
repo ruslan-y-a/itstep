@@ -7,6 +7,8 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de_services.ClientService;
+//import de_services.CurrencyService;
 import de_services.OrdersServiceImpl;
 import entities.Baseitem;
 import entities.Client;
@@ -15,12 +17,20 @@ import entities.Delivery;
 import entities.Orders;
 import entities.Orderstatus;
 import help.DateHelp;
+//import help.Params;
 import service.LogicException;
 import web.action.ActionException;
 import web.action.BaseAction;
 
 public class OrdersSaveAction extends BaseAction {
-	
+	ClientService clientService;	
+	//CurrencyService currencyService;	
+public ClientService getClientService() {
+		return clientService;}
+	public void setClientService(ClientService clientService) {
+		this.clientService = clientService;}
+    //public CurrencyService getCurrencyService() {return currencyService;}
+	//public void setCurrencyService(CurrencyService currencyService) {this.currencyService = currencyService;}
 @Override
 public Result exec(HttpServletRequest req, HttpServletResponse resp) throws LogicException {
 	try {
@@ -42,7 +52,7 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
  		Long baseitem;
  		Long client;
  		Integer quantity;
- 		Long sum;
+ 	//	Long sum;
  		Long currency; 		
  		boolean active; 		
  //		 System.out.println("=================>1)");
@@ -91,46 +101,30 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 	   try {baseitem = Long.parseLong(sbaseitem);}
 		   catch (NullPointerException | NumberFormatException err) {throw new IllegalArgumentException();}	
 	   orders.setBaseitem(new Baseitem()); orders.getBaseitem().setId(baseitem);	 	     
-	 //  System.out.println("=================>1)");
+	//  System.out.println("=================>1)");
 	   String sclient=req.getParameter("client"); 	  
 	   try {client = Long.parseLong(sclient);}
 		   catch (NullPointerException | NumberFormatException err) {throw new IllegalArgumentException();}	
 	   orders.setClient(new Client()); orders.getClient().setId(client);	 	   
-	 //  System.out.println("=================>2)");
+	//   System.out.println("=================>2)");
 	   quantity= Integer.parseInt(req.getParameter("quantity")); 
   	   if(quantity == null || quantity<=0) {throw new IllegalArgumentException();}
   	   orders.setQuantity(quantity);   	 
 
+  	   /*
   	   Long price;
   	   price= Long.parseLong(req.getParameter("price")); 
 	   if(price == null || price<=0) {throw new IllegalArgumentException();}
-
+ 
 	   Integer discount;
 	   try {discount= Integer.parseInt(req.getParameter("discount"));}
-	   catch (NullPointerException | NumberFormatException err) {discount=0;}
-	    
-	   if(discount == null || discount<=0) {discount=0;}	   	   
-
-	   /*Integer maxdiscount;
-	   maxdiscount= Integer.parseInt(req.getParameter("maxdiscount")); 
-	   if(maxdiscount == null || maxdiscount<=0) {maxdiscount=0;}	     	   
-	   Integer maxbonuspoints;
-	   maxbonuspoints= Integer.parseInt(req.getParameter("maxbonuspoints")); 
-	   if(maxbonuspoints == null || maxbonuspoints<=0) {maxbonuspoints=0;}
-	   System.out.println("=================>maxbonuspoints)"+maxbonuspoints);
-	   */
-	   
-	   Integer bonuspoints;	   
-	   bonuspoints= Integer.parseInt(req.getParameter("bonuspoints")); 
-	   if(bonuspoints == null || bonuspoints<=0) {bonuspoints= 0;} 	   	   
-	//   Integer finalprice = Math.round(price * maxdiscount / 100);
-	  // Integer sdiscount=0; 
-	/*   if (discount<maxdiscount) {
-		   sdiscount= Math.round(bonuspoints+price*discount/100);
-             if (finalprice>sdiscount) {finalprice=sdiscount;}
-             else {bonuspoints = bonuspoints - Math.round(finalprice-price*discount/100);}
-		  } else {bonuspoints=0;}
-	   sum=(price-finalprice)*quantity;*/
+	   catch (NullPointerException | NumberFormatException err) {discount=0;}	    
+	   if(discount == null || discount<=0) {discount=0;}	*/    	   
+  //	 System.out.println("=================>3)");
+	   Integer bonuspoints=0;	
+	   String sbonuspoints=req.getParameter("bonuspoints");	   
+	   try {bonuspoints= Integer.parseInt(sbonuspoints);} catch (NullPointerException | NumberFormatException e) {}		  	    	   	   
+	  // System.out.println("=================>4)");
 	   Double tsum;
 	   tsum= Double.parseDouble(req.getParameter("totalsum"));	   
 	   if(tsum == null || tsum<=0) {throw new IllegalArgumentException();} 		   	   
@@ -141,20 +135,10 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 	   try {currency = Long.parseLong(sCurrency);}
 		   catch (NullPointerException | NumberFormatException err) {throw new IllegalArgumentException();}	
 	   orders.setCurrency(new Currency()); orders.getCurrency().setId(currency);
-	     	   
+	//   System.out.println("=================>2)");    	   
 	   try { active= Boolean.parseBoolean(req.getParameter("active"));}
 	   catch (NullPointerException err) {active =false;}
 	   orders.setActive(active);  
-	   
-	   Integer deliveryid;
-	   try {deliveryid= Integer.parseInt(req.getParameter("delivery"));} 
-	   catch (NullPointerException | NumberFormatException err ) {deliveryid = null;} 
-	   if(deliveryid == null || deliveryid<0) { orders.setDelivery(Delivery.POST);}
-	   else {orders.setDelivery(Delivery.values()[deliveryid]);} 
-	   if (orders.getDelivery()==Delivery.PICKUP) {
-	   sum= (long)(Math.round(tsum * 95 / 100));	
-	   orders.setSum(sum);
-	   }
 	   
 	   Integer statusid;
 	   try {statusid= Integer.parseInt(req.getParameter("status")); } 
@@ -162,6 +146,16 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 	   if(statusid == null || statusid<0) {orders.setStatus(Orderstatus.BASKET); }
 	   else {orders.setStatus(Orderstatus.values()[statusid]);} 	   	   
 	   
+	   Integer deliveryid;
+	   try {deliveryid= Integer.parseInt(req.getParameter("delivery"));} 
+	   catch (NullPointerException | NumberFormatException err ) {deliveryid = null;} 
+	   if(deliveryid == null || deliveryid<0) { orders.setDelivery(Delivery.POST);}
+	   else {orders.setDelivery(Delivery.values()[deliveryid]);} 
+	   
+	   if (orders.getStatus()==Orderstatus.SOLD) {
+	     System.out.println("ATTENTION! WRONG BEHAVIOR!");	      	      
+	   }
+	   	 	   
 	   orders.setId(id); 	    	   	   	   
 	   ordersServiceImpl.save(orders);	   
 	   return new Result("/orders/list");

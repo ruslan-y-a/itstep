@@ -45,11 +45,20 @@ public class WebpagesSaveAction extends BaseAction {
 	    	   Integer robots= Integer.parseInt(srobots); 
 	    	   if(robots == null || robots==0) { webpages.setIndex(); }
 	    	   else {webpages.setRobots(robots); }
-	    	    	    	   	    	   
+	    	    	    	   	   
+	    	   String entity=req.getParameter("entity"); if(entity == null) {entity="";} 
+	    	   webpages.setEntity(entity);
+	    	   
+	    	   String sentityid=req.getParameter("entityid"); if(sentityid == null) {sentityid="";} 
+	    	   Long entityid=null;
+	    	   try {entityid = Long.parseLong(sentityid);}
+	  		   catch (NullPointerException | NumberFormatException err) {}
+	    	   webpages.setEntityid(entityid);
+	    	   	    	   
 	    	   webpages.setId(id); 	    	   
 	    	   
 	    	   WebpagesServiceImpl webpagesService = (WebpagesServiceImpl)getService();
-	    	   System.out.println("SAVING ==================)"); 
+	    //	   System.out.println("SAVING ==================)"); 
 	    	   webpagesService.save(webpages);	    	    
 	    	//	System.out.println("-------------SAVED user:" + user);
 				return new Result("/webpages/list");

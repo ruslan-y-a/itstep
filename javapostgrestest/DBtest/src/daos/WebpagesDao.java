@@ -11,4 +11,6 @@ public interface WebpagesDao  extends Dao<Webpages> {
 	void update(Webpages webpages) throws DaoException;
 	void delete(Long id) throws DaoException;
 	List<Webpages> read() throws DaoException;
+	Webpages readEntityId(String uri) throws DaoException;
+	Webpages fingByEntityId(Long eid, String entity) throws DaoException;
 }

@@ -66,10 +66,11 @@ public class Client extends Entity {
 
 	@Override
 	  public String toString() {		  
-		StringBuffer ss = new StringBuffer();  recentitems.forEach(x-> ss.append(x));
+	//	StringBuffer ss = new StringBuffer();  recentitems.forEach(x-> ss.append(x));
 		 return "id:" + this.getId() + "\ncountry:"+ country + "\naddress:" + address + 
-		 "\ncreationdate:"+FORMAT.format(creationdate) +"\nuser:" + user+ "\nbonuspoints:" + bonuspoints+
-		 "\nphoneno:" + phoneno + "\nbasket:" + "\nrecentitems:"+ ss.toString();
+		 //"\ncreationdate:"+FORMAT.format(creationdate) +
+		 "\nuser:" + user+ "\nbonuspoints:" + bonuspoints+
+		 "\nphoneno:" + phoneno; //+ "\nbasket:" + "\nrecentitems:"+ ss.toString();
 	  }
 /*//////////////////////////////////////////////////////////////////////////*/
 	  /*//////////////////////////////////////////////////////////////////////////*/

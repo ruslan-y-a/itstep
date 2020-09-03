@@ -63,6 +63,16 @@ public class TagcloudServiceImpl implements TagcloudService {
 			} else {
 				tagcloudDao.update(tagcloud);
 			}
+			
+			if (tagcloud.getWebpages()!=null && tagcloud.getWebpages().getId()!=null) {
+				Webpages webpages =webpagesDao.read(tagcloud.getWebpages().getId());
+				if (tagcloud.getWebpages().getEntity()!=null && !tagcloud.getWebpages().getEntity().isBlank()) {
+					webpages.setEntity(tagcloud.getWebpages().getEntity());}
+				if (tagcloud.getWebpages().getEntityid()!=null) {
+					webpages.setEntityid(tagcloud.getWebpages().getEntityid());}	
+				webpagesDao.update(webpages);
+			}
+			
 			return id;
 		} catch(DaoException e) {
 			throw new LogicException(e);
@@ -110,5 +120,14 @@ public class TagcloudServiceImpl implements TagcloudService {
 			throw new LogicException(e);
 		}
 	}
-	
+	//////////////////////////////////////////////////////////////////
+	@Override
+	public List<Long> readByWP(Long id) throws LogicException {
+		try {			
+				return tagcloudDao.readByWP(id);			
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+//////////////////////////////////////////////////////////////////////	
 }

@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +14,8 @@ import entities.Color;
 import entities.Variant;
 import postgres.DaoException;
 
-public class ColorDaoImpl implements ColorDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}	
-
+public class ColorDaoImpl extends DaoImpl<Color> implements ColorDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
 	private Map<Long, Variant> cache = new HashMap<>();
 		
 	@Override

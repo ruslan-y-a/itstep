@@ -1,5 +1,6 @@
 package de_services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -81,5 +82,22 @@ private boolean ComplexDelete(Long id) throws LogicException {
      e.printStackTrace(); throw new LogicException(e);} 
 
     return true; 	  			  	  	  	  	 	 
-    }	
+    }
+/////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////
+
+@Override
+public List<Classification> readByCategory(List<Long> id) throws LogicException {
+	try {					
+		List<Classification> nl = new ArrayList<>();		
+		for(Long i:id) {
+			Classification cl = classificationDao.readByCategory(i);
+			nl.add(cl);
+		}				
+		return nl;
+	} catch(DaoException e) {
+		throw new LogicException(e);
+	}
+}
+
  }

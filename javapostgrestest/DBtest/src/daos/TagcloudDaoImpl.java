@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,12 +16,8 @@ import entities.Webpages;
 import help.Helper;
 import postgres.DaoException;
 
-public class TagcloudDaoImpl implements TagcloudDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
+public class TagcloudDaoImpl extends DaoImpl<Tagcloud> implements TagcloudDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
 	private Map<Long, Tagcloud> cache = new HashMap<>();
 			
 	@Override
@@ -170,5 +166,38 @@ public class TagcloudDaoImpl implements TagcloudDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}
-	
+////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public List<Long> readByWP(Long id) throws DaoException {
+		String sql = "SELECT \"id\", \"classification\" FROM \"tagcloud\"  WHERE \"webpages\" = ?";
+		  //Tagcloud tagcloud;		
+		    ArrayList<Long> itagcloud= new ArrayList<>();
+		 //   ArrayList<Classification> tlist= new ArrayList<>();			    
+			PreparedStatement s = null;
+			ResultSet r = null;
+			try {
+				s = c.prepareStatement(sql);
+				s.setLong(1, id);
+				r = s.executeQuery();
+				if(r.next()) {
+					//tagcloud  = new Tagcloud(); tagcloud.setId(id);					
+					itagcloud=Helper.objToLongArrayList(r.getObject("classification"));
+			/*		itagcloud.forEach((x) -> {
+						Classification cl = new Classification();
+						cl.setId(x);
+						tlist.add(cl);
+					  });	
+					tagcloud.setClassification(tlist);
+					tagcloud.setWebpages(new Webpages());
+					tagcloud.getWebpages().setId(r.getLong("webpages")); */									
+				}
+			} catch(SQLException e) {
+				throw new DaoException(e);
+			} finally {
+				try { r.close(); } catch(Exception e) {}
+				try { s.close(); } catch(Exception e) {}
+			}		
+		return itagcloud;
+	}
+///////////////////////////////////////////////////////////////////////////////
 }

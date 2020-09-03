@@ -5,7 +5,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="u" %>
 <%@ page import="java.util.List"%>
-<%@ page import="entities.Entity"%>
+<%@ page import="entities.Orderstatus"%>
 
 
 <c:choose>
@@ -39,7 +39,8 @@
           <label class="backoffice-form__label" for="orders">Orders </label>               
            <select class="backoffice-form__text-input" id="orders" name="orders">
              <option value="0"></option>
-             <c:forEach var="iorders" items="${orders}">	  			  			   			     				 
+             <c:forEach var="iorders" items="${orders}">	
+               	<c:if test="${iorders.status==Orderstatus.ORDER && iorders.active==true}">		  			   			     				 
 				    <c:choose>
 					   <c:when test="${iorders.id == sale.order.id}">
 						   <c:set var="selected" value="selected"/>
@@ -48,11 +49,11 @@
 						   <c:remove var="selected"/>
 					   </c:otherwise>
 				   </c:choose>			
-				   <option value="${iorders.id}" ${selected}><span>${iorders.number}</span>-
-				       <span>${sale.order.client.address}</span>-
-				       <span><fmt:formatDate value="${iorders.datetime}" pattern="yyyy-MM-dd, HH:mm:ss"/></span>-
-				       <span><fmt:formatDate value="${iorders.dateexpired}" pattern="yyyy-MM-dd"/></span>-
-				       <span>${sale.order.sum}</span></option>				 
+				   <option value="${iorders.id}" ${selected}><span>${iorders.number}</span>-				      
+				       <span><fmt:formatDate value="${iorders.datetime}" pattern="yyyy-MM-dd"/></span>-				       
+				       sum: <span>${iorders.sum}</span>-				 
+				       currency: <span>${iorders.currency.id}</span></option>				       
+				 </c:if>	      				      
 			  </c:forEach>			 			 
 		   </select>
           </fieldset>    

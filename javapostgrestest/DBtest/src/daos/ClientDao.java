@@ -10,4 +10,6 @@ public interface ClientDao extends Dao<Client> {
 	void update(Client client) throws DaoException;
 	void delete(Long id) throws DaoException;
 	List<Client> read() throws DaoException;
+	Long findByUserId(Long id) throws DaoException;
+	Client readByUserId(Long id) throws DaoException;
 }

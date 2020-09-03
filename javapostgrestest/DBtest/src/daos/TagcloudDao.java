@@ -11,4 +11,5 @@ public interface TagcloudDao extends Dao<Tagcloud> {
 	void update(Tagcloud tagcloud) throws DaoException;
 	void delete(Long id) throws DaoException;
 	List<Tagcloud> read() throws DaoException;
+	List<Long> readByWP(Long id) throws DaoException;
 }

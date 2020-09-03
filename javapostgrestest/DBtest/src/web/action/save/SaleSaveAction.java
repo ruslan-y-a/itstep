@@ -7,23 +7,31 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de_services.ClientService;
+import de_services.CurrencyService;
 import de_services.OrdersService;
 import de_services.SaleServiceImpl;
 import entities.Client;
 import entities.Currency;
+import entities.Delivery;
 import entities.Orders;
 import entities.Orderstatus;
 import entities.Sale;
+import help.Params;
 import service.LogicException;
 import web.action.ActionException;
 import web.action.BaseAction;
 
 public class SaleSaveAction extends BaseAction {
 	private OrdersService ordersService;
-			
-public SaleSaveAction(OrdersService ordersService) {		
-		this.ordersService = ordersService;	
-	}
+	private CurrencyService currencyService;	 
+	private ClientService clientService;
+	public CurrencyService getCurrencyService() {return currencyService;}
+	public void setCurrencyService(CurrencyService currencyService) {this.currencyService = currencyService;}
+    public SaleSaveAction(OrdersService ordersService) {this.ordersService = ordersService;}    
+    public ClientService getClientService() {return clientService;}
+	public void setClientService(ClientService clientService) {this.clientService = clientService;}
+	
 public SaleSaveAction() {			
 }
 
@@ -61,8 +69,8 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 	    		   }    		   	    	   
 		   } 	   
 	   sale.setDatetime(datetime); 	   
-	   System.out.println("================datetime)"+datetime);
-	   System.out.println("================sdatetime)"+sdatetime);
+//	   System.out.println("================datetime)"+datetime);
+	//   System.out.println("================sdatetime)"+sdatetime);
   	   
 	   String sCurrency=req.getParameter("currency"); 		
 	   Long lCurrency;
@@ -80,18 +88,37 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 		   catch (NullPointerException | NumberFormatException err) {throw new IllegalArgumentException();}	
 	   //sale.setOrder(new Orders()); sale.getOrder().setId(lOrder);	 
 	   Orders orders = ordersService.read(lOrder);
-	   Client client =  orders.getClient();
+	   Client client =  clientService.read(orders.getClient().getId());
+	   Currency currency = orders.getCurrency();
+	   orders.setActive(false);
 	   if (!returned) {
-		   orders.setStatus(Orderstatus.SOLD); sale.setOrder(orders);		  
-		  int respoints =  Math.round(orders.getSum()/100-orders.getBonuspoints());
-		  client.setBonuspoints((client.getBonuspoints() + (respoints>0?respoints:0)));
-		  orders.setClient(client);
-	   } else {
-		   orders.setActive(false);
+		   Long sum; //Double tsum;
+		   double krate = currencyService.read(currency.getId()).getRate();
+		   orders.setStatus(Orderstatus.SOLD);
+		   if (client.getBonuspoints()<orders.getBonuspoints()) {orders.setBonuspoints(client.getBonuspoints());}
+		   sum= (long)(Math.round(orders.getSum()/krate));
+	//	  System.out.println("================sum)" + sum);
+		   orders.setSum(sum-orders.getBonuspoints());
+		//   System.out.println("================sum -orders.getBonuspoints())" + orders.getSum());
+		   Integer oCbp=(client.getBonuspoints()==null?0:client.getBonuspoints());
+		 //  System.out.println("================oCbp)" + oCbp);
+		   oCbp = oCbp-orders.getBonuspoints();
+		   oCbp=(oCbp<0?0:oCbp);
+		//   System.out.println("================oCbp)" + oCbp);
+		     if (orders.getDelivery()==Delivery.PICKUP) {	      
+				   sum= (long)(Math.round(sum * Params.PICKUP_DISCOUNT / 100)); orders.setSum(orders.getSum()-sum);}
+		//     System.out.println("================sum - PICKUP)" + orders.getSum());
+		     oCbp=(int) (oCbp+Math.round((orders.getSum()/krate)*Params.KOEF_BP/100));
+		//     System.out.println("================(orders.getSum()/krate))" + (orders.getSum()/krate));
+		//     System.out.println("================oCbp)" + oCbp);
+		     client.setBonuspoints(oCbp);
+		     		
+		  orders.setClient(client);		
+	   } else {		   
 		   client.setBonuspoints(client.getBonuspoints() + orders.getBonuspoints());
 		   orders.setClient(client);
 	   }		   	      		   		    
-	   
+	   sale.setOrder(orders);
 	   sale.setId(id); 	    	   	   	   
 	   saleServiceImpl.save(sale);
 

@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,12 +17,8 @@ import entities.User;
 import help.Helper;
 import postgres.DaoException;
 
-public class ClientDaoImpl implements ClientDao {
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
-	
+public class ClientDaoImpl extends DaoImpl<Client> implements ClientDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
 	private Map<Long, Client> cache = new HashMap<>();
 		
 	@Override
@@ -31,12 +27,14 @@ public class ClientDaoImpl implements ClientDao {
 		PreparedStatement s = null;
 		ResultSet r = null;
 		try {
+						
 			s = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			s.setLong(1, client.getCountry().getId());
 			s.setString(2, client.getAddress());
 			s.setDate(3, new java.sql.Date(client.getCreationdate().getTime()));
-			s.setLong(4, client.getUser().getId());
-			s.setInt(5, client.getBonuspoints());
+			s.setLong(4, client.getUser().getId());			
+			if (client.getBonuspoints()==null) {s.setObject(5, null);}
+			else {s.setInt(5, client.getBonuspoints());}
 			s.setString(6, client.getPhoneno());			
 		//	s.setObject(7, client.getRecentitems());
 			if (client.getRecentitems()==null || client.getRecentitems().size()==0) {
@@ -46,6 +44,7 @@ public class ClientDaoImpl implements ClientDao {
 				s.setObject( 7, (Object) result);
 			}					
 			s.executeUpdate();
+			
 			r = s.getGeneratedKeys();
 			r.next();
 			cache.clear();
@@ -199,5 +198,81 @@ public class ClientDaoImpl implements ClientDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}
-	
+///////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public Long findByUserId(Long id) throws DaoException {
+		String sql = "SELECT client.id as cid FROM \"client\" "
+				+"INNER JOIN \"users\" ON client.userid = users.id "
+				+ "WHERE users.id = ?";								
+			
+			Long cid=null;			  		
+			PreparedStatement s = null;
+			ResultSet r = null;
+			try {
+				s = c.prepareStatement(sql);
+				s.setLong(1, id);
+				r = s.executeQuery();
+				if(r.next()) {					 
+					cid=r.getLong("cid");										
+				}
+			} catch(SQLException e) {
+				throw new DaoException(e);
+			} finally {
+				try { r.close(); } catch(Exception e) {}
+				try { s.close(); } catch(Exception e) {}
+			}
+		
+		return cid;
+	}
+	////////////////////////////////////////////////////////////
+	@Override
+	public Client readByUserId(Long id) throws DaoException {
+		String sql = "SELECT client.id as cid, \"countryid\", \"address\", \"creationdate\", \"userid\", \"bonuspoints\", \"phoneno\", \"recentitems\", users.name as uname FROM \"client\" "
+				+"INNER JOIN \"users\" ON client.userid = users.id "
+				+ "WHERE users.id = ?";			
+		
+	//	Client client = cache.get(id);
+	//	if(client == null) {
+		Client client = new Client(); 
+			ArrayList<Long> iList= new ArrayList<>();	
+		    ArrayList<Items> Litems= new ArrayList<>();		
+			PreparedStatement s = null;
+			ResultSet r = null;
+			Long cid;
+			try {
+				s = c.prepareStatement(sql);
+				s.setLong(1, id);
+				r = s.executeQuery();
+				if(r.next()) {
+					cid=r.getLong("cid");				
+					client.setId(cid);
+					client.setCountry(new Country()); 
+					client.getCountry().setId(r.getLong("countryid"));					
+					client.setAddress(r.getString("address"));
+					client.setCreationdate(new java.util.Date(r.getDate("creationdate").getTime()));
+					client.setUser(new User()); 
+					client.getUser().setId(r.getLong("userid"));
+					client.getUser().setName(r.getString("uname"));
+					client.setBonuspoints(r.getInt("bonuspoints"));  
+					client.setPhoneno(r.getString("phoneno"));  
+					iList=Helper.objToLongArrayList(r.getObject("recentitems"));
+					if (iList!=null) {iList.forEach((x) -> {
+						Items cl = new Items();
+						cl.setId(x);
+						Litems.add(cl);
+					  });}
+					client.setRecentitems(Litems);		
+					
+					cache.put(cid, client);
+				}
+			} catch(SQLException e) {
+				throw new DaoException(e);
+			} finally {
+				try { r.close(); } catch(Exception e) {}
+				try { s.close(); } catch(Exception e) {}
+			}
+	//	}
+	//	System.out.println("================1)"+client);
+		return client;
+	}
 }

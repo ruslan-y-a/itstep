@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,16 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//import entities.Category;
 import entities.Classification;
 import postgres.DaoException;
 
-public class ClassificationDaoImpl implements ClassificationDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
-	
+public class ClassificationDaoImpl extends DaoImpl<Classification> implements ClassificationDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
 	private Map<Long, Classification> cache = new HashMap<>();
 
 	@Override
@@ -159,5 +155,39 @@ public class ClassificationDaoImpl implements ClassificationDao {
 			try { s.close(); } catch(Exception e) {}
 		}
 	}
-	
+	//////////////////////////////////////////
+	@Override
+	public Classification readByCategory(Long cid) throws DaoException {
+		String sql = "SELECT \"id\", \"name\", \"parentid\"  FROM \"classification\" WHERE \"categoryid\" = ?";
+		//System.out.println("=======================Dao readByCategory" + cid);
+		
+		   Classification classification= null;
+			PreparedStatement s = null;
+			ResultSet r = null;
+			try {
+				s = c.prepareStatement(sql);
+				s.setLong(1, cid);
+				r = s.executeQuery();
+				if(r.next()) {
+					classification = new Classification();
+					classification.setId(r.getLong("id"));
+					classification.setName(r.getString("name"));
+					classification.setParentid(r.getLong("parentid"));  
+					if (classification.getParentid()!=null && classification.getParentid()!=0) {
+						if (classification.getParentid()==classification.getId()) {classification.setParentname(classification.getName());}
+						else {classification.setParentname(read(classification.getParentid()).getName());}	
+					}  
+					classification.setCategoryid(cid);																			
+				}
+			//	System.out.println("=======================Dao2 readByCategory" + cid);				
+				return classification;
+			} catch(SQLException e) {
+				throw new DaoException(e);
+			} finally {
+				try { r.close(); } catch(Exception e) {}
+				try { s.close(); } catch(Exception e) {}
+			}
+		
+		
+	}
 }

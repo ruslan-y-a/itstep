@@ -104,7 +104,7 @@
 						   <c:remove var="selected"/>
 					   </c:otherwise>
 				   </c:choose>			
-				   <option value="${icurrency.id}" ${selected}>${icurrency.name}</option>					   					  	       
+				   <option value="${icurrency.id}" ${selected}><span>${icurrency.name}</span> <span id="crate">${icurrency.rate}</span></option>					   					  	       
 			  </c:forEach>			 			 
 		   </select>
           </fieldset>  		

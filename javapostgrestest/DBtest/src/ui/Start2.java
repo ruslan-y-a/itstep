@@ -1,6 +1,8 @@
 package ui;
 
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -10,7 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import daos.CategoryDaoImpl;
+import daos.ClassificationDaoImpl;
 import daos.ClientDaoImpl;
+import daos.ItemsDaoImpl;
+import daos.OrdersDaoImpl;
 import daos.TagcloudDaoImpl;
 import de_services.BaseitemServiceImpl;
 import de_services.CategoryServiceImpl;
@@ -33,7 +39,9 @@ import entities.Currency;
 import entities.Entity;
 import entities.Img;
 import entities.Items;
+import entities.ItemsSort;
 import entities.Orders;
+import entities.Orderstatus;
 import entities.Sale;
 import entities.Tagcloud;
 import entities.Variant;
@@ -42,35 +50,46 @@ import factories.Factory;
 import help.Reflection;
 
 public class Start2 {
-
-	public static void main(String[] args) throws ClassNotFoundException, SQLException, DaoException {
+	private static Connection connection = null;
+	public static void main(String[] args) throws ClassNotFoundException, SQLException, DaoException, LogicException {
 		Class.forName("org.postgresql.Driver");
-		try(Factory factory = new Factory()) {
-			
-		//OrdersServiceImpl baseitemServiceImpl = (OrdersServiceImpl)factory.getOrdersService();		
-			TagcloudDaoImpl baseitemServiceImpl1 = (TagcloudDaoImpl) factory.getTagcloudDao();		
-		/*	List<Classification> list = new ArrayList<>(); 
-			Classification cl1 = new Classification(); cl1.setId(8L); list.add(cl1);
-			Classification cl2 = new Classification(); cl2.setId(10L); list.add(cl2);
-			Tagcloud tagcloud = new Tagcloud();
-			tagcloud.setClassification(list);
-			tagcloud.setWebpages(new Webpages()); tagcloud.getWebpages().setId(1L);
-			baseitemServiceImpl1.create(tagcloud);*/
-			
-		//	Orders Orders = baseitemServiceImpl.read(1L);
-			//List<Tagcloud> list= baseitemServiceImpl1.read();
-			Tagcloud tagcloud = baseitemServiceImpl1.read(1L);
-			tagcloud.setWebpages(new Webpages()); tagcloud.getWebpages().setId(1L);
-		   System.out.println(tagcloud);
-		   baseitemServiceImpl1.update(tagcloud);
-		   
-		//	list.forEach(x->System.out.println(x));
+		
+		
+		ClassificationDaoImpl classificationDaoImpl = new ClassificationDaoImpl();		
+		classificationDaoImpl.setConnection(getConnection());
+		
+		Classification ids =classificationDaoImpl.readByCategory(13L);
+		System.out.println(ids);
+							  
+		  	 //ids.forEach(x->System.out.println(x));
 	
 			
-		} catch(LogicException  e) {
-			e.printStackTrace();
+			
+	}
+	
+/////////////////////////////////////////////////////////////////////////////////////	
+private static List<Long> findCategories(List<Category> categories,Long categoryId,List<Long> ids) {
+if (ids==null) {ids = new ArrayList<Long>();}
+List<Category> newlist=null;
+try {newlist=categories.stream().filter((x)-> x.getParentid()==categoryId).collect(Collectors.toList());}
+catch (Exception e) {}
+if (newlist==null || newlist.size()==0) {ids.add(categoryId); return ids;}
+else {		  
+for (Category x :newlist) {
+findCategories(newlist,x.getId(),ids);}
+}
+return ids; 	
+}
+
+public static Connection getConnection() throws LogicException {
+	if(connection == null) {
+		try {
+		connection = DriverManager.getConnection("jdbc:postgresql://localhost/ishop", "root", "root");
+	    } catch(SQLException e) {
+		  throw new LogicException(e);
 		}
-	
+	 }
+		return connection;
 	}
 
 }

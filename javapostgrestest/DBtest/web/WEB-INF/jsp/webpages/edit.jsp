@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="u" %>
+<%@ page import="help.Params"%>
 
 <c:choose>
 	<c:when test="${not empty entity}">		
@@ -56,6 +57,20 @@
 			<textarea style="width:400px; height:250px;" class="form__text-input text-input-height" 
 			id="text" name="text">${webpages.text}</textarea>
 			<br>							
+			
+			<label for="entity">entity</label>			
+	<!--	    <input type="text" id="entity" name="entity" value="${webpages.entity}"> -->		  		
+			<select id="entity" name="entity">				    													      
+		        <option value="${Params.WP_CATEGORY}">category</option>
+		        <option value="${Params.WP_ITEMS}">items</option>	
+				<option value="${Params.WP_TAGCLOUD}">tagcloud</option>											
+			</select>
+		     
+			<br>
+			<label for="entityid">entityid</label>			
+    	    <input type="text" id="entityid" name="entityid" value="${webpages.entityid}"> 
+			<br>	
+				
 			
 			<label for="robots">robots:</label>			
 			<select id="robots" name="robots">				    													      

@@ -13,9 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de_services.BaseService;
+import de_services.CategoryService;
+import de_services.ClientService;
 import de_services.ItemsService;
+import de_services.OrdersService;
 import factories.Factory;
+import entities.Category;
 import entities.Entity;
+import entities.Orders;
 import entities.Items;
 import service.LogicException;
 
@@ -30,6 +35,7 @@ public class ListServlet extends HttpServlet {
 		try(Factory factory = new Factory()) {
 			String uri = req.getRequestURI();
 			String search = req.getQueryString();
+			CategoryService cService;
 			
 			if (search!=null) {search = URLDecoder.decode(search, "UTF-8");}
 			uri = uri.substring(req.getContextPath().length());		
@@ -40,16 +46,48 @@ public class ListServlet extends HttpServlet {
 			Integer serchpos = uri.indexOf("/items/search");			
 			BaseService<?> service;			
 			
+			String categoryParentID = req.getParameter("parent");
+			String categoryID = req.getParameter("category");
+			
 			if (serchpos>=0 ) {								
 				service = factory.getService("items");
 				List<Items> iList = ((ItemsService)service).search(search);
 				olist = iList;	
-			} else {
-			List<Entity> list = new ArrayList<>();	
+			} else if (uri.indexOf("users/cart")>=0) {
+				OrdersService service1 = factory.getOrdersService(); Long oid=null;
+				ItemsService service2 = factory.getItemsService(); 				
+				try {oid=Long.parseLong(search);} catch (NumberFormatException | NullPointerException e) {}
+				if (oid!=null) {ClientService service3 = factory.getClientService(); 
+				oid=service3.readByUserId(oid, true);}
+				List<Orders> list = service1.orderdItems(oid);
+				list.forEach(x-> {
+					Items mItem=null;
+					try {
+						mItem = service2.read(x.getBaseitem().getItem().getId());
+					} catch (LogicException e) {					
+						e.printStackTrace();}	
+					x.getBaseitem().setItem(mItem);
+				});	
+				 olist =list;
+/////////////////////////////////////////////////////////////////////////////////////				 
+			} else if (categoryParentID!=null && !categoryParentID.isBlank()) {
+				cService = factory.getCategoryService();			
+				try {Long cpid=Long.parseLong(categoryParentID);
+				 List<Category> cplist =cService.readByParent(cpid);
+				 olist = cplist;	
+				} catch (NumberFormatException e) {}
+			} else if (categoryID!=null && !categoryID.isBlank()) {
+				cService = factory.getCategoryService();
+				try {Long cpid=Long.parseLong(categoryID);
+				 Category category =cService.read(cpid);
+				 olist = category;	
+				} catch (NumberFormatException e) {}
+//////////////////////////////////////////////////////////////////////////////////////////////				
+		   } else {	
+			List<Entity> list = new ArrayList<>();						
 			String Arr[]=uri.substring(1).split("/");	
-			service = factory.getService(Arr[0]);
-						
-			int qPos=search.indexOf("=");
+			service = factory.getService(Arr[0]);						
+			int qPos=0; try {qPos=search.indexOf("=");} catch (NullPointerException e) {}
 			  if (qPos>0) {
 				  String Arr1[]=search.split("=");
 				  Long aid=null; Entity entity=null;
@@ -62,13 +100,12 @@ public class ListServlet extends HttpServlet {
 					//  System.out.println("==============entity)"+entity);
 				  } catch (NullPointerException | NumberFormatException e) {
 					  resp.sendError(500);
-				  }				  
-				//  if (entity!=null) {list.add(entity);}
+				  }				  	
 				  olist =entity;
 			  } else {
 			  list = (List<Entity>)service.findAll();
 			  olist =list;
-			 }
+			 }			  			  
 			}
 			resp.setContentType("application/json");
 			resp.setCharacterEncoding("UTF-8");

@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,12 +16,8 @@ import entities.Sale;
 
 import postgres.DaoException;
 
-public class SaleDaoImpl implements SaleDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
+public class SaleDaoImpl extends DaoImpl<Sale> implements SaleDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
 	private Map<Long, Sale> cache = new HashMap<>();
 				
 	@Override
@@ -33,7 +29,7 @@ public class SaleDaoImpl implements SaleDao {
 		try {
 			s = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			
-	        s.setDate(1, new java.sql.Date(sale.getDatetime().getTime()));
+	        s.setTimestamp(1, new java.sql.Timestamp(sale.getDatetime().getTime())); // java.sql.timestamp
 	        s.setLong(2, sale.getOrder().getId());
 	        s.setBoolean(3, sale.getReturned());
 	        s.setLong(4, sale.getCurrency().getId());	        		
@@ -92,8 +88,8 @@ public class SaleDaoImpl implements SaleDao {
 	    PreparedStatement s = null;
 		try {
 			s = c.prepareStatement(sql);
-			  System.out.println("====================DAO DATA" + sale.getDatetime());
-			   s.setObject(1, new java.sql.Date(sale.getDatetime().getTime()));
+			//  System.out.println("====================DAO DATA" + sale.getDatetime());
+			    s.setTimestamp(1, new java.sql.Timestamp(sale.getDatetime().getTime()));
 		        s.setLong(2, sale.getOrder().getId());
 		        s.setBoolean(3, sale.getReturned());
 		        s.setLong(4, sale.getCurrency().getId());	 	

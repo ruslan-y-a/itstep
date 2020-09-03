@@ -95,7 +95,7 @@ public void setWebpages(Webpages webpages) {
 			 return "id:" + this.getId() + "\narticul:"+  this.articul + "\nmodel:" + this.model + 
 			 "\ncategory:" + this.category+ "\nbaseprice:"+this.baseprice +"\ndiscount:" + this.discount +
 			  "\nname:" + this.name + "\nclassification:" + this.classification + "\nimg:" + this.img 
-			  + "\nactive:" + this.active +    "\nwebpages:" + this.webpages;
+			  + "\nactive:" + this.active +    "\nwebpages:" + this.webpages+    "\nmyimg:" + this.myimg;
 		  }
 		
 		public String getMyimg() {

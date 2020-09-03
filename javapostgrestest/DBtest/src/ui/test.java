@@ -34,8 +34,8 @@ public class test {
 		try(Factory factory = new Factory()) {
 			Class.forName("org.postgresql.Driver");			
 			DBService service = factory.getDBService();
-			service.createCsvLoad("web/img.csv");				
-			List<Entity> products = service.read("img");
+			service.createCsvLoad("web/baseitem.csv");				
+			List<Entity> products = service.read("baseitem");
 			products.forEach(x-> System.out.println(x));
 			
 		//	products= service.read("client");printClient(products);

@@ -56,13 +56,24 @@ public class CategoryServiceImpl implements CategoryService {
 				category.setId(id);
 			} else {
 				categoryDao.update(category);
-			}			
+			}
+			
+			if (category.getWebpages()!=null && category.getWebpages().getId()!=null) {
+				Webpages webpages =webpagesDao.read(category.getWebpages().getId());
+				if (category.getWebpages().getEntity()!=null && !category.getWebpages().getEntity().isBlank()) {
+					webpages.setEntity(category.getWebpages().getEntity());}
+				if (category.getWebpages().getEntityid()!=null) {
+					webpages.setEntityid(category.getWebpages().getEntityid());}	
+				webpagesDao.update(webpages);
+			}
 			return id;
 		} catch(DaoException e) {
 			throw new LogicException(e);
 		}
 	}
-
+///////////////////////////////////////////////////////////////
+     
+//////////////////////////////////////////////////////	
 	@Override
 	public void delete(Long id) throws LogicException {		
 			ComplexDelete(id); //categoryDao.delete(id);		
@@ -87,9 +98,42 @@ public class CategoryServiceImpl implements CategoryService {
 				ComplexDelete(id); //categoryDao.delete(id);
 			}	
 	}
-	
-	
-	
+	//////////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public Category read(String str) throws LogicException {
+		try {
+			Category category=categoryDao.read(str);
+		/*	if (category.getParentid()>0) {category.setParentname(categoryDao.read(category.getParentid()).getName());}
+			Webpages webpages=webpagesDao.read(category.getWebpages().getId());
+			category.setWebpages(webpages); */
+			return category;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public List<Category> readByParent(Long parentid) throws LogicException {
+		try {
+			List<Category> list = categoryDao.readByParent(parentid);
+			list.forEach((x) -> {
+				Webpages webpages=x.getWebpages();
+				try {
+					if (x.getParentid()>0) {x.setParentname(categoryDao.read(x.getParentid()).getName());}
+					webpages = webpagesDao.read(webpages.getId());
+					x.setWebpages(webpages);		
+				} catch (DaoException e) {
+					e.printStackTrace();}
+				
+						
+			});
+			return list;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
 	///////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////
 	 public boolean updateClassificationFromCategory() throws LogicException  {

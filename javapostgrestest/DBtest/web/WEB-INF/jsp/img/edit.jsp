@@ -20,7 +20,7 @@
 <u:backoffice-page h1="${h1}" title="${title}">				
 				
 		    <c:url var="saveUrl" value="save.html"/>
-            <form action="${saveUrl}" method="post">
+            <form action="${saveUrl}" method="post"> <!-- enctype="multipart/form-data"   application/x-www-form-urlencoded -->
 				
 			<c:if test="${not empty entity}">
 			<input type="hidden" name="id" value="${img.id}">
@@ -35,8 +35,9 @@
 			<label for="url">url</label>			
 			<input type="text" id="url" name="url"  value="${img.url}">		
 			
-		<!--  	<label for="file">file</label>			
-			<input type="file" id="file" name="file">-->	
+		<!--  	<input type="file" name="file" multiple="true" />
+		    <label for="file">file</label>			
+			<input type="file" id="file" name="file">	-->
 				
 			<button class="form__button" type="submit">Save</button>
 		</form>

@@ -22,11 +22,14 @@ public class LoginServlet extends HttpServlet {
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		System.out.println("=================LOGIN)");
+		req.setAttribute("uri", req.getRequestURI());
 		req.getRequestDispatcher("/WEB-INF/jsp/login.jsp").forward(req, resp);}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
+			System.out.println("=================uri)"+req.getParameter("uri"));
 			String login = req.getParameter("login");
 			String password = req.getParameter("password");
 			if(login == null || login.isBlank() || password == null) {

@@ -57,10 +57,10 @@ public class SaleServiceImpl implements SaleService {
 		try {
 			Orders orders= sale.getOrder();
 			Client client =orders.getClient();
-			  System.out.println("====================SERV DATA" + sale.getDatetime());
+		//	  System.out.println("====================SERV DATA" + sale.getDatetime());
 			ordersDao.update(orders);
 			clientDao.update(client);
-			 System.out.println("====================SERV DATA 2" + sale.getDatetime());
+	//		 System.out.println("====================SERV DATA 2" + sale.getDatetime());
 			Long id =sale.getId();
 			if(id == null) {
 				 id = saleDao.create(sale);

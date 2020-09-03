@@ -8,6 +8,7 @@ import de_services.CategoryServiceImpl;
 import service.LogicException;
 import entities.Category;
 import entities.Webpages;
+import help.Params;
 import web.action.ActionException;
 import web.action.BaseAction;
 
@@ -45,7 +46,10 @@ public class CategorySaveAction extends BaseAction {
 	    	   if (webpages!=null && webpages==0) {webpages=null;}
 	    	   if (webpages!=null) {
 	    	   category.setWebpages(new Webpages());
-	    	   category.getWebpages().setId(webpages); }
+	    	   category.getWebpages().setId(webpages);
+	    	   category.getWebpages().setEntity(Params.WP_CATEGORY); 
+	    	   category.getWebpages().setEntityid(id);
+	    	   }
 	   	    	 	    	   
 	    	   if (parentid!= null && parentid>0) {
 	    		   category.setParentid(parentid);

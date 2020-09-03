@@ -10,4 +10,6 @@ public interface WebpagesService extends BaseService<Webpages> {
 	Long save(Webpages webpages) throws LogicException;
 	void delete(Long id) throws LogicException;
 	Webpages read(Long id) throws LogicException;
+	Webpages readEntityId(String uri) throws LogicException;
+	Webpages findByEntityId(Long eid, String entity) throws LogicException;
 }

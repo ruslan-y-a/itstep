@@ -11,6 +11,7 @@ import entities.Category;
 import entities.Classification;
 import entities.Items;
 import entities.Webpages;
+import help.Params;
 import web.action.ActionException;
 import web.action.BaseAction;
 
@@ -48,7 +49,10 @@ public Result exec(HttpServletRequest req, HttpServletResponse resp) throws Logi
 
  	  webpages= Long.parseLong(req.getParameter("webpages")); 
 	   if(webpages<=0) {webpages = null;}
-	   if (webpages != null) {product.setWebpages( new Webpages()); product.getWebpages().setId(webpages);} 	   
+	   if (webpages != null) {
+		   product.setWebpages( new Webpages()); product.getWebpages().setId(webpages);
+		   product.getWebpages().setEntity(Params.WP_ITEMS); product.getWebpages().setEntityid(id);
+	   } 	   
  	   
  	  try {baseprice= Long.parseLong(req.getParameter("baseprice")); }
 		   catch (NullPointerException | NumberFormatException err) {baseprice =null;}

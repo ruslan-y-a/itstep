@@ -1,6 +1,6 @@
 package daos;
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,12 +13,8 @@ import java.util.Map;
 import entities.Currency;
 import postgres.DaoException;
 
-public class CurrencyDaoImpl implements CurrencyDao {
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}
-	
+public class CurrencyDaoImpl extends DaoImpl<Currency> implements CurrencyDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */	
 	private Map<Long, Currency> cache = new HashMap<>();
 		
 	@Override

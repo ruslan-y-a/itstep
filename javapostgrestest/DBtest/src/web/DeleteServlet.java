@@ -40,6 +40,10 @@ public class DeleteServlet extends HttpServlet {
 				return;
 			}
 		}
-		resp.sendRedirect("list.html"); /* req.getContextPath() + */
+		
+		String dUrl=req.getParameter("dUrl"); 	  		 			  	
+		if (dUrl!=null) {resp.sendRedirect(dUrl);}
+		else {
+		resp.sendRedirect("list.html"); /* req.getContextPath() + */ }
 	}
 }

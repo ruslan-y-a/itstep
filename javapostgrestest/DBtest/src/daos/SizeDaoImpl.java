@@ -1,6 +1,6 @@
 package daos; //SizeDao
 
-import java.sql.Connection;
+//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,13 +14,8 @@ import entities.Size;
 import entities.Variant;
 import postgres.DaoException;
 
-public class SizeDaoImpl implements SizeDao {
-
-	private Connection c;
-	public void setConnection(Connection c) {
-		this.c = c;
-	}	
-
+public class SizeDaoImpl extends DaoImpl<Size> implements SizeDao {
+	/*private Connection c; public void setConnection(Connection c) {this.c = c;} */
 	private Map<Long, Variant> cache = new HashMap<>();
 		
 	@Override

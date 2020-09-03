@@ -119,5 +119,37 @@ public class ClientServiceImpl implements ClientService {
 			throw new LogicException(e);
 		}
 	}
-	
+///////////////////////////////////////////////////////////////////////////////////	
+	@Override
+	public Client readByUserId(Long id) throws LogicException {
+		try {
+			Client client=clientDao.readByUserId(id);
+	//		System.out.println("================2)"+client);
+			Country country =countryDao.read(client.getCountry().getId());
+			client.setCountry(country);
+			User user = userDao.read(client.getUser().getId());
+			client.setUser(user);
+			List<Items> ilist=new ArrayList<>();
+			client.getRecentitems().forEach((y)->{
+				  try {
+					ilist.add(itemsDao.read(y.getId()));
+				  } catch (DaoException e) {					
+					e.printStackTrace();}
+			}); 
+			client.setRecentitems(ilist);
+						
+			return client;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+	@Override
+	public Long readByUserId(Long id, boolean bJustId) throws LogicException {
+		try {
+			Client client=clientDao.readByUserId(id);							
+			return client.getId();
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
 }

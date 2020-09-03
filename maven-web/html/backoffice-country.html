@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Интернет-магазин &laquo;Всякая всячина&raquo;</title>
+		<link rel="stylesheet" href="main.css" type="text/css">
+     
+	</head>
+	<body>
+		<div class="wrapper">
+			<div>
+				<div class="backoffice-header">Back office. Интернет-магазин &laquo;Всякая всячина&raquo;</div>
+				<div class="backoffice-header2">Admin, Manager</div>				   				
+			</div>
+			<div class="main-content">
+				   <h2 class="page-title">country</h2>
+				   <div class="backoffice-edit-page"> 
+					<table class="table" id="table">
+			<!-- 		id", "name"     , "currency",  "rate" -->
+						<tr>
+						    <th class="table__header">id</th>
+							<th class="table__header">name</th>
+							<th class="table__header">currencyid</th>				
+							<th class="table__header">currency</th>				
+							<th class="table__header">Action</th>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">1</td>
+							<td class="table__cell" id="tname">USA</td>
+							<td class="table__cell" id="tcurrencyid">1</td>
+							<td class="table__cell" id="tcurrency">USD</td>														
+						    <td class="table__cell"><img src="img/edit.png" id="edit"></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">2</td>
+							<td class="table__cell" id="tname">Mexico</td>
+							<td class="table__cell" id="tcurrencyid">1</td>
+							<td class="table__cell" id="tcurrency">USD</td>		
+		                    <td class="table__cell" ><img src="img/edit.png" id="edit" ></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">3</td>
+							<td class="table__cell" id="tname">France</td>
+							<td class="table__cell" id="tcurrencyid">2</td>
+							<td class="table__cell" id="tcurrency">EUR</td>							    
+			                <td class="table__cell"  ><img src="img/edit.png" id="edit" ></td> <!-- onclick="Edit(this)" -->
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">4</td>
+							<td class="table__cell" id="tname">GB</td>
+							<td class="table__cell" id="tcurrencyid">3</td>
+							<td class="table__cell" id="tcurrency">GBP</td>								    
+		                    <td class="table__cell" ><img src="img/edit.png" id="edit" ></td>
+						</tr>
+						<tr>
+						    <td class="table__cell_numeric" id="tid">5</td>
+							<td class="table__cell" id="tname">Germany</td>
+							<td class="table__cell" id="tcurrencyid">2</td>
+							<td class="table__cell" id="tcurrency">EUR</td>							    
+			                <td class="table__cell"  ><img src="img/edit.png" id="edit" ></td> <!-- onclick="Edit(this)" -->
+						</tr>
+					</table>
+				</div>	
+				
+				<h2 class="backoffice-edit-form">Edit Form</h2>
+				<div>
+			        <form class="backoffice-edit-form" action="save.html" style="width: 350px">
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="id">id:</label>
+						<input class="backoffice-form__text-input" id="id" type="text" name="id" value="0" readonly>
+					  </fieldset> 
+			          <fieldset id="backoffice-edit-form-item">
+						<label class="backoffice-form__label" for="name">name:</label>
+						<input class="backoffice-form__text-input" id="name" type="text" name="name" value="USA" required>
+					  </fieldset> 
+					  <fieldset id="backoffice-edit-form-item">	
+						<label class="backoffice-form__label" for="currency">currency:</label>						
+						  <select style="width:100px;" id="currency" name="currency"  required>
+			                     <option value=1>USD</option>
+			                     <option value=2>EUR</option>
+			                     <option value=3>GBP</option>
+		                   </select>		
+					   </fieldset> 			
+					   					  						
+						<button class="form__button" type="submit">Save</button>
+						<button class="form__button_danger" type="button">Delete</button>
+						<button class="form__button" type="reset">Cancel</button>
+					</form>
+			   </div>	
+			</div>			    
+			<div class="end"></div>
+			
+		</div>
+	<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->	
+        <script type="text/javascript">          
+          document.querySelector('#table').addEventListener('click', function(e){         
+        	  var id = e.target.id; 
+        	  var tmp=id.substring(0,4);
+        	  if (tmp=='edit') {        	
+        			Edit(e.target);
+        	     }         	          	          	          			
+        	  });                   
+                     
+          function Edit(e){        	  
+        	  var pnode = e.parentNode.parentNode;        
+        	 // var id= getchildid(pnode,'tid').innerHTML; //pnode.childNodes[0]        	        	  
+        	  var id= pnode.childNodes[1].innerHTML; //pnode.childNodes[0]
+        	  var name = pnode.childNodes[3].innerHTML; //getchildid(pnode,'tname').innerHTML;
+        	  var currency = parseInt(pnode.childNodes[5].innerHTML); //getchildid(pnode,'tpassword').innerHTML;
+        	//  var rate = pnode.childNodes[7].innerHTML; //getchildid(pnode,'te-mail').innerHTML;        
+        	          	  
+        	  document.getElementById('id').value = id;
+        	  document.getElementById('name').value = name;
+        	  
+        	  var list2=document.getElementById('currency');
+        	  
+        	  for (var j=0, m=list2.options.length;j<m;j++) {     			  
+   				list2.options[j].selected=false;}
+        	  
+        	  list2.options[currency-1].selected = true;        	          	          	                 
+          }
+          
+		</script>
+<!-- //////////SCRIPT////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ -->			
+	</body>
+</html>

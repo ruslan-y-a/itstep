@@ -11,4 +11,5 @@ public interface ClassificationDao extends Dao<Classification> {
 	void update(Classification classification) throws DaoException;
 	void delete(Long id) throws DaoException;
 	List<Classification> read() throws DaoException;
+	Classification readByCategory(Long id) throws DaoException;
 }

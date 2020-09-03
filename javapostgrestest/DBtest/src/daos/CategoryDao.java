@@ -11,4 +11,6 @@ public interface CategoryDao extends Dao<Category> {
 	void update(Category category) throws DaoException;
 	void delete(Long id) throws DaoException;
 	List<Category> read() throws DaoException;
+	Category read(String str) throws DaoException;
+	List<Category> readByParent(Long parentid) throws DaoException;
 }

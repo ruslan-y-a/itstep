@@ -10,4 +10,6 @@ public interface ClientService extends BaseService<Client> {
 	Long save(Client category) throws LogicException;
 	void delete(Long id) throws LogicException;
 	Client read(Long id) throws LogicException;
+	Client readByUserId(Long id) throws LogicException;
+	Long readByUserId(Long id, boolean bJustId) throws LogicException;
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 import postgres.DaoException;
 import sqlSetGet.SqlGetter;
 import sqlSetGet.SqlSetter;
+import sqlSetGet.SqlSetterS;
 
 abstract public class Entity implements absEntity, Serializable {
 	/**
@@ -53,7 +54,14 @@ abstract public class Entity implements absEntity, Serializable {
 	  }
 	  public void setToTab (PreparedStatement s, Integer i,String columnName,String value) throws DaoException {	
 		  try { 
-		  SqlSetter sqlSetter = tabSetter.get(columnName);         		  
+		  		
+		  SqlSetter sqlSetter = tabSetter.get(columnName);
+/*		  if (sqlSetter==null) {		
+			  for (String str: tabSetter.keySet()) {
+				    if (columnName==str || columnName.contentEquals(str) || columnName.indexOf(str)>=0 || str.indexOf(columnName)>=0) {
+				    	sqlSetter = tabSetter.get(str); break;   }
+			      }
+		  }*/		  
 		  sqlSetter.sqlSet(s, i, value);      
 	    } catch (DaoException e) {
 		  throw new DaoException(e + " " + columnName); 

@@ -68,4 +68,22 @@ public class WebpagesServiceImpl implements WebpagesService {
 		}
 	}
 	
+	@Override
+	public Webpages readEntityId(String uri) throws LogicException {
+		try {					
+			return webpagesDao.readEntityId(uri);
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+	
+	@Override
+	public Webpages findByEntityId(Long eid, String entity) throws LogicException {
+		try {					
+			return webpagesDao.fingByEntityId(eid, entity);
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+	
 }

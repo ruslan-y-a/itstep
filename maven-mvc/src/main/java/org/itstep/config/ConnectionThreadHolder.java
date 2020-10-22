@@ -1,0 +1,20 @@
+package org.itstep.config;
+
+import java.sql.Connection;
+
+public class ConnectionThreadHolder {
+	private static final ThreadLocal<Connection> connectionThreadScope = new ThreadLocal<>();
+
+	public static Connection getConnection() {
+	//	System.out.println("===========POOL=========" + connectionThreadScope.get());
+		return connectionThreadScope.get();
+	}
+
+	public static void setConnection(Connection connection) {
+		connectionThreadScope.set(connection);
+	}
+
+	public static void removeConnection() {
+		connectionThreadScope.remove();
+	}
+}

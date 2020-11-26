@@ -1,11 +1,20 @@
 package org.itstep.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class Classification  extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4741888577354585872L;
+@Entity
+@Table(name = "classification", schema="public")
+public class Classification {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 	private Long parentid;
 	private String parentname;
 	private Long categoryid;

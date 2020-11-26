@@ -2,7 +2,6 @@ package org.itstep.daos;
 
 import java.util.List;
 import org.itstep.entities.Country;
-import org.itstep.postgres.DaoException;
 
 public interface CountryDao extends Dao<Country> {
 	Long create(Country country) throws DaoException;

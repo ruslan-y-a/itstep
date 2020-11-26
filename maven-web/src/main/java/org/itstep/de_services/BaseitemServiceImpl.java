@@ -1,17 +1,20 @@
 package org.itstep.de_services;
 
 import java.util.List;
+//import java.util.stream.Collectors;
+
 import org.itstep.daos.BaseitemDao;
 import org.itstep.daos.ColorDao;
 import org.itstep.daos.CurrencyDao;
 import org.itstep.daos.ItemsDao;
 import org.itstep.daos.SizeDao;
 import org.itstep.entities.Baseitem;
+//import org.itstep.entities.Classification;
 import org.itstep.entities.Color;
 import org.itstep.entities.Currency;
 import org.itstep.entities.Items;
 import org.itstep.entities.Size;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +34,8 @@ public class BaseitemServiceImpl implements BaseitemService {
 	private SizeDao sizeDao;
 	@Autowired
 	private CurrencyDao currencyDao;
+	@Autowired
+	private ItemsServiceImpl itemsServiceImpl;
 
 	public void setBaseitemDao(BaseitemDao baseitemDao) {this.baseitemDao= baseitemDao;}
 	public void setItemsDao(ItemsDao itemsDao) {this.itemsDao = itemsDao;}
@@ -73,6 +78,7 @@ public class BaseitemServiceImpl implements BaseitemService {
 				baseitem.setId(id);				
 			} else {
 				baseitemDao.update(baseitem);
+				itemsServiceImpl.updateItemStatus(baseitem.getItem().getId());
 			}
 			return id;
 		} catch(DaoException e) {
@@ -90,7 +96,7 @@ public class BaseitemServiceImpl implements BaseitemService {
 	}
 	
 	@Override
-	public Baseitem read(Long id) throws LogicException {
+	public Baseitem findById(Long id) throws LogicException {
 		try {
 			Baseitem baseitem=baseitemDao.read(id);
 			Items items = itemsDao.read(baseitem.getItem().getId());
@@ -104,6 +110,16 @@ public class BaseitemServiceImpl implements BaseitemService {
 			Currency currency=currencyDao.read(baseitem.getCurrency().getId());
 			baseitem.setCurrency(currency);		
 			
+			return baseitem;
+		} catch(DaoException e) {
+			throw new LogicException(e);
+		}
+	}
+	
+	public Baseitem readByICS(Long id,Long colorid,Long sizeid) throws LogicException {
+		try {
+			Baseitem baseitem=baseitemDao.readByICS(id, colorid, sizeid);								
+					
 			return baseitem;
 		} catch(DaoException e) {
 			throw new LogicException(e);
@@ -148,5 +164,7 @@ public class BaseitemServiceImpl implements BaseitemService {
 			throw new LogicException(e);
 		}
 	}
+	/////////////////////////////////////////////////////////////////////
+	
 	
 }

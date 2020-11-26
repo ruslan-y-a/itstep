@@ -3,7 +3,6 @@ package org.itstep.daos;
 import java.util.List;
 
 import org.itstep.entities.Category;
-import org.itstep.postgres.DaoException;
 
 public interface CategoryDao extends Dao<Category> {
 	Long create(Category category) throws DaoException;

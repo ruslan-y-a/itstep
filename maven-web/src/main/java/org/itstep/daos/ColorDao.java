@@ -3,7 +3,6 @@ package org.itstep.daos;
 import java.util.List;
 
 import org.itstep.entities.Color;
-import org.itstep.postgres.DaoException;
 
 public interface ColorDao extends Dao<Color> {
 	Long create(Color color) throws DaoException;	

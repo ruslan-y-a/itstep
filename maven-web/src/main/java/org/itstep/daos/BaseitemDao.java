@@ -1,7 +1,5 @@
 package org.itstep.daos;
 
-import org.itstep.postgres.DaoException;
-
 import java.util.List;
 
 import org.itstep.entities.Baseitem;
@@ -15,4 +13,5 @@ public interface BaseitemDao extends Dao<Baseitem> {
 	List<Baseitem> read() throws DaoException;
 	List<Baseitem> readItemRow(Long itemid) throws DaoException;
 	Boolean getInStock(Long itemid) throws DaoException;
+	public Baseitem readByICS(Long id,Long colorid,Long sizeid) throws DaoException;
 }

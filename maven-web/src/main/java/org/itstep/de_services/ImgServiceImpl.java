@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.itstep.daos.ImgDao;
 import org.itstep.entities.Img;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -32,7 +32,7 @@ public class ImgServiceImpl implements ImgService {
 			Long id =img.getId();
 			if(id == null) {
 				id = imgDao.create(img);
-				img.setId(id);
+				//img.setId(id);
 			} else {
 				imgDao.update(img);
 			}
@@ -52,7 +52,7 @@ public class ImgServiceImpl implements ImgService {
 	}
 	
 	@Override
-	public Img read(Long id) throws LogicException {
+	public Img findById(Long id) throws LogicException {
 		try {					
 			return imgDao.read(id);
 		} catch(DaoException e) {

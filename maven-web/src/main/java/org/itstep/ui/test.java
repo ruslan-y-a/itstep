@@ -1,307 +1,134 @@
 package org.itstep.ui;
 
+import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ArrayList;
-//import java.util.Date;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-//import javax.servlet.ServletException;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import javax.servlet.ServletContext;
+
+import org.itstep.config.ConnectionThreadHolder;
+import org.itstep.config.ContextKeeper;
 import org.itstep.csvLoader.CsvLoader;
-import org.itstep.service.DBService;
+import org.itstep.csvupdater.LoadService;
+import org.itstep.daos.BaseitemDaoImpl;
+import org.itstep.daos.ClassificationDaoImpl;
+import org.itstep.daos.CurrencyDaoImpl;
+import org.itstep.daos.DaoException;
+import org.itstep.daos.ItemsDaoImpl;
+import org.itstep.daos.TagcloudDaoImpl;
+import org.itstep.daos.WebpagesDaoImpl;
+import org.itstep.de_services.CurrencyServiceImpl;
+import org.itstep.de_services.ItemsServiceImpl;
+import org.itstep.de_services.WebpagesService;
+import org.itstep.de_services.WebpagesServiceImpl;
+import org.itstep.entities.Baseitem;
+import org.itstep.entities.Classification;
+import org.itstep.entities.Currency;
+import org.itstep.entities.Items;
+import org.itstep.entities.ItemsSort;
+import org.itstep.entities.Webpages;
+import org.itstep.pool.ConnectionPool;
+import org.itstep.pool.ConnectionPoolException;
 import org.itstep.service.LogicException;
-import org.itstep.tabs.Baseitem;
-import org.itstep.tabs.Category;
-import org.itstep.tabs.Classification;
-import org.itstep.tabs.Client;
-import org.itstep.tabs.Country;
-import org.itstep.tabs.Currency;
-import org.itstep.tabs.Entity;
-import org.itstep.tabs.Img;
-import org.itstep.tabs.Itemcatgory;
-import org.itstep.tabs.Items;
-import org.itstep.tabs.Orders;
-import org.itstep.tabs.Sale;
-import org.itstep.tabs.Tagcloud;
-import org.itstep.tabs.Tagurl;
-import org.itstep.tabs.User;
-import org.itstep.tabs.Variant;
-import org.itstep.tabs.Webpages;
+import org.itstep.sqlite.Stats;
+import org.itstep.sqlite.StatsDao;
+import org.itstep.xml.SitemapCreator;
 
 public class test {
-
-	public static void main(String[] args) throws LogicException, IOException {
-		try(Factory factory = new Factory()) {
-			Class.forName("org.postgresql.Driver");			
-			DBService service = factory.getDBService();
-			service.createCsvLoad("web/baseitem.csv");				
-			List<Entity> products = service.read("baseitem");
-			products.forEach(x-> System.out.println(x));
-			
-		//	products= service.read("client");printClient(products);
-		//	products= service.read("users");printUser(products);
-		//	products= service.read("baseitem");printBaseitem(products);
-		//	products= service.read("category");printCategory(products);
-		//	products= service.read("classification");printClassification(products);
-		//	products= service.read("country");printCountry(products);
-		//	products= service.read("currency");printCurrency(products);
-		//	products= service.read("img");printImg(products);
-		//	products= service.read("itemcatgory");printItemcatgory(products);
-		//	products= service.read("items");printItems(products);
-		//	products= service.read("orders");printOrders(products);
-		//	products= service.read("sale");printSale(products);
-		//	products= service.read("tagcloud");printTagcloud(products);
-		//	products= service.read("tagurl");printTagurl(products);
-		//	products= service.read("webpages");printWebpages(products);
-		//	products= service.read("size");printVariant(products);																																						
-		//	products= service.read("color");printVariant(products);
-		} catch(LogicException | ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-	}
+ public static void main(String...args) throws Exception {
 /*
-	static void printClient(List<Entity> products ) {
-		Client client; 
-		for(Entity product : products) {
-			 client=(Client)product; 
-			System.out.printf("<tr>");
-			System.out.printf("<td>%d</td>\n", client.DBgetId());
-			System.out.printf("<td>%d</td>\n", client.getCountryid());
-			System.out.printf("<td>%s</td>\n", client.getAddress());
-			System.out.printf("<td>%1$td.%1$tm.%1$tY, %1$tA</td>\n", client.getCreationdate());
-			System.out.printf("<td>+%s</td>\n", client.getPhoneno());		
-			System.out.printf("<td>%d</td>\n", client.getUserid());
-			System.out.printf("</tr>");
+	 Connection c = getConnection();
+	/// c = ConnectionThreadHolder.getConnection();
+		if (c==null) {
+			ConnectionPool.getInstance().init("org.postgresql.Driver", "jdbc:postgresql://localhost/ishop", "root", "root", 5, 20, 1000);
+		    connection = ConnectionPool.getInstance().getConnection();
+			ConnectionThreadHolder.setConnection(connection);
 		}
-	}
-	//////////////////////////////////////////////////////////	
-	static void printUser(List<Entity> products ) {
-		User user; 
-		for(Entity product : products) {
-			user=(User)product; 
-			System.out.printf("<tr>");
-			System.out.printf("<td>%d</td>\n", user.DBgetId());
-			System.out.printf("<td>%s</td>\n", user.getName());
-			System.out.printf("<td>%s</td>\n", user.getPassword());
-			System.out.printf("<td>%s</td>\n", user.getEmail());
-			System.out.printf("<td>+%s</td>\n", user.getRoleid());					
-			System.out.printf("</tr>");
-		}
-	}
-//////////////////////////////////////////////////////////
-    static void printVariant(List<Entity> products ) {
-     Variant variant; 
-     for(Entity product : products) {
-    	 variant=(Variant)product; 
-      System.out.printf("<tr>");
-      System.out.printf("<td>%d</td>\n", variant.DBgetId());
-      System.out.printf("<td>%s</td>\n", variant.getName());  
-      System.out.printf("</tr>");
-     }
-   }
-//////////////////////////////////////////////////////////
-    static void printBaseitem(List<Entity> products ) {
-    	Baseitem baseitem; 
-       for(Entity product : products) {
-    	   baseitem=(Baseitem)product; 
-         System.out.printf("<tr>");
-        System.out.printf("<td>%d</td>\n", baseitem.DBgetId());
-         System.out.printf("<td>%d</td>\n", baseitem.getItemid());
-        System.out.printf("<td>%d</td>\n", baseitem.getColorid());
-        System.out.printf("<td>%d</td>\n", baseitem.getSizeid());
-        System.out.printf("<td>%s</td>\n", baseitem.getName());		
-        System.out.printf("<td>%d</td>\n", baseitem.getQuantity());
-        System.out.printf("<td>%d</td>\n", baseitem.getBaseprice());
-        System.out.printf("<td>%d</td>\n", baseitem.getCurrency());    
-        System.out.printf("</tr>");
-       }
-    }
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printCategory(List<Entity> products ) {
-	Category category; 
-   for(Entity product : products) {
-	category=(Category)product; 
-    System.out.printf("<tr>");
-    System.out.printf("<td>%d</td>\n", category.DBgetId());
-    System.out.printf("<td>%d</td>\n", category.getParentid());
-    System.out.printf("<td>%s</td>\n", category.getName());   
-    System.out.printf("</tr>");
-    }
-  }
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printClassification(List<Entity> products ) {
-	Classification classification; 
-for(Entity product : products) {
-	classification=(Classification)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", classification.DBgetId());
-System.out.printf("<td>%d</td>\n", classification.getParentid());
-System.out.printf("<td>%d</td>\n", classification.getCategoryid());   
-System.out.printf("<td>%s</td>\n", classification.getName());   
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printCountry(List<Entity> products ) {
-	Country country; 
-for(Entity product : products) {
-	country=(Country)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", country.DBgetId());
-System.out.printf("<td>%s</td>\n", country.getName());   
-System.out.printf("<td>%d</td>\n", country.getCurrency());  
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printCurrency(List<Entity> products ) {
-	Currency currency; 
-for(Entity product : products) {
-	currency=(Currency)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", currency.DBgetId());
-System.out.printf("<td>%s</td>\n", currency.getName());   
-System.out.printf("<td>%f</td>\n", currency.getRate());  
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printImg(List<Entity> products ) {
-	Img img; 
-for(Entity product : products) {
-	img=(Img)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", img.DBgetId());
-System.out.printf("<td>%s</td>\n", img.getItems());   
-System.out.printf("<td>%s</td>\n", img.getTitle());  
-System.out.printf("<td>%s</td>\n", img.getAlt());  
-System.out.printf("<td>%s</td>\n", img.getUrl());  
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printItemcatgory(List<Entity> products ) {
-	Itemcatgory itemcatgory; 
-for(Entity product : products) {
-	itemcatgory=(Itemcatgory)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", itemcatgory.DBgetId());
-System.out.printf("<td>%s</td>\n", itemcatgory.getItems());   
-System.out.printf("<td>%s</td>\n", itemcatgory.getClassification());   
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printItems(List<Entity> products ) {
-	Items item; 
-for(Entity product : products) {
-	item=(Items)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", item.DBgetId());
-System.out.printf("<td>%s</td>\n", item.getArticul());   
-System.out.printf("<td>%s</td>\n", item.getModel());   
-System.out.printf("<td>%s</td>\n", item.getBaseprice());   
-System.out.printf("<td>%s</td>\n", item.getDiscount());   
-System.out.printf("<td>%s</td>\n", item.getTitle());   
-System.out.printf("<td>%s</td>\n", item.getText());   
-System.out.printf("<td>%s</td>\n", item.getName());   
-System.out.printf("<td>%s</td>\n", item.getDescription());   
-System.out.printf("<td>%s</td>\n", item.getKeywords());   
-System.out.printf("<td>%s</td>\n", item.getMainimgurl());   
-System.out.printf("<td>%s</td>\n", item.getUrl());   
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printOrders(List<Entity> products ) {
-	Orders item; 
-for(Entity product : products) {
-  item=(Orders)product; 
-   System.out.printf("<tr>");
-   System.out.printf("<td>%d</td>\n", item.DBgetId());
-   System.out.printf("<td>%s</td>\n", item.getNumber());   
-   System.out.printf("<td>%s</td>\n", item.getDatetime());   
-   System.out.printf("<td>%s</td>\n", item.getDateexpired());   
-   System.out.printf("<td>%s</td>\n", item.getCustomerid());   
-   System.out.printf("<td>%s</td>\n", item.getQuantity());   
-   System.out.printf("<td>%s</td>\n", item.getSum());   
-   System.out.printf("<td>%s</td>\n", item.getCurrencyid());   
-   System.out.printf("<td>%s</td>\n", item.getOrdertype());   
-   System.out.printf("<td>%s</td>\n", item.isActive());   
-   System.out.printf("<td>%s</td>\n", item.getStatus());    
-   System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printSale(List<Entity> products ) {
-	Sale sale; 
-for(Entity product : products) {
-	sale=(Sale)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", sale.DBgetId());
-System.out.printf("<td>%s</td>\n", sale.getDatetime());   
-System.out.printf("<td>%s</td>\n", sale.getOrderid());
-System.out.printf("<td>%s</td>\n", sale.isReturn());
-System.out.printf("<td>%s</td>\n", sale.getCurrencyid());
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printTagcloud(List<Entity> products ) {
-	Tagcloud tagcloud; 
-for(Entity product : products) {
-	tagcloud=(Tagcloud)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", tagcloud.DBgetId());
-System.out.println("<td>" +tagcloud.getClassification()+ "</td>\n");   
-System.out.printf("<td>%s</td>\n", tagcloud.getTagurl());
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printTagurl(List<Entity> products ) {
-	Tagurl tagurl; 
-for(Entity product : products) {
-	tagurl=(Tagurl)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", tagurl.DBgetId()); 
-System.out.printf("<td>%s</td>\n", tagurl.getTagname());
-System.out.printf("<td>%s</td>\n", tagurl.getUrl());
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-static void printWebpages(List<Entity> products ) {
-	Webpages webpages; 
-for(Entity product : products) {
-	webpages=(Webpages)product; 
-System.out.printf("<tr>");
-System.out.printf("<td>%d</td>\n", webpages.DBgetId()); 
-System.out.printf("<td>%s</td>\n", webpages.getUrl());
-System.out.printf("<td>%s</td>\n", webpages.getTitle());
-System.out.printf("<td>%s</td>\n", webpages.getDescription());
-System.out.printf("<td>%s</td>\n", webpages.getKeywords());
-System.out.printf("<td>%s</td>\n", webpages.getH1());
-System.out.printf("<td>%s</td>\n", webpages.getText());
-System.out.printf("<td>%s</td>\n", webpages.getRobots());
-System.out.printf("</tr>");
-}
-}
-//////////////////////////////////////////////////////////
- * 
- * 
- */
-}
+		*/
+	 /*
+		Set<String> whiteURLs, adminURLs, managerURLs, couriesURLs, cashierURLs, clientURLs, productURLs;
+		 try {
+			  String fileupload ="c:/Users/Admin/eclipse-workspace/maven-mvc/src/main/webapp/";
+				//ServletContext context = ContextKeeper.getServletContext();
+				//String fileupload = context.getInitParameter("file-upload");					
+				Map<String,ArrayList<String>> map = loadRole(fileupload + "rolepages.csv");
+				
+				whiteURLs = map.get("whiteURL").stream().collect(Collectors.toSet());
+				adminURLs = map.get("adminURL").stream().collect(Collectors.toSet());
+				managerURLs = map.get("managerURL").stream().collect(Collectors.toSet());
+				couriesURLs = map.get("couriesURL").stream().collect(Collectors.toSet());
+				cashierURLs = map.get("cashierURL").stream().collect(Collectors.toSet());
+				clientURLs = map.get("clientURL").stream().collect(Collectors.toSet());
+				productURLs = map.get("productURL").stream().collect(Collectors.toSet());			
+				System.out.println("=====================ROLES LOADED");			
+			} catch (Exception e) {	 e.printStackTrace(); throw new LogicException(e);}	
+		  
+		  Map<String,Set<String>> listUrl = listUrls(null,adminURLs,"ADMIN");
+		  listUrl =  listUrls(listUrl,managerURLs,"MANAGER");
+		  listUrl =  listUrls(listUrl,couriesURLs,"COURIER");
+		  listUrl =  listUrls(listUrl,cashierURLs,"CASHIER");
+		  listUrl =  listUrls(listUrl,clientURLs,"CLIENT");
+		  listUrl =  listUrls(listUrl,productURLs,"PRODUCT");
+		
+		  listUrl.forEach((x,y) -> {
+			  if (x!=null && !x.isBlank()) {System.out.print(x + " " + setToString(y)); System.out.println();}
+			  });  
+			  
+			  */
+ }
+///////////////////////////////////////////////////////////////////////////////////////////
+ private static Map<String,ArrayList<String>> loadRole(String fileupload){
+	   File file= new File(fileupload); if (!file.exists()) {return null;}
+	   Map<String,ArrayList<String>> map=null;
+	   CsvLoader csvLoader = new CsvLoader(file);				
+	   try {
+	    map=csvLoader.Load();
+	   } catch (ClassNotFoundException | IOException e) {e.printStackTrace();}
+	    return map;
+	  }  
+	private static Map<String,Set<String>> listUrls(Map<String,Set<String>> map, Set<String> URLs, String sRole){
+		  if (map==null) {map = new HashMap<>();}
+		  String ss;
+		  for(String x : URLs) {			 
+			  ss = (x.indexOf(".html")>=0? x.substring(0, x.indexOf(".html")):x);
+			  Set<String> al = map.get(ss);
+			  if (al==null) {al = new HashSet<>();}
+			  al.add(sRole);
+			  map.put(ss, al);
+		  };
+		 return map;  
+	  }  
 
+	private static String setToString(Set<String> URLs) {
+	   StringBuilder sb = new StringBuilder();
+	   boolean first=false;
+	   for(String x : URLs) {
+		     if (first) {sb.append(", ");}; sb.append("'"); sb.append(x); sb.append("'");
+		     first=true;	   
+		    }	  
+		return sb.toString();
+	  }
+///////////////////////////////////////////////////////////////////////////////////////////
+ private static Connection connection;
+ private static Connection getConnection() throws LogicException, ClassNotFoundException {
+	    Class.forName("org.postgresql.Driver");
+		if(connection == null) {
+			try {
+			connection = DriverManager.getConnection("jdbc:postgresql://localhost/ishop", "root", "root");
+		    } catch(SQLException e) {
+			  throw new LogicException(e);
+			}
+		 }
+			return connection;
+		}
+}

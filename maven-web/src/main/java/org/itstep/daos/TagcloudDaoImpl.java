@@ -14,7 +14,6 @@ import org.itstep.entities.Classification;
 import org.itstep.entities.Tagcloud;
 import org.itstep.entities.Webpages;
 import org.itstep.help.Helper;
-import org.itstep.postgres.DaoException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

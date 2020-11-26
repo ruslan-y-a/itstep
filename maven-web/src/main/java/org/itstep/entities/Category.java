@@ -1,13 +1,29 @@
 package org.itstep.entities;
 
-public class Category extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -3449097732629054565L;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "category", schema="public")
+public class Category {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)	
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
+	
 	private String name;
 	private Long parentid;
 	private String parentname;
+	@ManyToOne()
+	@JoinColumn(name="webpages")
 	private Webpages webpages;
 
 	public Webpages getWebpages() {

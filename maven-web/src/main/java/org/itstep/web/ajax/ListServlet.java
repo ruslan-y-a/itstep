@@ -12,25 +12,34 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.itstep.config.ContextKeeper;
+import org.itstep.controller_main.Mapping;
 import org.itstep.de_services.BaseService;
 import org.itstep.de_services.CategoryService;
 import org.itstep.de_services.ClientService;
 import org.itstep.de_services.ItemsService;
+import org.itstep.de_services.ItemsServiceImpl;
 import org.itstep.de_services.OrdersService;
 import org.itstep.entities.Category;
-import org.itstep.entities.Entity;
 import org.itstep.entities.Orders;
 import org.itstep.entities.Items;
 import org.itstep.service.LogicException;
-import org.itstep.web.action.ActionFactory;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 public class ListServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	@Autowired private WebApplicationContext context;
+	
+	public void setWebApplicationContext(WebApplicationContext context) {
+		this.context = context;
+	}
+
 	private static final long serialVersionUID = -5809000526961602603L;
-	@SuppressWarnings("unchecked")
+
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
@@ -45,12 +54,12 @@ public class ListServlet extends HttpServlet {
 			}						
 			Object olist = null;
 			Integer serchpos = uri.indexOf("/items/search");			
-			BaseService<?> service;			
+			BaseService <?>service;			
 			
 			String categoryParentID = req.getParameter("parent");
 			String categoryID = req.getParameter("category");
-			ApplicationContext context = (ApplicationContext)getServletContext().getAttribute("spring-context");
-			ItemsService iservice=context.getBean(ItemsService.class);	
+			context = ContextKeeper.getContext(); //WebApplicationContext 
+			ItemsService iservice=(ItemsService) context.getBean(ItemsServiceImpl.class);	
 			if (serchpos>=0 ) {													
 				List<Items> iList = iservice.search(search);
 				olist = iList;	
@@ -66,7 +75,7 @@ public class ListServlet extends HttpServlet {
 				list.forEach(x-> {
 					Items mItem=null;
 					try {
-						mItem = iservice.read(x.getBaseitem().getItem().getId());
+						mItem = iservice.findById(x.getBaseitem().getItem().getId());
 					} catch (LogicException e) {					
 						e.printStackTrace();}	
 					x.getBaseitem().setItem(mItem);
@@ -82,32 +91,34 @@ public class ListServlet extends HttpServlet {
 			} else if (categoryID!=null && !categoryID.isBlank()) {
 				cService = context.getBean(CategoryService.class);							
 				try {Long cpid=Long.parseLong(categoryID);
-				 Category category =cService.read(cpid);
+				 Category category =cService.findById(cpid);
 				 olist = category;	
 				} catch (NumberFormatException e) {}
 //////////////////////////////////////////////////////////////////////////////////////////////				
 		   } else {	
-			List<Entity> list = new ArrayList<>();						
+							
 			String Arr[]=uri.substring(1).split("/");	
-			Class<?> cl = ActionFactory.getServiceClass(Arr[0]);	
-			service = (BaseService<?>) context.getBean(cl); 	
+			Class<?> cl = Mapping.getServiceImpl(Arr[0]);	
+			List<?> list = new ArrayList<>();		
+		//	Class<?> clEntity = Mapping.getEntity(Arr[0]);
+			
+			service = (BaseService <?>) context.getBean(cl); 	
 			int qPos=0; try {qPos=search.indexOf("=");} catch (NullPointerException e) {}
 			  if (qPos>0) {
 				  String Arr1[]=search.split("=");
-				  Long aid=null; Entity entity=null;
+				  Long aid=null; Object entity=null;
 									
 				  try {
 					  if (Arr1[0].equals("id")) {
-					  aid=Long.parseLong(Arr1[1]);
-					//  System.out.println("==============aid)"+aid);
-					   entity = service.read(aid); }
-					//  System.out.println("==============entity)"+entity);
+					  aid=Long.parseLong(Arr1[1]);					
+					  entity = service.findById(aid); }
+				
 				  } catch (NullPointerException | NumberFormatException e) {
 					  resp.sendError(500);
 				  }				  	
 				  olist =entity;
 			  } else {
-			  list = (List<Entity>)service.findAll();
+			  list = service.findAll();
 			  olist =list;
 			 }			  			  
 			}

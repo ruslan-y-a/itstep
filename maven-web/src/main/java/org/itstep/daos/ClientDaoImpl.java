@@ -15,13 +15,14 @@ import org.itstep.entities.Country;
 import org.itstep.entities.Items;
 import org.itstep.entities.User;
 import org.itstep.help.Helper;
-import org.itstep.postgres.DaoException;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class ClientDaoImpl extends DaoImpl<Client> implements ClientDao {
+	//@Autowired private Connection c;
 	private Map<Long, Client> cache = new HashMap<>();
 		
 	@Override

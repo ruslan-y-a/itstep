@@ -4,12 +4,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class Client extends Entity {
+public class Client {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1547671674400170833L;
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 	public static final SimpleDateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 	
 	private Country country;

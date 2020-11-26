@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.itstep.daos.CurrencyDao;
 import org.itstep.entities.Currency;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -52,7 +52,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 	}
 	
 	@Override
-	public Currency read(Long id) throws LogicException {
+	public Currency findById(Long id) throws LogicException {
 		try {					
 			return currencyDao.read(id);
 		} catch(DaoException e) {

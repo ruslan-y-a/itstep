@@ -2,7 +2,10 @@ package org.itstep.de_services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.itstep.daos.BaseitemDao;
 import org.itstep.daos.CategoryDao;
 import org.itstep.daos.ClassificationDao;
@@ -15,15 +18,20 @@ import org.itstep.entities.Items;
 import org.itstep.entities.ItemsSort;
 import org.itstep.entities.Img;
 import org.itstep.entities.Webpages;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.itstep.entities.Baseitem;
 
 @Component
+@Service
 @Scope("prototype")
 public class ItemsServiceImpl implements ItemsService {
+	private static final Logger logger = LogManager.getLogger();
+	
 	@Autowired		
 	private WebpagesDao webpagesDao;
 	@Autowired		
@@ -121,7 +129,7 @@ public class ItemsServiceImpl implements ItemsService {
 	}
 	
 	@Override
-	public Items read(Long id) throws LogicException {
+	public Items findById(Long id) throws LogicException {
 		try {
 			Items items=itemsDao.read(id);
 			Category category =categoryDao.read(items.getCategory().getId());
@@ -583,4 +591,147 @@ public class ItemsServiceImpl implements ItemsService {
 		}
 	}	
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public Boolean updateItemsStatus() {
+		Classification cls=null;
+		List<Classification> clsList;
+		try {
+			clsList = classificationDao.read();
+		} catch (DaoException e2) {e2.printStackTrace();return false;}		
+		
+		try {
+			cls= clsList.stream().filter(x -> x.getName().equals("In stock")).findFirst().get();
+			if (cls==null) {logger.warn("Item UPDATING FAILED"); return false;}
+			for(Items it: itemsDao.read()) {
+/////////////////UPDATE PRICES////////////				
+				List<Baseitem> bis = baseitemDao.readItemRow(it.getId());
+				 if (bis==null || !(bis.size()>0)) {logger.warn("THERE ARE NO BASEITEMS FOR ITEM " + it.getArticul()); continue;} 
+				 Baseitem bi=null;
+				 bi=bis.stream().filter(x -> x.getQuantity()>0).findFirst().get();				 
+				 List<Classification> itemClsList= it.getClassification();
+				 long sid= cls.getId(); Classification classificationT=null;
+				 for(Classification classification: itemClsList) {
+					 if (classification.getId()==sid) {classificationT=classification;break;}
+				 } 				 
+				 if (bi==null && classificationT!=null) {
+					 itemClsList.remove(classificationT); it.setClassification(itemClsList); 
+					 itemsDao.update(it); }
+				 if (bi!=null && classificationT==null) {
+					 itemClsList.add(cls); it.setClassification(itemClsList); 
+					 itemsDao.update(it); } 
+/////////////////////////////////////
+				 updatePrices(it,clsList,itemClsList);				 
+			 } 						
+		} catch (DaoException e) {
+			logger.warn("Item UPDATING FAILED"); e.printStackTrace(); return false;
+		}									 
+		
+		return true;
+	}
+///////////////////////////////////////////////////////////////	
+	public Boolean updateItemStatus(Long id) {
+		Classification cls=null;
+		List<Classification> clsList;
+		try {
+			clsList = classificationDao.read();
+		} catch (DaoException e2) {e2.printStackTrace();return false;}		
+		
+		try {
+			cls= clsList.stream().filter(x -> x.getName().equals("In stock")).findFirst().get();
+			if (cls==null) {logger.warn("Item UPDATING FAILED"); return false;}
+			Items it= itemsDao.read(id); 
+/////////////////UPDATE PRICES////////////				
+				List<Baseitem> bis = baseitemDao.readItemRow(it.getId());
+				 if (bis==null || !(bis.size()>0)) {logger.warn("THERE ARE NO BASEITEMS FOR ITEM " + it.getArticul()); return false;} 
+				 Baseitem bi=null;
+				 bi=bis.stream().filter(x -> x.getQuantity()>0).findFirst().get();				 
+				 List<Classification> itemClsList= it.getClassification();
+				 long sid= cls.getId(); Classification classificationT=null;
+				 for(Classification classification: itemClsList) {
+					 if (classification.getId()==sid) {classificationT=classification;break;}
+				 } 				 
+				 if (bi==null && classificationT!=null) {
+					 itemClsList.remove(classificationT); it.setClassification(itemClsList); 
+					 itemsDao.update(it); }
+				 if (bi!=null && classificationT==null) {
+					 itemClsList.add(cls); it.setClassification(itemClsList); 
+					 itemsDao.update(it); } 
+/////////////////////////////////////
+				 updatePrices(it,clsList,itemClsList);				 
+			  						
+		} catch (DaoException e) {
+			logger.warn("Item UPDATING FAILED"); e.printStackTrace(); return false;
+		}									 
+		
+		return true;
+	}
+///////////////////////////////////////////////////////////////	
+	public void updatePrices(Items item, List<Classification> clsList,List<Classification> itemClsList) throws DaoException {
+		Classification prices=null; Classification discounts=null;	
+		for(Classification classification:clsList) {
+			if (classification.getName().equals("Prices")) {prices=classification;}
+			if (classification.getName().equals("Discounts")) {discounts=classification;}
+		}
+		if (prices==null ||  discounts==null) {System.out.println("no prices in the classification table");return;}
+		long pricesId=prices.getId(); long discountsId=discounts.getId();
+		List<Classification> prc=null; List<Classification> dsc=null;
+		try {
+		prc= clsList.stream().filter(x -> x.getParentid()==pricesId).collect(Collectors.toList());
+		dsc= clsList.stream().filter(x -> x.getParentid()==discountsId).collect(Collectors.toList());
+		} catch (Exception e) {}
+		if (prc==null ||  dsc==null) {System.out.println("no prices in the classification table");return;}
+/////////////////////////////////////////////////////////
+		int in=0;		
+		int ik = (prc.get(in).getName().equals("0")?0:Integer.parseInt(prc.get(in).getName().substring(1)));
+		if (item.getBaseprice()<=ik)  {
+			   if (!itemClsList.contains(prc.get(in))) {itemClsList.add(prc.get(in));}				   
+		} else if (itemClsList.contains(prc.get(in))) {
+			itemClsList.remove(prc.get(in));
+		}
+		
+		for(int i=1; i<prc.size()-1;i++) {
+			int ik1 = (prc.get(i-1).getName().equals("0")?0:Integer.parseInt(prc.get(i-1).getName().substring(1)));
+			int ik2 = (prc.get(i).getName().equals("0")?0:Integer.parseInt(prc.get(i).getName().substring(1)));
+			if (item.getBaseprice()>ik1 && item.getBaseprice()<=ik2)  {
+				   if (!itemClsList.contains(prc.get(i))) {itemClsList.add(prc.get(i));}				   
+			} else if (itemClsList.contains(prc.get(i))) {
+				itemClsList.remove(prc.get(i));
+			}			
+		} 
+		in=prc.size()-1;
+		ik = (prc.get(in).getName().equals("0")?0:Integer.parseInt(prc.get(in).getName().substring(1)));
+		if (item.getBaseprice()>ik)  {
+			   if (!itemClsList.contains(prc.get(in))) {itemClsList.add(prc.get(in));}				   
+		} else if (itemClsList.contains(prc.get(in))) {
+			itemClsList.remove(prc.get(in));
+		}		
+////////////////////////////////////////////////////////////////////////		
+		
+/////////////////////////////////////////////////////////
+        in=0;		
+        ik = (dsc.get(in).getName().equals("0")?0:Integer.parseInt(dsc.get(in).getName().substring(1)));
+        if (item.getDiscount()<=ik)  {
+           if (!itemClsList.contains(dsc.get(in))) {itemClsList.add(dsc.get(in));}				   
+         } else if (itemClsList.contains(dsc.get(in))) {
+              itemClsList.remove(dsc.get(in));
+         }
+
+         for(int i=1; i<dsc.size()-1;i++) {
+           int ik1 = (dsc.get(i-1).getName().equals("0")?0:Integer.parseInt(dsc.get(i-1).getName().substring(1)));
+           int ik2 = (dsc.get(i).getName().equals("0")?0:Integer.parseInt(dsc.get(i).getName().substring(1)));
+           if (item.getDiscount()>ik1 && item.getDiscount()<=ik2)  {
+              if (!itemClsList.contains(dsc.get(i))) {itemClsList.add(dsc.get(i));}				   
+            } else if (itemClsList.contains(dsc.get(i))) {
+               itemClsList.remove(dsc.get(i));
+            }			
+          } 
+          in=dsc.size()-1;
+          ik = (dsc.get(in).getName().equals("0")?0:Integer.parseInt(dsc.get(in).getName().substring(1)));
+          if (item.getDiscount()>ik)  {
+               if (!itemClsList.contains(dsc.get(in))) {itemClsList.add(dsc.get(in));}				   
+           } else if (itemClsList.contains(dsc.get(in))) {
+               itemClsList.remove(dsc.get(in));
+           }		
+////////////////////////////////////////////////////////////////////////	
+          item.setClassification(itemClsList);
+	}
 }

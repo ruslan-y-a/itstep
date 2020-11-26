@@ -20,7 +20,7 @@ public class RequestConnectionBinding implements ServletRequestListener {
 		try {
 			Connection connection = ConnectionPool.getInstance().getConnection();
 			ConnectionThreadHolder.setConnection(connection);
-			logger.debug("Connection bind to request successfull");
+			logger.debug("Connection bind to request successfull");				
 		} catch(ConnectionPoolException e) {
 			logger.error("Can't connect to database", e);
 		}

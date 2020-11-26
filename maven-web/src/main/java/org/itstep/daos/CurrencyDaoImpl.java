@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.itstep.entities.Currency;
-import org.itstep.postgres.DaoException;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class CurrencyDaoImpl extends DaoImpl<Currency> implements CurrencyDao {	
+	//@Autowired private Connection c;
 	private Map<Long, Currency> cache = new HashMap<>();
 		
 	@Override

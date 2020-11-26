@@ -1,6 +1,5 @@
 package org.itstep.daos;
 
-import org.itstep.postgres.DaoException;
 
 import java.util.List;
 import org.itstep.entities.Webpages;

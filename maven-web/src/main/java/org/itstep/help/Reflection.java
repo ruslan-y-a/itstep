@@ -22,7 +22,7 @@ import org.itstep.daos.TagcloudDao;
 import org.itstep.daos.UserDao;
 import org.itstep.daos.WebpagesDao;
 import org.itstep.de_services.BaseService;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 
 public class Reflection {
 	

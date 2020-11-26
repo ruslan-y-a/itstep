@@ -1,10 +1,21 @@
 package org.itstep.entities;
 
-public class Webpages extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6211220639783766885L;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "webpages", schema="public")
+public class Webpages {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 
 	private static final String[] ROBOTSTYPE ={"index,follow","noindex,nofollow","noindex,follow"};
 	

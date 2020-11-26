@@ -5,11 +5,11 @@ import java.util.Date;
 
 
 
-public class Orders extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5979464879541712099L;
+public class Orders {
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 
 	public static final SimpleDateFormat FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 	public static final SimpleDateFormat TIMEFORMAT = new SimpleDateFormat("dd-MM-yyyy H:m:s"); 

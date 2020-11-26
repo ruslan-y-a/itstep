@@ -11,13 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.itstep.entities.Classification;
-import org.itstep.postgres.DaoException;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class ClassificationDaoImpl extends DaoImpl<Classification> implements ClassificationDao {
+	//@Autowired private Connection c;
 	private Map<Long, Classification> cache = new HashMap<>();
 
 	@Override
@@ -167,6 +168,8 @@ public class ClassificationDaoImpl extends DaoImpl<Classification> implements Cl
 			PreparedStatement s = null;
 			ResultSet r = null;
 			try {
+			//	System.out.println("======CLASS DAO cid:" +cid);
+				
 				s = c.prepareStatement(sql);
 				s.setLong(1, cid);
 				r = s.executeQuery();
@@ -181,7 +184,7 @@ public class ClassificationDaoImpl extends DaoImpl<Classification> implements Cl
 					}  
 					classification.setCategoryid(cid);																			
 				}
-			//	System.out.println("=======================Dao2 readByCategory" + cid);				
+		//		System.out.println("=======================Dao2 readByCategory classification) " + classification);				
 				return classification;
 			} catch(SQLException e) {
 				throw new DaoException(e);

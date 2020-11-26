@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.itstep.postgres.DaoException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -139,6 +138,8 @@ public class WebpagesDaoImpl extends DaoImpl<Webpages> implements WebpagesDao{
 		String sql = "SELECT \"entity\",\"entityid\",\"id\", \"url\", \"title\", \"description\", \"keywords\", \"h1\", \"text\", \"robots\" FROM \"webpages\"";
 		Statement s = null;
 		ResultSet r = null;
+	//	System.out.println("=============DAO WP READ CONN)" + c);
+		
 		try {
 			s = c.createStatement();
 			r = s.executeQuery(sql);

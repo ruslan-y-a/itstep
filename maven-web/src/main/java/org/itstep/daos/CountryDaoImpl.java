@@ -12,13 +12,14 @@ import java.util.Map;
 
 import org.itstep.entities.Currency;
 import org.itstep.entities.Country;
-import org.itstep.postgres.DaoException;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class CountryDaoImpl extends DaoImpl<Country>  implements CountryDao {
+//	@Autowired private Connection c;
 	private Map<Long, Country> cache = new HashMap<>();
 		
 	@Override

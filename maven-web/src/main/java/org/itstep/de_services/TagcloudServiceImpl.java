@@ -8,8 +8,9 @@ import org.itstep.daos.WebpagesDao;
 import org.itstep.daos.TagcloudDao;
 import org.itstep.entities.Tagcloud;
 import org.itstep.entities.Webpages;
+import org.itstep.repository.WebpagesRepository;
 import org.itstep.entities.Classification;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -21,6 +22,7 @@ public class TagcloudServiceImpl implements TagcloudService {
 	private ClassificationDao classificationDao;
 	@Autowired		
 	private WebpagesDao webpagesDao;
+	@Autowired private WebpagesRepository wrepo;
 	@Autowired		
 	private TagcloudDao tagcloudDao;	
 	
@@ -68,12 +70,10 @@ public class TagcloudServiceImpl implements TagcloudService {
 			}
 			
 			if (tagcloud.getWebpages()!=null && tagcloud.getWebpages().getId()!=null) {
-				Webpages webpages =webpagesDao.read(tagcloud.getWebpages().getId());
-				if (tagcloud.getWebpages().getEntity()!=null && !tagcloud.getWebpages().getEntity().isBlank()) {
-					webpages.setEntity(tagcloud.getWebpages().getEntity());}
-				if (tagcloud.getWebpages().getEntityid()!=null) {
-					webpages.setEntityid(tagcloud.getWebpages().getEntityid());}	
-				webpagesDao.update(webpages);
+				Webpages webpages =wrepo.findById(tagcloud.getWebpages().getId()).orElse(null);	
+				if (tagcloud.getWebpages().getId() !=null) {
+					webpages.setEntityid(tagcloud.getWebpages().getId());}	
+				wrepo.save(webpages);
 			}
 			
 			return id;
@@ -92,7 +92,7 @@ public class TagcloudServiceImpl implements TagcloudService {
 	}
 	
 	@Override
-	public Tagcloud read(Long id) throws LogicException {
+	public Tagcloud findById(Long id) throws LogicException {
 		try {
 			Tagcloud tagcloud=tagcloudDao.read(id);
 			

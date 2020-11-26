@@ -17,7 +17,7 @@ import org.itstep.entities.Orderstatus;
 import org.itstep.entities.User;
 import org.itstep.help.DateHelp;
 import org.itstep.help.Params;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -96,9 +96,9 @@ public class OrdersServiceImpl implements OrdersService {
 	}
 	
 	@Override
-	public Orders read(Long id) throws LogicException {
+	public Orders findById(Long id) throws LogicException {
 		try {
-			Orders orders=ordersDao.read(id);			
+			Orders orders=ordersDao.read(id);				
 			Baseitem baseitem=baseitemDao.read(orders.getBaseitem().getId());
 			orders.setBaseitem(baseitem);
 			Client client=clientDao.read(orders.getClient().getId());

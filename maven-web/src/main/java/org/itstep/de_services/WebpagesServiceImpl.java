@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.itstep.daos.WebpagesDao;
 import org.itstep.entities.Webpages;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class WebpagesServiceImpl implements WebpagesService {
 	}
 	
 	@Override
-	public Webpages read(Long id) throws LogicException {
+	public Webpages findById(Long id) throws LogicException {
 		try {					
 			return webpagesDao.read(id);
 		} catch(DaoException e) {

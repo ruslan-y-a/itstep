@@ -1,5 +1,6 @@
 package org.itstep.csvLoader;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,21 +19,24 @@ public class Parser {
 		this.state = new StartRow();
 		this.inputList = reader.getList();
 		this.outputMap = new HashMap<String,ArrayList<String>>();
-	//	this.currentChar =;
 	}  
-  public Parser() throws IOException {
-		Reader reader = new Reader();
+  public Parser(File file, String encoding) throws IOException {
+		Reader reader = new Reader(file,encoding);
 		this.state = new StartRow();
 		this.inputList = reader.getList();
 		this.outputMap = new HashMap<String,ArrayList<String>>();
-//		this.currentChar = ;
+	}   
+  public Parser(File file) throws IOException {
+		Reader reader = new Reader(file);
+		this.state = new StartRow();
+		this.inputList = reader.getList();
+		this.outputMap = new HashMap<String,ArrayList<String>>();
 	}  
   public Parser(String sFile) throws IOException {
 		Reader reader = new Reader(sFile);
 		this.state = new StartRow();
 		this.inputList = reader.getList();
 		this.outputMap = new HashMap<String,ArrayList<String>>();
-	//	this.currentChar = ;
 	}  
 ////////////////////////////////////////   
   public State getState() {
@@ -50,6 +54,7 @@ public ArrayList<String> getOutputHeadList() {
 }
 //////////////////////////////////////////	
   public Map<String,ArrayList<String>> parse() throws ClassNotFoundException, ParserException{
+	  if (inputList==null) {return null;}
 	  StringBuilder row = new StringBuilder();
 	  ArrayList<String> headers; // = new ArrayList<String>();
 	  Character ch=null;
@@ -65,7 +70,7 @@ public ArrayList<String> getOutputHeadList() {
 			 this.currentChar=tch;
 			 ch=state.parsedChar(this);
 			 if (ch!=null) {
-			   if (this.state.getClass().equals(Class.forName("csvLoader.Delimiter"))) {
+			   if (this.state.getClass().equals(Class.forName("org.itstep.csvLoader.Delimiter"))) {
 				  if (firstRow) {
 					  headers.add(row.toString()); 
 					  outputMap.put(headers.get(++nColumn), new ArrayList<String>());}
@@ -78,7 +83,7 @@ public ArrayList<String> getOutputHeadList() {
 				   row.append(ch);
 			   } 
 			 }
-			 else if (this.state.getClass().equals(Class.forName("csvLoader.StartRow"))) {
+			 else if (this.state.getClass().equals(Class.forName("org.itstep.csvLoader.StartRow"))) {
 				  if (columnsNumber!=null && columnsNumber!=nColumn) {
 					 throw new ParserException("Wrong amount of columns.Bad column"+ nColumn +". Bad row:" + outputMap.get(headers.get(nColumn)).size());
 				  } else {

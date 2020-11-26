@@ -1,16 +1,36 @@
 package org.itstep.entities;
 
-public class Baseitem extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1964817509967223673L;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+//@Entity
+//@Table(name = "baseitem", schema="public")
+public class Baseitem {
+//	@Id
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
+  //  	
 	private Items item;
+//	@ManyToOne()
+//	@JoinColumn(name="id")   
 	private Color color;
+//	@ManyToOne()
+//	@JoinColumn(name="id") 	
 	private Size size;
 	private String name;
 	private Integer quantity;
 	private Long baseprice;
+	@ManyToOne()
+	@JoinColumn(name="id") 		
 	private Currency currency;
 	
 	
@@ -21,12 +41,14 @@ public class Baseitem extends Entity {
 				 + "\nquantity:"+ this.quantity + "\nbaseprice:"+ this.baseprice
 				 + "\ncurrency:"+ this.currency; }
 
-
-	public Items getItem() {
+//	@ManyToOne()
+//	@JoinColumn(name="id", referencedColumnName = "itemid")		
+	public Items getItem() {						
 		return item;
 	}
 	public void setItem(Items item) {
-		this.item = item;
+		//ChildItem chItem= new ChildItem(item);
+		this.item =item; 
 	}
 	public Color getColor() {
 		return color;

@@ -17,7 +17,6 @@ import org.itstep.entities.Classification;
 import org.itstep.entities.Img;
 import org.itstep.entities.Webpages;
 import org.itstep.help.Helper;
-import org.itstep.postgres.DaoException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -323,6 +322,7 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 		String sql = String.format("SELECT \"id\", \"articul\", \"model\", \"category\", \"baseprice\", \"discount\", \"name\", \"classification\" ,"
 		+ " \"img\" , \"active\", \"webpages\" FROM \"items\" WHERE \"name\" LIKE '%%%s%%' " + sortOrder(itemsSort) +
 		" limit " + limit+" offset " + limit*(page-1), search);		
+	//   System.out.println("===================sql)" + sql);
 		Statement s = null;
 		ResultSet r = null;
 		try {
@@ -385,7 +385,8 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 		String sql = "SELECT \"id\", \"articul\", \"model\", \"category\", \"baseprice\", \"discount\", \"name\", \"classification\" ,"
 				+ " \"img\" , \"active\", \"webpages\" FROM \"items\" WHERE \"category\" = " + category + " " + sortOrder(itemsSort) +
 				" limit " + limit+" offset " + limit*(page-1);	
-		
+//		System.out.println("===================sql)" + sql);
+
 		Statement s = null;
 		ResultSet r = null;
 		try {
@@ -447,7 +448,8 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 		String sql = "SELECT \"id\", \"articul\", \"model\", \"category\", \"baseprice\", \"discount\", \"name\", \"classification\" ,"
 				+ " \"img\" , \"active\", \"webpages\" FROM \"items\" " + sortOrder(itemsSort) +
 				" limit " + limit+" offset " + limit*(page-1);	
-		
+	//	System.out.println("===================sql)" + sql);
+
 		Statement s = null;
 		ResultSet r = null;
 		try {
@@ -517,7 +519,7 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 		StringBuilder SB = new StringBuilder();
 		Boolean first=false;
 		for (Long x:categories) {			
-			if (x!=null) {SB.append((first?" OR ":"") + x +" = \"category\"");
+			if (x!=null) {SB.append((first?" OR ":" WHERE ") + x +" = \"category\"");
 		  if (!first) {first=true;}	}
 		}
 		return SB.toString();
@@ -548,7 +550,8 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 		String sql = "SELECT \"id\", \"articul\", \"model\", \"category\", \"baseprice\", \"discount\", \"name\", \"classification\" ,"
 				+ " \"img\" , \"active\", \"webpages\" FROM \"items\" WHERE " + queryClassification(sclassification) +" "+ sortOrder(itemsSort) +
 				" limit " + limit+" offset " + limit*(page-1);	
-		
+	//	System.out.println("===================sql)" + sql);
+
 		Statement s = null;
 		ResultSet r = null;
 		try {
@@ -612,7 +615,8 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 		String sql = "SELECT \"id\", \"articul\", \"model\", \"category\", \"baseprice\", \"discount\", \"name\", \"classification\" ,"
 				+ " \"img\" , \"active\", \"webpages\" FROM \"items\" WHERE " + queryClassificationLists(sclassification)  +" "+ sortOrder(itemsSort)+
 				" limit " + limit+" offset " + limit*(page-1);	
-	//	System.out.println("==============SQL "+sql);
+	//	System.out.println("===================sql)" + sql);
+
 		Statement s = null;
 		ResultSet r = null;
 		try {
@@ -675,9 +679,10 @@ public class ItemsDaoImpl extends DaoImpl<Items>  implements ItemsDao{
 	   /* Select * from items ORDER BY id ASC limit 10 offset 10*0;  */
 		/* select * from items where 2 = ANY (classification) and 31 = ANY (classification) */
 		String sql = "SELECT \"id\", \"articul\", \"model\", \"category\", \"baseprice\", \"discount\", \"name\", \"classification\" ,"
-				+ " \"img\" , \"active\", \"webpages\" FROM \"items\" WHERE " + queryCategories(categories)  +" "+ sortOrder(itemsSort)+
+				+ " \"img\" , \"active\", \"webpages\" FROM \"items\" " + queryCategories(categories)  +" "+ sortOrder(itemsSort)+
 				" limit " + limit+" offset " + limit*(page-1);	
-				
+	//	System.out.println("===================sql)" + sql);
+		
 		Statement s = null;
 		ResultSet r = null;
 		try {

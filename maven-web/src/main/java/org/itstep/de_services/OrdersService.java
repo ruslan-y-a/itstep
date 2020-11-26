@@ -11,7 +11,7 @@ public interface OrdersService extends BaseService<Orders> {
 	List<Orders> findAll() throws LogicException;
 	Long save(Orders orders) throws LogicException;
 	void delete(Long id) throws LogicException;
-	Orders read(Long id) throws LogicException;
+	Orders findById(Long id) throws LogicException;
 	List<Orders> search(Orderstatus status, Long client) throws LogicException;
 	List<Orders> orderdItems(Long lclient) throws LogicException;
 	void orderListUpdate(List<Orders> list, boolean updatePrice) throws LogicException;

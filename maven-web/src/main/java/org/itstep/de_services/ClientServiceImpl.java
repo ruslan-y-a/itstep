@@ -11,7 +11,7 @@ import org.itstep.entities.Client;
 import org.itstep.entities.Country;
 import org.itstep.entities.Items;
 import org.itstep.entities.User;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -91,7 +91,7 @@ public class ClientServiceImpl implements ClientService {
 	}
 	
 	@Override
-	public Client read(Long id) throws LogicException {
+	public Client findById(Long id) throws LogicException {
 		try {
 			Client client=clientDao.read(id);
 			Country country =countryDao.read(client.getCountry().getId());

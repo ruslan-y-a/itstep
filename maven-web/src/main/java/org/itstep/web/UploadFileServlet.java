@@ -12,12 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.itstep.csvupdater.LoadService;
 
 @WebServlet(name="UploadFileServlet")
 public class UploadFileServlet extends HttpServlet {
 	/**
 	 * 
 	 */
+	private static final Logger logger = LogManager.getLogger();
 	private static final long serialVersionUID = -6901985353326397696L;
 	
 	//private String savePath=""; //c:/Users/Admin/eclipse-workspace/maven-web/src/main/webapp/
@@ -26,13 +30,20 @@ public class UploadFileServlet extends HttpServlet {
 		ServletFileUpload fileUpload = new ServletFileUpload(new DiskFileItemFactory());
 		ServletContext context =req.getServletContext();
 		String fileupload = context.getInitParameter("file-upload");
-		String path; path = new String (req.getParameter("path"));
+		String path; path = req.getParameter("path");
 		if (path==null || path.isBlank()) {path=fileupload;}
 		if (path==null || path.isBlank()) {path="c:/Users/Admin/eclipse-workspace/maven-web/src/main/webapp/";}
    	   	
-		try {
-		  List<FileItem> multiFiles = fileUpload.parseRequest(req);
-		  for (FileItem file : multiFiles) {file.write(new File(path+file.getName()));}
+		try {						
+		  List<FileItem> multiFiles = fileUpload.parseRequest(req);		 		  
+		  LoadService ls = new LoadService();
+		  System.out.println("=============LODING FILES " + multiFiles.toString());
+		  for (FileItem file : multiFiles) {
+			     File nf = new File(path+file.getName());
+			     file.write(nf); boolean bl= ls.createCsvLoad(nf);
+			     logger.warn("TRY TO LOAD FILE "+(bl?"SUCCESS":"FAIL")+" : " +nf);			     
+			  }		  
+
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	

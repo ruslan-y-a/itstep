@@ -12,7 +12,6 @@ import java.util.Map;
 
 
 import org.itstep.entities.Img;
-import org.itstep.postgres.DaoException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

@@ -11,30 +11,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Reader {
-   private String sFile="web/import.csv";
+   private String sFile;
    private String encoding="UTF-8";
+   private File fileToRead;
  //////////////////////////////////////////////////////////  
    public Reader(String sFile, String encoding) {
-		//this.sFile = "web/" + sFile + ".csv";
 	    this.sFile = sFile;
 		this.encoding = encoding;
 	}
-	public Reader() {		
+   public Reader(File fileToRead, String encoding) {
+	    this.fileToRead = fileToRead;
+		this.encoding = encoding;
 	}
-	public Reader(String sFile) {
-		this.sFile = sFile;	
-	}
-  public String getsFile() {
-		return sFile;
-	}
-	public void setsFile(String sFile) {
-		this.sFile = sFile;
-	}
+	public Reader(File file) {this.fileToRead = file;}
+	public Reader(String sFile) {this.sFile = sFile;}
+   
+	public String getsFile() {return sFile;}
+	public void setsFile(String sFile) {this.sFile = sFile;}
+	
+    public File getFileToRead() {return fileToRead;}
+	public void setFileToRead(File fileToRead) {this.fileToRead = fileToRead;}
 ///////////////////////////////////////////////////  
    public List<String> getList() throws IOException{
 	   List<String> list = new ArrayList<>();
-	   File file = new File(sFile);	
-	   if (!file.exists()) {return null;}		
+	   File file=null;
+	   if (fileToRead!=null) {file=fileToRead;}
+	   else {file = new File(sFile);}	
+	   if (file==null || !file.exists()) {return null;}		
 		
 	    FileInputStream fis = null;
 		InputStreamReader ois = null;

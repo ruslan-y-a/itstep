@@ -16,7 +16,6 @@ import org.itstep.entities.Currency;
 import org.itstep.entities.Delivery;
 import org.itstep.entities.Orderstatus;
 import org.itstep.entities.Orders;
-import org.itstep.postgres.DaoException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 

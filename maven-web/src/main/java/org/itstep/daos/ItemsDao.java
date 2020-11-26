@@ -3,7 +3,6 @@ package org.itstep.daos;
 import java.util.List;
 import org.itstep.entities.Items;
 import org.itstep.entities.ItemsSort;
-import org.itstep.postgres.DaoException;
 
 public interface ItemsDao extends Dao<Items> {
 	Long create(Items items) throws DaoException;

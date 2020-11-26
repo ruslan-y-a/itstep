@@ -1,6 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<!-- copy this file into tomcat\conf\Catalina\localhost -->
-<Context path="/maven-web" docBase="c:/Users/Admin/eclipse-workspace/maven-web/target/maven-web-0.0.1-SNAPSHOT" disableURLRewriting="true"/>
-<!-- 
-    c:\Users\Admin\eclipse-workspace\maven-web\target\maven-web-0.0.1-SNAPSHOT.war
--->

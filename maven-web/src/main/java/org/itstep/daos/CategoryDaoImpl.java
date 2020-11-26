@@ -12,13 +12,14 @@ import java.util.Map;
 
 import org.itstep.entities.Category;
 import org.itstep.entities.Webpages;
-import org.itstep.postgres.DaoException;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class CategoryDaoImpl extends DaoImpl<Category>  implements CategoryDao {	
+	//@Autowired private Connection c;
 	private Map<Long, Category> cache = new HashMap<>();
 
 	@Override

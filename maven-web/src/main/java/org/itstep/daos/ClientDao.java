@@ -2,7 +2,6 @@ package org.itstep.daos;
 
 import java.util.List;
 import org.itstep.entities.Client;
-import org.itstep.postgres.DaoException;
 
 public interface ClientDao extends Dao<Client> {
 	Long create(Client client) throws DaoException;

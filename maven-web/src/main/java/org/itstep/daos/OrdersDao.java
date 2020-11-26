@@ -5,7 +5,6 @@ import java.util.List;
 //import entities.Client;
 import org.itstep.entities.Orders;
 import org.itstep.entities.Orderstatus;
-import org.itstep.postgres.DaoException;
 
 public interface OrdersDao extends Dao<Orders> {
 	Integer getMaxOrder();

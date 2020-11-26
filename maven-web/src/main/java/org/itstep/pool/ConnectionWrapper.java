@@ -27,7 +27,7 @@ public class ConnectionWrapper implements Connection, Comparable<ConnectionWrapp
 		this.connection = connection;
 	}
 
-	Connection getConnection() {
+	public Connection getConnection() {
 		return connection;
 	}
 

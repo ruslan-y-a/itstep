@@ -8,7 +8,7 @@ import org.itstep.entities.Webpages;
 import org.itstep.daos.CategoryDao;
 import org.itstep.daos.ClassificationDao;
 import org.itstep.daos.WebpagesDao;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -85,7 +85,7 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 	
 	@Override
-	public Category read(Long id) throws LogicException {
+	public Category findById(Long id) throws LogicException {
 		try {
 			Category category=categoryDao.read(id);
 			if (category.getParentid()>0) {category.setParentname(categoryDao.read(category.getParentid()).getName());}
@@ -106,7 +106,7 @@ public class CategoryServiceImpl implements CategoryService {
 	//////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////
 	@Override
-	public Category read(String str) throws LogicException {
+	public Category search(String str) throws LogicException {
 		try {
 			Category category=categoryDao.read(str);
 		/*	if (category.getParentid()>0) {category.setParentname(categoryDao.read(category.getParentid()).getName());}

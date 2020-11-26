@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.itstep.daos.SizeDao;
 import org.itstep.entities.Size;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class SizeServiceImpl implements SizeService {
 	}
 	
 	@Override
-	public Size read(Long id) throws LogicException {
+	public Size findById(Long id) throws LogicException {
 		try {					
 			return sizeDao.read(id);
 		} catch(DaoException e) {

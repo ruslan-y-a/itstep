@@ -1,6 +1,5 @@
 package org.itstep.daos;
 
-//import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,20 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+//import java.sql.Connection;
 import org.itstep.entities.Color;
 import org.itstep.entities.Currency;
 import org.itstep.entities.Baseitem;
 import org.itstep.entities.Items;
 import org.itstep.entities.Size;
-import org.itstep.postgres.DaoException;
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class BaseitemDaoImpl extends DaoImpl<Baseitem> implements BaseitemDao {
-
+	//@Autowired private Connection c;
 	private Map<Long, Baseitem> cache = new HashMap<>();
 
 	@Override
@@ -51,7 +50,8 @@ public class BaseitemDaoImpl extends DaoImpl<Baseitem> implements BaseitemDao {
 			try { r.close(); } catch(Exception e) {}
 		}
 	}
-	
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////	
 	@Override
 	public Baseitem read(Long id) throws DaoException {
 		String sql = "SELECT \"itemid\", \"color\", \"size\", baseitem.name, \"quantity\", baseitem.baseprice, \"currency\", " + 
@@ -105,7 +105,49 @@ public class BaseitemDaoImpl extends DaoImpl<Baseitem> implements BaseitemDao {
 		}
 		return baseitem;
 	}
-
+	@Override
+	public Baseitem readByICS(Long id,Long colorid,Long sizeid) throws DaoException {
+		String sql = "SELECT \"itemid\", \"color\", \"size\", \"name\", \"quantity\", \"baseprice\", \"currency\" " + 				
+				" FROM \"baseitem\" WHERE baseitem.id = ? and color.id = ? and size.id = ?";
+		Baseitem baseitem = cache.get(id);
+		if(baseitem == null) {
+			PreparedStatement s = null;
+			ResultSet r = null;
+			try {
+				s = c.prepareStatement(sql);
+				s.setLong(1, id);
+				s.setLong(2, colorid);
+				s.setLong(3, sizeid);
+				r = s.executeQuery();
+				if(r.next()) {
+					baseitem = new Baseitem();
+					baseitem.setId(id);
+					baseitem.setItem(new Items()); 
+					baseitem.getItem().setId(r.getLong("itemid"));					
+					
+					baseitem.setColor(new Color()); 
+					baseitem.getColor().setId(r.getLong("color"));
+					baseitem.setSize(new Size()); 
+					baseitem.getSize().setId(r.getLong("size"));
+					baseitem.setName(r.getString("name"));
+					baseitem.setQuantity(r.getInt("quantity"));
+					baseitem.setBaseprice(r.getLong("baseprice"));										
+					baseitem.setCurrency(new Currency()); 
+					baseitem.getCurrency().setId(r.getLong("currency"));
+					
+					cache.put(id, baseitem);
+				}
+			} catch(SQLException e) {
+				throw new DaoException(e);
+			} finally {
+				try { r.close(); } catch(Exception e) {}
+				try { s.close(); } catch(Exception e) {}
+			}
+		}
+		return baseitem;
+	}
+///////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////
 	@Override
 	public Baseitem read(Long id, boolean bDisk) throws DaoException {
 		String sql = "SELECT \"itemid\", \"color\", \"size\", baseitem.name, \"quantity\", baseitem.baseprice, \"currency\", " + 

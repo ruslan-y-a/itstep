@@ -2,22 +2,22 @@ package org.itstep.entities;
 
 import java.util.List;
 
-public class Items extends Entity {
-   /**
-	 * 
-	 */
-   private static final long serialVersionUID = 3830211556006473653L;
-   private String articul;
-   private String model;
-   private Category category;
-   private Long baseprice;
-   private Integer discount;	
-   private String name;   
-   private List<Classification> classification;
-   private List<Img> img;
-   private boolean active;
-   private Webpages webpages;
-   private String myimg;
+public class Items {
+	protected Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
+   protected String articul;
+   protected String model;
+   protected Category category;
+   protected Long baseprice;
+   protected Integer discount=0;	
+   protected String name;   
+   protected List<Classification> classification;
+   protected List<Img> img;
+   protected boolean active;
+   protected Webpages webpages;
+   protected String myimg;
    
    public boolean getActive() {
 	return active;

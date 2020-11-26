@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.itstep.entities.Size;
-import org.itstep.entities.Variant;
-import org.itstep.postgres.DaoException;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +18,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("prototype")
 public class SizeDaoImpl extends DaoImpl<Size>  implements SizeDao {
-	private Map<Long, Variant> cache = new HashMap<>();
+	private Map<Long, Size> cache = new HashMap<>();
 		
 	@Override
 	public Long create(Size size) throws DaoException {
@@ -47,7 +45,7 @@ public class SizeDaoImpl extends DaoImpl<Size>  implements SizeDao {
 	@Override
 	public Size read(Long id) throws DaoException {
 		String sql = "SELECT \"name\" FROM \"size\" WHERE \"id\" = ?";
-		Size size = (Size) cache.get(id);
+		Size size = cache.get(id);
 		if(size == null) {
 			PreparedStatement s = null;
 			ResultSet r = null;
@@ -56,7 +54,7 @@ public class SizeDaoImpl extends DaoImpl<Size>  implements SizeDao {
 				s.setLong(1, id);
 				r = s.executeQuery();
 				if(r.next()) {
-					size  = (Size) Variant.getVariant("size");
+					size  = new Size();
 					size.setId(id);					 
 					size.setName(r.getString("name"));  					
 					

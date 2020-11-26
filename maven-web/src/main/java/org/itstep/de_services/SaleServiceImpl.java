@@ -10,7 +10,7 @@ import org.itstep.entities.Orders;
 import org.itstep.entities.Client;
 import org.itstep.entities.Currency;
 import org.itstep.entities.Sale;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -89,7 +89,7 @@ public class SaleServiceImpl implements SaleService {
 	}
 	
 	@Override
-	public Sale read(Long id) throws LogicException {
+	public Sale findById(Long id) throws LogicException {
 		try {
 			Sale sale=saleDao.read(id);
 			

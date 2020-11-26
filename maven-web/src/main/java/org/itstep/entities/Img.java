@@ -1,10 +1,20 @@
 package org.itstep.entities;
 
-public class Img extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -9087723422328289017L;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "img", schema="public")
+public class Img {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 	private String title;
 	private String alt;
 	private String url;

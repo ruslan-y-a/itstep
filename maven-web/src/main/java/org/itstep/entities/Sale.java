@@ -4,11 +4,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class Sale extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6726818484675413813L;
+public class Sale {
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 
 	public static final SimpleDateFormat TIMEFORMAT = new SimpleDateFormat("dd-MM-yyyy H:m:s"); 
 	

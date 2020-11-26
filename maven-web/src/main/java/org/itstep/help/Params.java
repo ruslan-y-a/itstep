@@ -7,4 +7,5 @@ public class Params {
   public static final String WP_ITEMS="items";	
   public static final String WP_CATEGORY="category";
   public static final String WP_TAGCLOUD="tagcloud";
+  public static final Integer REGISTER_BONUS=10;
 }

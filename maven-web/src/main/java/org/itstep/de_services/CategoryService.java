@@ -9,7 +9,7 @@ public interface CategoryService extends BaseService<Category> {
 	List<Category> findAll() throws LogicException;
 	Long save(Category category) throws LogicException;
 	void delete(Long id) throws LogicException;
-	Category read(Long id) throws LogicException;
-	Category read(String str) throws LogicException;
+	Category findById(Long id) throws LogicException;
+	Category search(String str) throws LogicException;
 	List<Category> readByParent(Long parentid) throws LogicException;
 }

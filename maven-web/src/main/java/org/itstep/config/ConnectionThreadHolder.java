@@ -6,6 +6,7 @@ public class ConnectionThreadHolder {
 	private static final ThreadLocal<Connection> connectionThreadScope = new ThreadLocal<>();
 
 	public static Connection getConnection() {
+	//	System.out.println("===========POOL=========" + connectionThreadScope.get());
 		return connectionThreadScope.get();
 	}
 

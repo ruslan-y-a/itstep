@@ -9,6 +9,6 @@ public interface UserService extends BaseService<User> {
 	List<User> findAll() throws LogicException;
 	Long save(User user) throws LogicException;
 	void delete(Long id) throws LogicException;
-	User read(Long id) throws LogicException;
+	User findById(Long id) throws LogicException;
 	User authenticate(String login, String password) throws LogicException;
 }

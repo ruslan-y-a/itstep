@@ -11,15 +11,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.itstep.entities.Color;
-import org.itstep.entities.Variant;
-import org.itstep.postgres.DaoException;
+
+//import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
 @Scope("prototype")
 public class ColorDaoImpl extends DaoImpl<Color> implements ColorDao {
-	private Map<Long, Variant> cache = new HashMap<>();
+	//@Autowired private Connection c;
+	private Map<Long, Color> cache = new HashMap<>();
 		
 	@Override
 	public Long create(Color color) throws DaoException {
@@ -46,7 +47,7 @@ public class ColorDaoImpl extends DaoImpl<Color> implements ColorDao {
 	@Override
 	public Color read(Long id) throws DaoException {
 		String sql = "SELECT \"name\" FROM \"color\" WHERE \"id\" = ?";
-		Color color = (Color) cache.get(id);
+		Color color = cache.get(id);
 		if(color == null) {
 			PreparedStatement s = null;
 			ResultSet r = null;
@@ -55,7 +56,7 @@ public class ColorDaoImpl extends DaoImpl<Color> implements ColorDao {
 				s.setLong(1, id);
 				r = s.executeQuery();
 				if(r.next()) {
-					color  = (Color) Variant.getVariant("color");
+					color  = new Color();
 					color.setId(id);					 
 					color.setName(r.getString("name"));  					
 					

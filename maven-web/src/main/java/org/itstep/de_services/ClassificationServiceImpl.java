@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.itstep.daos.ClassificationDao;
 //import entities.Category;
 import org.itstep.entities.Classification;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class ClassificationServiceImpl implements ClassificationService {
 	}
 	
 	@Override
-	public Classification read(Long id) throws LogicException {
+	public Classification findById(Long id) throws LogicException {
 		try {					
 			return classificationDao.read(id);
 		} catch(DaoException e) {

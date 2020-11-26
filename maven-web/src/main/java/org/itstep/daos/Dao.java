@@ -1,10 +1,8 @@
 package org.itstep.daos;
 
 import java.util.List;
-import org.itstep.entities.Entity;
-import org.itstep.postgres.DaoException;
 
-public interface Dao<T extends Entity> {
+public interface Dao<T> {
 	Long create(T entity) throws DaoException;
 	T read(Long id) throws DaoException;
 	void update(T t) throws DaoException;

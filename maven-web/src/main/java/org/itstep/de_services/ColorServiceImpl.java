@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.itstep.daos.ColorDao;
 import org.itstep.entities.Color;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -52,7 +52,7 @@ public class ColorServiceImpl implements ColorService {
 	}
 	
 	@Override
-	public Color read(Long id) throws LogicException {
+	public Color findById(Long id) throws LogicException {
 		try {					
 			return colorDao.read(id);
 		} catch(DaoException e) {

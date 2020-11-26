@@ -1,17 +1,27 @@
 package org.itstep.entities;
 
-import org.itstep.tabs.Role;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
-public class User extends Entity { 
+@Entity
+@Table(name = "users", schema="public")
+public class User { 
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -5667655294155727623L;
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
 	private String login;
 	private String password;
 	private String name;
 	private String email;
+    @Column(name = "roleid")	
 	private Role role;
 	
  

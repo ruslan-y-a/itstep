@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.itstep.postgres.DaoException;
-import org.itstep.tabs.Role;
+import org.itstep.entities.Role;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +45,7 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 		} finally {
 			try { s.close(); } catch(Exception e) {}
 			try { r.close(); } catch(Exception e) {}
+		//	try { c.close(); } catch(Exception e) {}  ////!!!!!!!!!!!1
 		}
 	}
 	
@@ -76,6 +76,7 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 			} finally {
 				try { r.close(); } catch(Exception e) {}
 				try { s.close(); } catch(Exception e) {}
+		//		try { c.close(); } catch(Exception e) {}  ////!!!!!!!!!!!1
 			}
 		}
 		return user;
@@ -87,6 +88,8 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 		PreparedStatement s = null;
 		ResultSet r = null;
 		try {
+	//		 System.out.println("=====================================USER DAO c)" + c);
+		//	 System.out.println("=====================================USER DAO sql)" + sql);
 			s = c.prepareStatement(sql);
 			s.setString(1, login);
 			s.setString(2, password);
@@ -106,6 +109,7 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 		} finally {
 			try { r.close(); } catch(Exception e) {}
 			try { s.close(); } catch(Exception e) {}
+	//		try { c.close(); } catch(Exception e) {}  ////!!!!!!!!!!!1
 		}
 	}
 	
@@ -127,6 +131,7 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 			throw new DaoException(e);
 		} finally {
 			try { s.close(); } catch(Exception e) {}
+	//		try { c.close(); } catch(Exception e) {}  ////!!!!!!!!!!!1
 		}
 	}
 
@@ -143,6 +148,7 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 			throw new DaoException(e);
 		} finally {
 			try { s.close(); } catch(Exception e) {}
+//			try { c.close(); } catch(Exception e) {}  ////!!!!!!!!!!!1
 		}
 	}
 	
@@ -173,6 +179,7 @@ public class UserDaoImpl extends DaoImpl<User>  implements UserDao {
 		} finally {
 			try { r.close(); } catch(Exception e) {}
 			try { s.close(); } catch(Exception e) {}
+	//		try { c.close(); } catch(Exception e) {}  ////!!!!!!!!!!!1
 		}
 	}
 	

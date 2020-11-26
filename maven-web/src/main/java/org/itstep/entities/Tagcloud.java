@@ -2,13 +2,16 @@ package org.itstep.entities;
 
 import java.util.List;
 
+
 import org.itstep.help.Helper;
 
-public class Tagcloud extends Entity {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -2014558826175709177L;
+public class Tagcloud {
+	
+	private Long id;
+
+	public Long getId() {return id;}
+	public void setId(Long id) {this.id = id;}
+	
 	private List<Classification> classification;
 	private Webpages webpages;
 	

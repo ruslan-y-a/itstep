@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.itstep.daos.UserDao;
 import org.itstep.entities.User;
-import org.itstep.postgres.DaoException;
+import org.itstep.daos.DaoException;
 import org.itstep.service.LogicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User read(Long id) throws LogicException {
+	public User findById(Long id) throws LogicException {
 		try {					
 			return userDao.read(id);
 		} catch(DaoException e) {
@@ -61,10 +61,10 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User authenticate(String login, String password) throws LogicException {
-	//	 System.out.println("authenticate" + login + " " + password);
+	//	 System.out.println("=====================authenticate)" + login + " " + password);
 		try {
 			User user=userDao.read(login, password);
-			user=userDao.read(user.getId());
+			if (user!=null) {user=userDao.read(user.getId());}
 			return user;
 		} catch(DaoException e) {
 			throw new LogicException(e);

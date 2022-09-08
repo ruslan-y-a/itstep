@@ -16,7 +16,7 @@
 		<jstl.version>1.2</jstl.version>
 		<log4j.version>2.13.3</log4j.version>
 		<jackson.version>2.11.2</jackson.version>
-		<postgresql.jdbc.driver.version>42.2.5</postgresql.jdbc.driver.version>
+		<postgresql.jdbc.driver.version>42.4.1</postgresql.jdbc.driver.version>
 		<servlet.api.version>4.0.1</servlet.api.version>
 		<jsp.api.version>2.3.3</jsp.api.version>
 		<junit.version>4.11</junit.version>
